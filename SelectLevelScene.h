@@ -18,4 +18,5 @@ private:
 	cocos2d::ui::Button* turn_left;//左按键
 	cocos2d::ui::Button* turn_right;//右按键
 	cocos2d::ui::Button* skyline_button;//选择天空地图
+	cocos2d::ui::Button* desert_button;//选择沙漠地图
 };
