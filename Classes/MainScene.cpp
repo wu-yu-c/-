@@ -43,10 +43,10 @@ bool MainScene::InitUI()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
+	ValueMap a;
 	//╠Ё╬╟
 	Sprite* rootNode = nullptr;
-	InitSprite(rootNode, this, "MainMenu/zh/front_bg.png", origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2, -1);
+	InitSprite(rootNode, this, "MainMenu/zh/front_bg1152.png", origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2, -1);
 	if (nullptr == rootNode)
 		return false;
 
@@ -131,7 +131,7 @@ bool MainScene::InitUI()
 	InitSprite(monster1, this, "MainMenu/front_monster_1.png", origin.x + 230, origin.y + 155, 1);
 	if (nullptr == monster1)
 		return false;
-	monster1->setScale(0.85);
+	monster1->setScale(0.75);
 
 
 	//ялнМ1

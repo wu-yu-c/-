@@ -32,11 +32,9 @@ bool SelectLevelScene::InitUI()
 	if (nullptr == rootNode)
 		return false;
 
-	//创建天空地图
-	skyline_button= Button::create("ChooseLevel/skyline.png", "ChooseLevel/skyline.png", "null.png");
-	//此处未使用problemloading检查错误
-	skyline_button->setPosition(Vec2(origin.x + 568, origin.y + 320));
-	this->addChild(skyline_button, 1);
+	//把天空地图作为图层加到界面中
+	auto skyline = SkyLine::create();
+	this->addChild(skyline);
 
 	//创建返回主界面的按钮
 	const char* toolbarHomeFilePath = "ChooseLevel/home_button.png";
@@ -52,7 +50,7 @@ bool SelectLevelScene::InitUI()
 	//添加右按钮
 	const char* right = "ChooseLevel/right_button.png";
 	turn_right = Button::create(right, right, "");
-	turn_right->setPosition(Vec2(1136 - 59 / 2 - 11, 320));
+	turn_right->setPosition(Vec2(1136 - 70 / 2 - 11, 320));
 	turn_right->setPressedActionEnabled(true);
 	//参数1的目的是将其设置在背景的上层
 	this->addChild(turn_right, 1);
@@ -62,7 +60,7 @@ bool SelectLevelScene::InitUI()
 	//添加左按钮
 	const char* left = "ChooseLevel/left_button.png";
 	turn_left = Button::create(left, left, "");
-	turn_left->setPosition(Vec2(70 - 59 + 59 / 2, 320));
+	turn_left->setPosition(Vec2(70 - 59 + 70 / 2, 320));
 	turn_left->setPressedActionEnabled(true);
 	//参数1的目的是将其设置在背景的上层
 	this->addChild(turn_left, 1);
@@ -84,6 +82,74 @@ void SelectLevelScene::InitEvent()
 		}
 		});
 
+	//初始化左按钮
+	turn_left->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			//获取当前场景
+			auto currentScene = Director::getInstance()->getRunningScene();
+			// 根据图层名称查找要移除的图层
+			auto currentLayer = currentScene->getChildByName("ChooseLevel/desert.png");
+			// 如果找到了要移除的图层，则移除它
+			if (currentLayer)
+				currentLayer->removeFromParent();
+			// 创建并添加天际图层
+			auto newLayer = SkyLine::createLayer();
+			currentScene->addChild(newLayer);
+		}
+		});
+
+	//初始化右按钮
+	turn_right->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			//获取当前场景
+			auto currentScene = Director::getInstance()->getRunningScene();
+			// 根据图层名称查找要移除的图层
+			auto currentLayer = currentScene->getChildByName("ChooseLevel/skyline.png");
+			// 如果找到了要移除的图层，则移除它
+			if (currentLayer)
+				currentLayer->removeFromParent();
+			// 创建并添加沙漠图层
+			auto newLayer = Desert::createLayer();
+			currentScene->addChild(newLayer);
+		}
+		});
+}
+
+cocos2d::Layer* SkyLine::createLayer()
+{
+	return SkyLine::create();
+}
+
+bool SkyLine::init()
+{
+	if (!Layer::init())
+		return false;
+
+	InitUI();
+
+	InitEvent();
+
+	return true;
+}
+
+bool SkyLine::InitUI()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	//创建天空地图
+	skyline_button = Button::create("ChooseLevel/skyline.png", "ChooseLevel/skyline.png", "null.png");
+	//此处未使用problemloading检查错误
+	skyline_button->setPosition(Vec2(origin.x + 568, origin.y + 320));
+	this->addChild(skyline_button, 1);
+	if (skyline_button == nullptr)
+		return false;
+	return true;
+}
+
+void SkyLine::InitEvent()
+{
 	//初始化选择天空地图按钮
 	skyline_button->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
@@ -93,19 +159,43 @@ void SelectLevelScene::InitEvent()
 			Director::getInstance()->replaceScene(youroperator);
 		}
 		});
+}
 
-	//初始化左按钮
-	turn_left->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
-		if (type == ui::Widget::TouchEventType::ENDED)
-		{
-			//此处需要你改成进入该地图，目前先返回主界面
-			auto youroperator = MainScene::createScene();
-			Director::getInstance()->replaceScene(youroperator);
-		}
-		});
+cocos2d::Layer* Desert::createLayer()
+{
+	return Desert::create();
+}
 
-	//初始化右按钮
-	turn_right->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
+bool Desert::init()
+{
+	if (!Layer::init())
+		return false;
+
+	InitUI();
+
+	InitEvent();
+
+	return true;
+}
+
+bool Desert::InitUI()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	//创建天空地图
+	desert_button = Button::create("ChooseLevel/desert.png", "ChooseLevel/desert.png", "null.png");
+	//此处未使用problemloading检查错误
+	desert_button->setPosition(Vec2(origin.x + 568, origin.y + 320));
+	this->addChild(desert_button, 1);
+	if (desert_button == nullptr)
+		return false;
+	return true;
+}
+
+void Desert::InitEvent()
+{
+	//初始化选择天空地图按钮
+	desert_button->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			//此处需要你改成进入该地图，目前先返回主界面
