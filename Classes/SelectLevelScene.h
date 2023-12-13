@@ -20,3 +20,27 @@ private:
 	cocos2d::ui::Button* skyline_button;//选择天空地图
 	cocos2d::ui::Button* desert_button;//选择沙漠地图
 };
+
+class SkyLine : public cocos2d::Layer {
+private:
+	cocos2d::Scene* skyMap;
+	cocos2d::ui::Button* skyline_button;
+	void InitEvent();
+	bool InitUI();
+public:
+	static cocos2d::Layer* createLayer();
+	virtual bool init();
+	CREATE_FUNC(SkyLine);
+};
+
+class Desert : public cocos2d::Layer {
+private:
+	cocos2d::Scene* desertMap;
+	cocos2d::ui::Button* desert_button;
+	void InitEvent();
+	bool InitUI();
+public:
+	static cocos2d::Layer* createLayer();
+	virtual bool init();
+	CREATE_FUNC(Desert);
+};

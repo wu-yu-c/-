@@ -1,5 +1,7 @@
 #include "SelectLevelScene.h"
 #include "MainScene.h"
+#include"SkyMapScene.h"
+#include"DesertMapScene.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
