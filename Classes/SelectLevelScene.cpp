@@ -22,7 +22,6 @@ bool SelectLevelScene::init()
 
 bool SelectLevelScene::InitUI()
 {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	//创建背景
@@ -138,7 +137,7 @@ bool SkyLine::InitUI()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	//创建天空地图
+	//选关图片
 	skyline_button = Button::create("ChooseLevel/skyline.png", "ChooseLevel/skyline.png", "null.png");
 	//此处未使用problemloading检查错误
 	skyline_button->setPosition(Vec2(origin.x + 568, origin.y + 320));
@@ -151,12 +150,12 @@ bool SkyLine::InitUI()
 void SkyLine::InitEvent()
 {
 	//初始化选择天空地图按钮
-	skyline_button->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
+	skyline_button->addTouchEventListener([this](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			//此处需要你改成进入该地图，目前先返回主界面
-			auto youroperator = MainScene::createScene();
-			Director::getInstance()->replaceScene(youroperator);
+			//进入天际地图
+			skyMap = SkyMapScene::createScene();
+			Director::getInstance()->pushScene(skyMap);
 		}
 		});
 }
@@ -182,7 +181,7 @@ bool Desert::InitUI()
 {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	//创建天空地图
+	//选关图片
 	desert_button = Button::create("ChooseLevel/desert.png", "ChooseLevel/desert.png", "null.png");
 	//此处未使用problemloading检查错误
 	desert_button->setPosition(Vec2(origin.x + 568, origin.y + 320));
@@ -194,13 +193,13 @@ bool Desert::InitUI()
 
 void Desert::InitEvent()
 {
-	//初始化选择天空地图按钮
-	desert_button->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
+	//初始化选择沙漠地图按钮
+	desert_button->addTouchEventListener([this](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			//此处需要你改成进入该地图，目前先返回主界面
-			auto youroperator = MainScene::createScene();
-			Director::getInstance()->replaceScene(youroperator);
+			//进入沙漠地图
+			desertMap = DesertMapScene::createScene();			
+			Director::getInstance()->pushScene(desertMap);
 		}
 		});
 }
