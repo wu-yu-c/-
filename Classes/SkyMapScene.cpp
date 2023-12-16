@@ -14,7 +14,6 @@ bool SkyMapScene::init() {
 		return false;
 
 	skyMap = TMXTiledMap::create("MAP/SKY/TileMap1.tmx");
-	skyMap->setScale(float(0.89), float(0.9));
 	
 	this->addChild(skyMap, -1);
 	if (skyMap == nullptr)
@@ -34,11 +33,10 @@ bool SkyMapScene::InitUI() {
 
 	/*添加菜单按钮*/
 	ValueMap menu = Object->getObject("menuButton");
-	float x = menu["x"].asFloat() * 0.89;
-	float y = menu["y"].asFloat() * 0.855;
+	float x = menu["x"].asFloat();
+	float y = menu["y"].asFloat();
 
 	menuButton = Button::create("MAP/menuButton_normal.png", "MAP/menuButton_pressed.png","");
-	menuButton->setAnchorPoint(Vec2(0, 0));
 	menuButton->setPosition(Vec2(x, y));
 	menuButton->setPressedActionEnabled(true);
 	addChild(menuButton, 1);
@@ -48,11 +46,10 @@ bool SkyMapScene::InitUI() {
 
 	/*添加暂停按钮*/
 	ValueMap stop = Object->getObject("stopButton");
-	x = stop["x"].asFloat() * 0.89;
-	y = stop["y"].asFloat() * 0.86;
+	x = stop["x"].asFloat();
+	y = stop["y"].asFloat();
 
 	stopButton = Button::create("MAP/stopButton_normal.png", "MAP/stopButton_pressed.png", "");
-	stopButton->setAnchorPoint(Vec2(0, 0));
 	stopButton->setPosition(Vec2(x, y));
 	stopButton->setPressedActionEnabled(true);
 	addChild(stopButton, 1);
@@ -135,7 +132,7 @@ void ChooseMenu::InitEvent() {
 		if (type == ui::Widget::TouchEventType::ENDED) {
 
 			Director::getInstance()->popScene();
-
+			
 		}
 		});
 
