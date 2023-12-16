@@ -1,7 +1,7 @@
 #include "SelectLevelScene.h"
 #include "MainScene.h"
-#include"SkyMapScene.h"
-#include"DesertMapScene.h"
+#include "DesertMapScene.h"
+#include "SkyMapScene.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -34,7 +34,7 @@ bool SelectLevelScene::InitUI()
 		return false;
 
 	//把天空地图作为图层加到界面中
-	auto skyline = SkyLine::create();
+	skyline = SkyLine::createLayer();
 	this->addChild(skyline);
 
 	//创建返回主界面的按钮
@@ -82,38 +82,28 @@ void SelectLevelScene::InitEvent()
 			Director::getInstance()->replaceScene(mainScene);
 		}
 		});
-
-	//初始化左按钮
-	turn_left->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
+	//初始化右按钮
+	turn_right->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			//获取当前场景
-			auto currentScene = Director::getInstance()->getRunningScene();
-			// 根据图层名称查找要移除的图层
-			auto currentLayer = currentScene->getChildByName("ChooseLevel/desert.png");
-			// 如果找到了要移除的图层，则移除它
-			if (currentLayer)
-				currentLayer->removeFromParent();
-			// 创建并添加天际图层
-			auto newLayer = SkyLine::createLayer();
-			currentScene->addChild(newLayer);
+			if (skyline != nullptr) {
+				desert = Desert::createLayer();
+				this->addChild(desert, 1);
+				skyline->removeFromParent();
+				skyline = nullptr;
+			}
 		}
 		});
-
-	//初始化右按钮
-	turn_right->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
+	//初始化左按钮
+	turn_left->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			//获取当前场景
-			auto currentScene = Director::getInstance()->getRunningScene();
-			// 根据图层名称查找要移除的图层
-			auto currentLayer = currentScene->getChildByName("ChooseLevel/skyline.png");
-			// 如果找到了要移除的图层，则移除它
-			if (currentLayer)
-				currentLayer->removeFromParent();
-			// 创建并添加沙漠图层
-			auto newLayer = Desert::createLayer();
-			currentScene->addChild(newLayer);
+			if (desert != nullptr) {
+				skyline = SkyLine::createLayer();
+				this->addChild(skyline, 1);
+				desert->removeFromParent();
+				desert = nullptr;
+			}
 		}
 		});
 }
