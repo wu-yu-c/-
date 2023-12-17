@@ -22,4 +22,5 @@ private:
 	cocos2d::TMXObjectGroup* Object;
 	cocos2d::ui::Button* stopButton;
 	cocos2d::ui::Button* menuButton;
+	cocos2d::Sprite* birthPlace;
 };

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="left-down" width="16" height="9" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="6">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="left-down" width="16" height="9" tilewidth="64" tileheight="64" infinite="0" nextlayerid="7" nextobjectid="26">
  <tileset firstgid="1" name="BG" tilewidth="64" tileheight="64" tilecount="144" columns="16">
   <image source="BG2.png" width="1024" height="576"/>
  </tileset>
@@ -23,7 +23,7 @@
    AQAAAAIAAAADAAAABAAAAAUAAAAGAAAABwAAAAgAAAAJAAAACgAAAAsAAAAMAAAADQAAAA4AAAAPAAAAEAAAABEAAAASAAAAEwAAABQAAAAVAAAAFgAAABcAAAAYAAAAGQAAABoAAAAbAAAAHAAAAB0AAAAeAAAAHwAAACAAAAAhAAAAIgAAACMAAAAkAAAAJQAAACYAAAAnAAAAKAAAACkAAAAqAAAAKwAAACwAAAAtAAAALgAAAC8AAAAwAAAAMQAAADIAAAAzAAAANAAAADUAAAA2AAAANwAAADgAAAA5AAAAOgAAADsAAAA8AAAAPQAAAD4AAAA/AAAAQAAAAEEAAABCAAAAQwAAAEQAAABFAAAARgAAAEcAAABIAAAASQAAAEoAAABLAAAATAAAAE0AAABOAAAATwAAAFAAAABRAAAAUgAAAFMAAABUAAAAVQAAAFYAAABXAAAAWAAAAFkAAABaAAAAWwAAAFwAAABdAAAAXgAAAF8AAABgAAAAYQAAAGIAAABjAAAAZAAAAGUAAABmAAAAZwAAAGgAAABpAAAAagAAAGsAAABsAAAAbQAAAG4AAABvAAAAcAAAAHEAAAByAAAAcwAAAHQAAAB1AAAAdgAAAHcAAAB4AAAAeQAAAHoAAAB7AAAAfAAAAH0AAAB+AAAAfwAAAIAAAACBAAAAggAAAIMAAACEAAAAhQAAAIYAAACHAAAAiAAAAIkAAACKAAAAiwAAAIwAAACNAAAAjgAAAI8AAACQAAAA
   </data>
  </layer>
- <layer id="2" name="Path" width="16" height="9">
+ <layer id="2" name="path" width="16" height="9">
   <data encoding="base64">
    AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJEAAACSAAAAkwAAAJQAAACVAAAAlgAAAJcAAACYAAAAmQAAAJoAAACbAAAAnAAAAJ0AAACeAAAAnwAAAKAAAAChAAAAogAAAKMAAACkAAAApQAAAKYAAACnAAAAqAAAAKkAAACqAAAAqwAAAKwAAACtAAAArgAAAK8AAACwAAAAsQAAALIAAACzAAAAtAAAALUAAAC2AAAAtwAAALgAAAC5AAAAugAAALsAAAC8AAAAvQAAAL4AAAC/AAAAwAAAAMEAAADCAAAAwwAAAMQAAADFAAAAxgAAAMcAAADIAAAAyQAAAMoAAADLAAAAzAAAAM0AAADOAAAAzwAAANAAAADRAAAA0gAAANMAAADUAAAA1QAAANYAAADXAAAA2AAAANkAAADaAAAA2wAAANwAAADdAAAA3gAAAN8AAADgAAAA4QAAAOIAAADjAAAA5AAAAOUAAADmAAAA5wAAAOgAAADpAAAA6gAAAOsAAADsAAAA7QAAAO4AAADvAAAA8AAAAPEAAADyAAAA8wAAAPQAAAD1AAAA9gAAAPcAAAD4AAAA+QAAAPoAAAD7AAAA/AAAAP0AAAD+AAAA/wAAAAABAAABAQAAAgEAAAMBAAAEAQAABQEAAAYBAAAHAQAACAEAAAkBAAAKAQAACwEAAAwBAAANAQAADgEAAA8BAAAQAQAA
   </data>
@@ -38,8 +38,63 @@
    AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQgEAYAAAAAAiAQAAIwEAAEMBAAAAAAAAMAEAAAAAAABCAQBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANAEAADUBAAAAAAAARQEAYAAAAABCAQBgAAAAACQBAAAlAQAAJgEAACcBAAAoAQAAAAAAAAAAAAAkAQAAJQEAACYBAAAnAQAAKAEAACkBAAAqAQAAKwEAAAAAAAA2AQAANwEAADgBAAA5AQAAOgEAAAAAAAAAAAAANgEAADcBAAA4AQAAOQEAADoBAAA7AQAAPAEAAD0BAAAiAQAAIwEAAEUBAGAAAAAAIgEAACMBAAAAAAAAAAAAAAAAAAAAAAAAMAEAAAAAAABFAQBgAAAAAAAAAAAAAAAANAEAADUBAAAAAAAAMAEAADQBAAA1AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQwEAAAAAAABCAQBgIgEAACMBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQBAAA1AQAAAAAAAAAAAAAwAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
   </data>
  </layer>
+ <objectgroup id="6" name="Path">
+  <object id="8" name="1" x="188" y="99">
+   <ellipse/>
+  </object>
+  <object id="9" name="2" x="250" y="99">
+   <ellipse/>
+  </object>
+  <object id="10" name="3" x="308" y="99">
+   <ellipse/>
+  </object>
+  <object id="11" name="4" x="371.333" y="99">
+   <ellipse/>
+  </object>
+  <object id="12" name="5" x="435.333" y="99">
+   <ellipse/>
+  </object>
+  <object id="13" name="6" x="470" y="135.333">
+   <ellipse/>
+  </object>
+  <object id="14" name="7" x="470" y="190">
+   <ellipse/>
+  </object>
+  <object id="15" name="8" x="470" y="253">
+   <ellipse/>
+  </object>
+  <object id="16" name="9" x="470" y="321">
+   <ellipse/>
+  </object>
+  <object id="17" name="10" x="470" y="382">
+   <ellipse/>
+  </object>
+  <object id="18" name="11" x="470" y="436.667">
+   <ellipse/>
+  </object>
+  <object id="19" name="12" x="523.333" y="448">
+   <ellipse/>
+  </object>
+  <object id="20" name="13" x="587.333" y="448">
+   <ellipse/>
+  </object>
+  <object id="21" name="14" x="654" y="448">
+   <ellipse/>
+  </object>
+  <object id="22" name="15" x="719.333" y="448">
+   <ellipse/>
+  </object>
+  <object id="23" name="16" x="776" y="448">
+   <ellipse/>
+  </object>
+  <object id="24" name="17" x="829.333" y="448">
+   <ellipse/>
+  </object>
+  <object id="25" name="18" x="884.667" y="448">
+   <ellipse/>
+  </object>
+ </objectgroup>
  <objectgroup id="4" name="Object">
-  <object id="2" gid="289" x="69" y="121" width="64" height="51"/>
   <object id="3" name="carrot" x="938.667" y="448">
    <ellipse/>
   </object>
@@ -47,6 +102,9 @@
    <ellipse/>
   </object>
   <object id="5" name="stopButton" x="801" y="33">
+   <ellipse/>
+  </object>
+  <object id="6" name="birth" x="122" y="99">
    <ellipse/>
   </object>
  </objectgroup>
