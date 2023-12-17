@@ -5,7 +5,6 @@
 
 class MAP :public cocos2d::Scene {
 public:
-	static MAP* createScene();
 
 	CREATE_FUNC(MAP);
 
@@ -15,7 +14,6 @@ public:
 
 	void InitEvent();
 
-	cocos2d::Scene* mapScene;
 	cocos2d::TMXTiledMap* tilemap;
 	cocos2d::TMXObjectGroup* Object;
 	cocos2d::ui::Button* stopButton;

@@ -2,23 +2,13 @@
 USING_NS_CC;
 using namespace cocos2d::ui;
 
-MAP* MAP::createScene() {
-
-	MAP* Map = MAP::create();
-
-	Map->mapScene = Scene::create();
-
-	return Map;
-
-}
-
 MAP* SkyMapScene::createMap(){
 
-	auto skymap = MAP::createScene();
+	auto skymap = MAP::create();
 
 	skymap->tilemap = TMXTiledMap::create("MAP/SKY/TileMap1.tmx");
 	
-	skymap->mapScene->addChild(skymap->tilemap, -1);
+	skymap->addChild(skymap->tilemap, -1);
 	if (skymap->tilemap == nullptr)
 		return false;
 
@@ -34,11 +24,11 @@ MAP* SkyMapScene::createMap(){
 
 MAP* DesertMapScene::createMap() {
 
-	auto desertmap = MAP::createScene();
+	auto desertmap = MAP::create();
 
 	desertmap->tilemap = TMXTiledMap::create("MAP/DESERT/TileMap2.tmx");
 
-	desertmap->mapScene->addChild(desertmap->tilemap, -1);
+	desertmap->addChild(desertmap->tilemap, -1);
 	if (desertmap->tilemap == nullptr)
 		return false;
 
@@ -63,7 +53,7 @@ bool MAP::InitUI() {
 	menuButton = Button::create("MAP/menuButton_normal.png", "MAP/menuButton_pressed.png","");             //创建按钮
 	menuButton->setPosition(Vec2(x, y));                           //放到对象位置
 	menuButton->setPressedActionEnabled(true);
-	mapScene->addChild(menuButton, 1);
+	addChild(menuButton, 1);
 	if (menuButton == nullptr)
 		return false;
 
@@ -76,7 +66,7 @@ bool MAP::InitUI() {
 	stopButton = Button::create("MAP/stopButton_normal.png", "MAP/stopButton_pressed.png", "");
 	stopButton->setPosition(Vec2(x, y));
 	stopButton->setPressedActionEnabled(true);
-	mapScene->addChild(stopButton, 1);
+	addChild(stopButton, 1);
 	if (stopButton == nullptr)
 		return false;
 
@@ -87,7 +77,7 @@ bool MAP::InitUI() {
 
 	birthPlace = Sprite::create("MAP/SKY/birth.png");
 	birthPlace->setPosition(x, y);
-	mapScene->addChild(birthPlace);
+	addChild(birthPlace);
 	if (birthPlace == nullptr)
 		return false;
 
@@ -101,7 +91,7 @@ void MAP::InitEvent() {
 		if (type == ui::Widget::TouchEventType::ENDED) {
 
 			auto choosemenu = ChooseMenu::createLayer();
-			mapScene->addChild(choosemenu);
+			addChild(choosemenu);
 
 		}
 		});

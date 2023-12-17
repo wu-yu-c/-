@@ -145,7 +145,7 @@ void SkyLine::InitEvent()
 		{
 			//进入天际地图
 			skyMap = SkyMapScene::createMap();
-			Director::getInstance()->pushScene(skyMap->mapScene);
+			Director::getInstance()->pushScene(skyMap);
 
 		}
 		});
@@ -190,7 +190,7 @@ void Desert::InitEvent()
 		{
 			//进入沙漠地图
 			desertMap = DesertMapScene::createMap();			
-			Director::getInstance()->pushScene(desertMap->mapScene);
+			Director::getInstance()->pushScene(desertMap);
 
 		}
 		});
