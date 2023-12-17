@@ -1,7 +1,5 @@
 #include "SelectLevelScene.h"
 #include "MainScene.h"
-#include "DesertMapScene.h"
-#include "SkyMapScene.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -146,8 +144,9 @@ void SkyLine::InitEvent()
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			//进入天际地图
-			skyMap = SkyMapScene::createScene();
-			Director::getInstance()->pushScene(skyMap);
+			skyMap = SkyMapScene::createMap();
+			Director::getInstance()->pushScene(skyMap->mapScene);
+
 		}
 		});
 }
@@ -190,8 +189,9 @@ void Desert::InitEvent()
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			//进入沙漠地图
-			desertMap = DesertMapScene::createScene();			
-			Director::getInstance()->pushScene(desertMap);
+			desertMap = DesertMapScene::createMap();			
+			Director::getInstance()->pushScene(desertMap->mapScene);
+
 		}
 		});
 }
