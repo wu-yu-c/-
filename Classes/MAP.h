@@ -14,25 +14,33 @@ public:
 
 	void InitEvent();
 
+	void InitMonster();
+
 	cocos2d::TMXTiledMap* tilemap;
 	cocos2d::TMXObjectGroup* Object;
+	cocos2d::TMXObjectGroup* Corner;
 	cocos2d::ui::Button* stopButton;
 	cocos2d::ui::Button* menuButton;
 	cocos2d::Sprite* birthPlace;
-	cocos2d::Sprite* carrot;
-	std::vector<cocos2d::Node*> Path;
+	cocos2d::Sprite* Carrot;
+	cocos2d::Sequence* movepath;
 };
 
 class SkyMapScene :public MAP {
 public:
-	static MAP* createMap();
+	static SkyMapScene* createMap();
+
+	void loadPath();
 
 	CREATE_FUNC(SkyMapScene);
+
 };
 
 class DesertMapScene :public MAP {
 public:
-	static MAP* createMap();
+	static DesertMapScene* createMap();
+
+	void loadPath();
 
 	CREATE_FUNC(DesertMapScene);
 

@@ -1,13 +1,81 @@
 #include"MAP.h"
+#include"Monster.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
-MAP* SkyMapScene::createMap(){
+void SkyMapScene::loadPath() {
 
-	auto skymap = MAP::create();
+	float x, y;
+
+	Corner = tilemap->getObjectGroup("Corner");
+
+	/*创建几段移动动作，corner坐标从瓦片地图获取*/
+	const Vec2 begin = birthPlace->getPosition();
+	
+	ValueMap corner1 = Corner->getObject("corner1");
+	x = corner1["x"].asFloat();
+	y = corner1["y"].asFloat();
+	auto move1 = MoveTo::create(3, Vec2(x, y));
+
+	ValueMap corner2 = Corner->getObject("corner2");
+	x = corner2["x"].asFloat();
+	y = corner2["y"].asFloat();
+	auto move2 = MoveTo::create(1, Vec2(x, y));
+
+	ValueMap corner3 = Corner->getObject("corner3");
+	x = corner3["x"].asFloat();
+	y = corner3["y"].asFloat();
+	auto move3 = MoveTo::create(3, Vec2(x, y));
+
+	ValueMap corner4 = Corner->getObject("corner4");
+	x = corner4["x"].asFloat();
+	y = corner4["y"].asFloat();
+	auto move4 = MoveTo::create(1, Vec2(x, y));
+
+	const Vec2 end = Carrot->getPosition();
+	auto move5 = MoveTo::create(3, end);
+
+	/*镜面翻转动作*/
+	auto reverse = ScaleBy::create(0.1f, -1, 1);
+
+	/*创建动作序列*/
+	movepath = Sequence::create(move1, reverse, move2, move3, reverse, move4, move5, NULL);
+
+}
+
+void DesertMapScene::loadPath() {
+
+	float x, y;
+
+	Corner = tilemap->getObjectGroup("Corner");
+
+	/*创建几段移动动作，corner坐标从瓦片地图获取*/
+	const Vec2 begin = birthPlace->getPosition();
+
+	ValueMap corner1 = Corner->getObject("corner1");
+	x = corner1["x"].asFloat();
+	y = corner1["y"].asFloat();
+	auto move1 = MoveTo::create(3, Vec2(x, y));
+
+	ValueMap corner2 = Corner->getObject("corner2");
+	x = corner2["x"].asFloat();
+	y = corner2["y"].asFloat();
+	auto move2 = MoveTo::create(3, Vec2(x, y));
+
+	const Vec2 end = Carrot->getPosition();
+	auto move3 = MoveTo::create(3, end);
+
+	/*创建动作序列*/
+	movepath = Sequence::create(move1, move2, move3, NULL);
+
+}
+
+SkyMapScene* SkyMapScene::createMap() {
+
+	auto skymap = SkyMapScene::create();
 
 	skymap->tilemap = TMXTiledMap::create("MAP/SKY/TileMap1.tmx");
-	
+
 	skymap->addChild(skymap->tilemap, -1);
 	if (skymap->tilemap == nullptr)
 		return false;
@@ -18,13 +86,29 @@ MAP* SkyMapScene::createMap(){
 
 	skymap->InitEvent();
 
+	skymap->loadPath();
+
+	skymap->InitMonster();
+
 	return skymap;
 
 }
 
-MAP* DesertMapScene::createMap() {
+/*初始化怪物*/
+void MAP::InitMonster() {
+	/*创建普通怪物*/
+	Sprite* normal = NormalMonster::createMonster();
 
-	auto desertmap = MAP::create();
+	normal->setPosition(birthPlace->getPosition());
+
+	normal->runAction(movepath);
+
+	this->addChild(normal);
+}
+
+DesertMapScene* DesertMapScene::createMap() {
+
+	auto desertmap = DesertMapScene::create();
 
 	desertmap->tilemap = TMXTiledMap::create("MAP/DESERT/TileMap2.tmx");
 
@@ -32,12 +116,15 @@ MAP* DesertMapScene::createMap() {
 	if (desertmap->tilemap == nullptr)
 		return false;
 
-	/*将对象图层中的对象读入Object中*/
 	desertmap->Object = desertmap->tilemap->getObjectGroup("Object");
 
 	desertmap->InitUI();
 
 	desertmap->InitEvent();
+
+	desertmap->loadPath();
+
+	desertmap->InitMonster();
 
 	return desertmap;
 
@@ -79,6 +166,17 @@ bool MAP::InitUI() {
 	birthPlace->setPosition(x, y);
 	addChild(birthPlace);
 	if (birthPlace == nullptr)
+		return false;
+
+	/*添加萝卜*/
+	ValueMap carrotloc = Object->getObject("carrot");
+	x = carrotloc["x"].asFloat();
+	y = carrotloc["y"].asFloat();
+
+	Carrot = Sprite::create("MAP/SKY/birth.png");
+	Carrot->setPosition(x, y);
+	addChild(Carrot);
+	if (Carrot == nullptr)
 		return false;
 
 	return true;

@@ -54,93 +54,21 @@
   <object id="58" name="birth" x="417.333" y="100">
    <ellipse/>
   </object>
-  <object id="93" name="carrrot" x="626" y="450">
-   <ellipse/>
-  </object>
-  <object id="94" x="1200.67" y="654">
+  <object id="93" name="carrot" x="626" y="435">
    <ellipse/>
   </object>
  </objectgroup>
- <objectgroup id="24" name="Path">
-  <object id="66" name="1" x="476" y="100">
+ <objectgroup id="24" name="Corner">
+  <object id="71" name="corner1" x="807" y="100">
    <ellipse/>
   </object>
-  <object id="67" name="2" x="535" y="100">
+  <object id="75" name="corner2" x="807" y="265">
    <ellipse/>
   </object>
-  <object id="68" name="3" x="596" y="100">
+  <object id="84" name="corner3" x="216" y="265">
    <ellipse/>
   </object>
-  <object id="69" name="4" x="656" y="100">
-   <ellipse/>
-  </object>
-  <object id="70" name="5" x="715.333" y="100">
-   <ellipse/>
-  </object>
-  <object id="71" name="6" x="776" y="100">
-   <ellipse/>
-  </object>
-  <object id="72" name="7" x="808" y="135.333">
-   <ellipse/>
-  </object>
-  <object id="73" name="8" x="808" y="185">
-   <ellipse/>
-  </object>
-  <object id="74" name="9" x="808" y="232">
-   <ellipse/>
-  </object>
-  <object id="75" name="10" x="779.333" y="281">
-   <ellipse/>
-  </object>
-  <object id="76" name="11" x="711.333" y="281">
-   <ellipse/>
-  </object>
-  <object id="77" name="12" x="639.333" y="281">
-   <ellipse/>
-  </object>
-  <object id="78" name="13" x="572.667" y="281">
-   <ellipse/>
-  </object>
-  <object id="79" name="14" x="510.667" y="281">
-   <ellipse/>
-  </object>
-  <object id="80" name="15" x="447.333" y="281">
-   <ellipse/>
-  </object>
-  <object id="81" name="16" x="383.333" y="281">
-   <ellipse/>
-  </object>
-  <object id="82" name="17" x="318" y="281">
-   <ellipse/>
-  </object>
-  <object id="83" name="18" x="255.333" y="281">
-   <ellipse/>
-  </object>
-  <object id="84" name="19" x="212" y="305.333">
-   <ellipse/>
-  </object>
-  <object id="85" name="20" x="212" y="360">
-   <ellipse/>
-  </object>
-  <object id="86" name="21" x="212" y="415.333">
-   <ellipse/>
-  </object>
-  <object id="87" name="22" x="246" y="450">
-   <ellipse/>
-  </object>
-  <object id="88" name="23" x="310" y="450">
-   <ellipse/>
-  </object>
-  <object id="89" name="24" x="376" y="450">
-   <ellipse/>
-  </object>
-  <object id="90" name="25" x="441.333" y="450">
-   <ellipse/>
-  </object>
-  <object id="91" name="26" x="506.667" y="450">
-   <ellipse/>
-  </object>
-  <object id="92" name="27" x="570" y="450">
+  <object id="87" name="corner4" x="216" y="435">
    <ellipse/>
   </object>
  </objectgroup>
