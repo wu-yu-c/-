@@ -22,3 +22,21 @@ public:
 
 	CREATE_FUNC(NormalMonster);
 };
+
+class FlyMonster :public Monster {
+public:
+	static Monster* createMonster();
+
+	void InitAnimation();
+
+	CREATE_FUNC(FlyMonster);
+};
+
+class BigMonster :public Monster {
+public:
+	static Monster* createMonster();
+
+	void InitAnimation();
+
+	CREATE_FUNC(BigMonster);
+};

@@ -16,6 +16,10 @@ public:
 
 	void InitMonster();
 
+	void roundMonster();
+
+	void generateMonster(float dt);
+
 	cocos2d::TMXTiledMap* tilemap;
 	cocos2d::TMXObjectGroup* Object;
 	cocos2d::TMXObjectGroup* Corner;
@@ -24,6 +28,8 @@ public:
 	cocos2d::Sprite* birthPlace;
 	cocos2d::Sprite* Carrot;
 	cocos2d::Sequence* movepath;
+	cocos2d::Layer* chooseMenu;
+	cocos2d::ui::Button* continueButton;
 };
 
 class SkyMapScene :public MAP {
@@ -59,6 +65,6 @@ private:
 	void InitEvent();
 
 	cocos2d::ui::Button* restartButton;
-	cocos2d::ui::Button* continueButton;
+	//cocos2d::ui::Button* continueButton;
 	cocos2d::ui::Button* returnButton;
 };

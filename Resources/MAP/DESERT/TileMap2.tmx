@@ -47,7 +47,7 @@
   </object>
  </objectgroup>
  <objectgroup id="4" name="Object">
-  <object id="3" name="carrot" x="938.667" y="445">
+  <object id="3" name="carrot" x="950.667" y="445">
    <ellipse/>
   </object>
   <object id="4" name="menuButton" x="925" y="30">

@@ -25,7 +25,7 @@ void SkyMapScene::loadPath() {
 	ValueMap corner3 = Corner->getObject("corner3");
 	x = corner3["x"].asFloat();
 	y = corner3["y"].asFloat();
-	auto move3 = MoveTo::create(3, Vec2(x, y));
+	auto move3 = MoveTo::create(4, Vec2(x, y));
 
 	ValueMap corner4 = Corner->getObject("corner4");
 	x = corner4["x"].asFloat();
@@ -88,12 +88,30 @@ SkyMapScene* SkyMapScene::createMap() {
 
 	skymap->loadPath();
 
+	//skymap->roundMonster();
+	//skymap->generateMonster(1.0);
+
 	skymap->InitMonster();
 
 	return skymap;
 
 }
 
+void MAP::roundMonster()
+{
+	schedule(schedule_selector(MAP::generateMonster), 2.0f);
+}
+
+void MAP::generateMonster(float dt) {
+	const int numOfMonsters = 5; // 每次生成5个怪物
+	for (int i = 0; i < numOfMonsters; ++i) {
+		auto monster = NormalMonster::createMonster();
+		monster->setPosition(birthPlace->getPosition()); // 设置怪物的初始位置
+		monster->runAction(movepath);
+		this->addChild(monster); // 添加到场景中
+		
+	}
+}
 /*初始化怪物*/
 void MAP::InitMonster() {
 	/*创建普通怪物*/
@@ -157,6 +175,15 @@ bool MAP::InitUI() {
 	if (stopButton == nullptr)
 		return false;
 
+	/*添加继续游戏按钮*/
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	continueButton = Button::create("MAP/continueBUtton_normal.png", "MAP/continueButton_pressed.png");
+	continueButton->setPosition(Vec2(origin.x + 565, origin.y + 395));
+	continueButton->setVisible(false);//初始设置为不可见
+	this->addChild(continueButton, 2);
+	if (continueButton == nullptr)
+		return false;
+
 	/*添加怪物出生点*/
 	ValueMap birth = Object->getObject("birth");
 	x = birth["x"].asFloat();
@@ -173,7 +200,8 @@ bool MAP::InitUI() {
 	x = carrotloc["x"].asFloat();
 	y = carrotloc["y"].asFloat();
 
-	Carrot = Sprite::create("MAP/SKY/birth.png");
+	Carrot = Sprite::create("Carrot/carrot_10(1).png");
+	Carrot->setAnchorPoint(Vec2(0.5, 0.3f));
 	Carrot->setPosition(x, y);
 	addChild(Carrot);
 	if (Carrot == nullptr)
@@ -183,19 +211,40 @@ bool MAP::InitUI() {
 }
 
 void MAP::InitEvent() {
-
+	static int count = 0;//检测按下暂停按钮时的状态
 	/*初始化菜单按钮*/
 	menuButton->addTouchEventListener([this](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED) {
-
-			auto choosemenu = ChooseMenu::createLayer();
-			addChild(choosemenu);
-
+			chooseMenu = ChooseMenu::createLayer();
+			Director::getInstance()->pause();
+			addChild(chooseMenu);
+			continueButton->setVisible(true);
 		}
 		});
 
+	/*设置继续游戏按钮*/
+	continueButton->addTouchEventListener([this](Ref* sender, Widget::TouchEventType type) {
+		if (type == ui::Widget::TouchEventType::ENDED) {
+			auto director = Director::getInstance();
+			director->resume();
+			chooseMenu->removeFromParent();
+			continueButton->setVisible(false);//重新设置为不可见
+		}
+		});
 
-
+	//设置暂停按钮
+	stopButton->addTouchEventListener([this](Ref* sender, Widget::TouchEventType type) {
+		if (type == ui::Widget::TouchEventType::ENDED) {
+			auto director = Director::getInstance();
+			//若为偶数次按下，则暂停动画
+			if (count % 2 == 0)
+				director->stopAnimation();
+			//否则，使动画重新开始
+			else
+				director->startAnimation();
+			count++;
+		}
+		});
 }
 
 Layer* ChooseMenu::createLayer() {
@@ -215,19 +264,12 @@ bool ChooseMenu::init() {
 
 bool ChooseMenu::InitUI() {
 
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	/*添加菜单背景*/
 	Sprite* choosemenu = Sprite::create("MAP/Menu.png");
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	choosemenu->setPosition(Vec2(origin.x + 568, origin.y + 320));
 	this->addChild(choosemenu, 1);
 	if (choosemenu == nullptr)
-		return false;
-
-	/*添加继续游戏按钮*/
-	continueButton = Button::create("MAP/continueBUtton_normal.png", "MAP/continueButton_pressed.png");
-	continueButton->setPosition(Vec2(origin.x + 565, origin.y + 395));
-	this->addChild(continueButton, 2);
-	if (continueButton == nullptr)
 		return false;
 
 	/*添加重新开始按钮*/
@@ -249,19 +291,11 @@ bool ChooseMenu::InitUI() {
 
 void ChooseMenu::InitEvent() {
 	//目前全部设置为返回
-	/*设置继续游戏按钮*/
-	continueButton->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
-		if (type == ui::Widget::TouchEventType::ENDED) {
-
-			Director::getInstance()->popScene();
-			
-		}
-		});
-
 	/*设置重新开始按钮*/
 	restartButton->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED) {
-
+			auto director = Director::getInstance();
+			director->resume();
 			Director::getInstance()->popScene();
 
 		}
@@ -270,7 +304,8 @@ void ChooseMenu::InitEvent() {
 	/*设置返回按钮*/
 	returnButton->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED) {
-
+			auto director = Director::getInstance();
+			director->resume();
 			Director::getInstance()->popScene();
 
 		}
