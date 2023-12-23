@@ -93,6 +93,8 @@ SkyMapScene* SkyMapScene::createMap() {
 
 	skymap->InitMonster();
 
+
+
 	return skymap;
 
 }

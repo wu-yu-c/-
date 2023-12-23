@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="left-down" compressionlevel="1" width="16" height="9" tilewidth="64" tileheight="64" infinite="0" nextlayerid="25" nextobjectid="95">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="left-down" compressionlevel="1" width="16" height="9" tilewidth="64" tileheight="64" infinite="0" nextlayerid="26" nextobjectid="131">
  <editorsettings>
   <export target="TileMap1..tmx" format="tmx"/>
  </editorsettings>
@@ -69,6 +69,32 @@
    <ellipse/>
   </object>
   <object id="87" name="corner4" x="216" y="435">
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup id="25" name="Tower">
+  <object id="121" name="tower1" x="439" y="196">
+   <ellipse/>
+  </object>
+  <object id="122" name="tower2" x="512" y="196">
+   <ellipse/>
+  </object>
+  <object id="123" name="tower3" x="707" y="198">
+   <ellipse/>
+  </object>
+  <object id="125" name="tower5" x="566" y="366">
+   <ellipse/>
+  </object>
+  <object id="126" name="tower6" x="642" y="365">
+   <ellipse/>
+  </object>
+  <object id="127" name="tower4" x="325" y="368">
+   <ellipse/>
+  </object>
+  <object id="129" name="tower7" x="511" y="533">
+   <ellipse/>
+  </object>
+  <object id="130" name="tower8" x="125" y="402">
    <ellipse/>
   </object>
  </objectgroup>
