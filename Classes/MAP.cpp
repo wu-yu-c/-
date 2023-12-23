@@ -3,149 +3,78 @@
 USING_NS_CC;
 using namespace cocos2d::ui;
 
-void SkyMapScene::loadPath() {
-
-	float x, y;
-
-	Corner = tilemap->getObjectGroup("Corner");
-
-	/*创建几段移动动作，corner坐标从瓦片地图获取*/
-	const Vec2 begin = birthPlace->getPosition();
+/*初始化怪物*/
+void MAP::addWaves(float dt) {
 	
-	ValueMap corner1 = Corner->getObject("corner1");
-	x = corner1["x"].asFloat();
-	y = corner1["y"].asFloat();
-	auto move1 = MoveTo::create(3, Vec2(x, y));
+	if (wave < maxWave&&currentMonster.size()==0) {
 
-	ValueMap corner2 = Corner->getObject("corner2");
-	x = corner2["x"].asFloat();
-	y = corner2["y"].asFloat();
-	auto move2 = MoveTo::create(1, Vec2(x, y));
-
-	ValueMap corner3 = Corner->getObject("corner3");
-	x = corner3["x"].asFloat();
-	y = corner3["y"].asFloat();
-	auto move3 = MoveTo::create(4, Vec2(x, y));
-
-	ValueMap corner4 = Corner->getObject("corner4");
-	x = corner4["x"].asFloat();
-	y = corner4["y"].asFloat();
-	auto move4 = MoveTo::create(1, Vec2(x, y));
-
-	const Vec2 end = Carrot->getPosition();
-	auto move5 = MoveTo::create(3, end);
-
-	/*镜面翻转动作*/
-	auto reverse = ScaleBy::create(0.1f, -1, 1);
-
-	/*创建动作序列*/
-	movepath = Sequence::create(move1, reverse, move2, move3, reverse, move4, move5, NULL);
+		IsStart = true;
+		wave++;
+		schedule(schedule_selector(MAP::addMonsters), 1.0f, waveMonster.at(wave).size(), 0);
+	}
 
 }
 
-void DesertMapScene::loadPath() {
-
-	float x, y;
-
-	Corner = tilemap->getObjectGroup("Corner");
-
-	/*创建几段移动动作，corner坐标从瓦片地图获取*/
-	const Vec2 begin = birthPlace->getPosition();
-
-	ValueMap corner1 = Corner->getObject("corner1");
-	x = corner1["x"].asFloat();
-	y = corner1["y"].asFloat();
-	auto move1 = MoveTo::create(3, Vec2(x, y));
-
-	ValueMap corner2 = Corner->getObject("corner2");
-	x = corner2["x"].asFloat();
-	y = corner2["y"].asFloat();
-	auto move2 = MoveTo::create(3, Vec2(x, y));
-
-	const Vec2 end = Carrot->getPosition();
-	auto move3 = MoveTo::create(3, end);
-
-	/*创建动作序列*/
-	movepath = Sequence::create(move1, move2, move3, NULL);
-
-}
-
-SkyMapScene* SkyMapScene::createMap() {
-
-	auto skymap = SkyMapScene::create();
-
-	skymap->tilemap = TMXTiledMap::create("MAP/SKY/TileMap1.tmx");
-
-	skymap->addChild(skymap->tilemap, -1);
-	if (skymap->tilemap == nullptr)
-		return false;
-
-	skymap->Object = skymap->tilemap->getObjectGroup("Object");
-
-	skymap->InitUI();
-
-	skymap->InitEvent();
-
-	skymap->loadPath();
-
-	//skymap->roundMonster();
-	//skymap->generateMonster(1.0);
-
-	skymap->InitMonster();
-
-	return skymap;
-
-}
-
-void MAP::roundMonster()
-{
-	schedule(schedule_selector(MAP::generateMonster), 2.0f);
-}
-
-void MAP::generateMonster(float dt) {
-	const int numOfMonsters = 5; // 每次生成5个怪物
-	for (int i = 0; i < numOfMonsters; ++i) {
-		auto monster = NormalMonster::createMonster();
-		monster->setPosition(birthPlace->getPosition()); // 设置怪物的初始位置
-		monster->runAction(movepath);
-		this->addChild(monster); // 添加到场景中
-		
+void MAP::addMonsters(float dt) {
+	if (MonsterNum < waveMonster.at(wave).size()) {
+		Monster* monster = NULL;
+		switch (waveMonster.at(wave).at(MonsterNum)) {
+		case(normal):
+			monster = NormalMonster::createMonster();
+			addChild(monster);
+			currentMonster.pushBack(monster);
+			break;
+		case(fly):
+			monster = FlyMonster::createMonster();
+			addChild(monster);
+			currentMonster.pushBack(monster);
+			break;
+		case(big):
+			monster = BigMonster::createMonster();
+			addChild(monster);
+			currentMonster.pushBack(monster);
+			break;
+		default:
+			break;
+		}
+		MonsterNum++;
+	}
+	else {
+		MonsterNum = 0;
+		if (wave == maxWave - 1)
+			IsEnd = true;
 	}
 }
-/*初始化怪物*/
-void MAP::InitMonster() {
-	/*创建普通怪物*/
-	Sprite* normal = NormalMonster::createMonster();
 
-	normal->setPosition(birthPlace->getPosition());
+void MAP::updateMoneyandLife() {
 
-	normal->runAction(movepath);
-
-	this->addChild(normal);
 }
 
-DesertMapScene* DesertMapScene::createMap() {
+void MAP::update(float dt){
 
-	auto desertmap = DesertMapScene::create();
+	updateMoneyandLife();
 
-	desertmap->tilemap = TMXTiledMap::create("MAP/DESERT/TileMap2.tmx");
+}
 
-	desertmap->addChild(desertmap->tilemap, -1);
-	if (desertmap->tilemap == nullptr)
-		return false;
+void MAP::InitMap() {
+	scheduleUpdate();
 
-	desertmap->Object = desertmap->tilemap->getObjectGroup("Object");
+	MonsterNum = 0;
 
-	desertmap->InitUI();
+	wave = -1;
 
-	desertmap->InitEvent();
+	maxLife = life = 10;
 
-	desertmap->loadPath();
+	IsStart = IsEnd = false;
 
-	desertmap->InitMonster();
+	InitUI();
 
-	return desertmap;
+	beginAnimation();
 
+}
+
+void MAP::beginAnimation() {
+	schedule(schedule_selector(MAP::addWaves), 1.0f);
 }
 
 bool MAP::InitUI() {
@@ -200,9 +129,8 @@ bool MAP::InitUI() {
 	x = carrotloc["x"].asFloat();
 	y = carrotloc["y"].asFloat();
 
-	Carrot = Sprite::create("Carrot/carrot_10(1).png");
-	Carrot->setAnchorPoint(Vec2(0.5, 0.3f));
-	Carrot->setPosition(x, y);
+	Carrot = Sprite::create("Carrot/carrot_10.png");
+	Carrot->setPosition(x, y + 25);
 	addChild(Carrot);
 	if (Carrot == nullptr)
 		return false;
@@ -290,7 +218,6 @@ bool ChooseMenu::InitUI() {
 }
 
 void ChooseMenu::InitEvent() {
-	//目前全部设置为返回
 	/*设置重新开始按钮*/
 	restartButton->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED) {

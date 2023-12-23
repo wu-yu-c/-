@@ -2,16 +2,45 @@
 USING_NS_CC;
 using namespace cocos2d::ui;
 
-Monster* NormalMonster::createMonster() 
+Monster::Monster() :
+	baseSprite(NULL),
+	speed(0),
+	Hp(0),
+	nextState(None),
+	currentState(None),
+	money(0) {
+
+}
+
+bool Monster::init() {
+	if (!Sprite::init())
+		return false;
+
+	return true;
+}
+
+
+Monster* NormalMonster::createMonster()
 {
 
 	/*先创建一个实例*/
 	auto normal = NormalMonster::create();
-	
-	normal->InitAnimation();
+
+	//normal->setPosition(begin);
+
+	//normal->InitAnimation();
 
 	return normal;
 
+}
+
+bool NormalMonster::init() {
+	if (!Sprite::init())
+		return false;
+
+	InitAnimation();
+
+	return true;
 }
 
 /*初始化动画*/
@@ -47,6 +76,15 @@ Monster* FlyMonster::createMonster()
 	return fly;
 }
 
+bool FlyMonster::init() {
+	if (!Sprite::init())
+		return false;
+
+	InitAnimation();
+
+	return true;
+}
+
 void FlyMonster::InitAnimation() {
 
 	auto animation = Animation::create();
@@ -79,6 +117,15 @@ Monster* BigMonster::createMonster()
 	return big;
 }
 
+bool BigMonster::init() {
+	if (!Sprite::init())
+		return false;
+
+	InitAnimation();
+
+	return true;
+}
+
 void BigMonster::InitAnimation() {
 
 	auto animation = Animation::create();
@@ -101,3 +148,4 @@ void BigMonster::InitAnimation() {
 	runAction(action);
 
 }
+

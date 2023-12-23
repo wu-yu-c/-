@@ -1,26 +1,66 @@
 #pragma once
 #include "cocos2d.h"
-#include "ui/CocosGUI.h"
 #include<vector>
+#include "ui/CocosGUI.h"
+#include"Monster.h"
 
 class MAP :public cocos2d::Scene {
 public:
 
 	CREATE_FUNC(MAP);
 
+
+protected:
+	 
+	int wave;               //当前波数
+
+	int maxWave;            //最大波数
+
+	unsigned int MonsterNum;
+
+	int money;              //钱数
+
+	int life;              //当前生命值
+
+	int maxLife;           //最大生命值
+
+	bool IsStart;          //游戏开始
+
+	bool IsEnd;            //游戏结束
+
+	std::vector<std::vector<int>> waveMonster;        //存储每波怪物信息的容器
+
+	std::vector<cocos2d::Point> path;                          //存储的路径
+
+	cocos2d::Vector<Monster*> currentMonster;                      //存储当前波怪物
+
 	void beginAnimation();
 
-	bool InitUI();
+	void InitMap();             //初始化地图
 
-	void InitEvent();
+	virtual void loadPath() { }            //读取怪物路径
 
-	void InitMonster();
+	virtual void loadWave() { }            //读取怪物信息
 
-	void roundMonster();
+	bool InitUI();              //初始化UI界面，包括菜单按键和暂停按键以及怪物出生点
 
-	void generateMonster(float dt);
+	void InitWave();            //初始化怪物波数和每波的怪物类型
 
-	cocos2d::TMXTiledMap* tilemap;
+	void InitEvent();           //添加监听器
+
+	virtual void addWaves(float dt);
+
+	virtual void addMonsters(float dt);
+
+	void update(float dt);
+
+	void updateMoneyandLife();
+
+	void Victory();
+
+	cocos2d::Vector<Monster*> liveMonster;
+
+	cocos2d::TMXTiledMap* tiledmap;
 	cocos2d::TMXObjectGroup* Object;
 	cocos2d::TMXObjectGroup* Corner;
 	cocos2d::ui::Button* stopButton;
@@ -30,26 +70,6 @@ public:
 	cocos2d::Sequence* movepath;
 	cocos2d::Layer* chooseMenu;
 	cocos2d::ui::Button* continueButton;
-};
-
-class SkyMapScene :public MAP {
-public:
-	static SkyMapScene* createMap();
-
-	void loadPath();
-
-	CREATE_FUNC(SkyMapScene);
-
-};
-
-class DesertMapScene :public MAP {
-public:
-	static DesertMapScene* createMap();
-
-	void loadPath();
-
-	CREATE_FUNC(DesertMapScene);
-
 };
 
 class ChooseMenu :public cocos2d::Layer {

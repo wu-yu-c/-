@@ -1,7 +1,8 @@
 #pragma once
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-#include"MAP.h"
+#include"SkyMap.h"
+#include"DesertMap.h"
 class SelectLevelScene :public cocos2d::Scene {
 public:
 	static cocos2d::Scene* createScene();
@@ -26,7 +27,7 @@ private:
 
 class SkyLine : public cocos2d::Layer {
 private:
-	MAP* skyMap;
+	SkyMap* skyMap;
 	cocos2d::ui::Button* skyline_button;
 	void InitEvent();
 	bool InitUI();
