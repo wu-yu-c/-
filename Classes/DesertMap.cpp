@@ -25,7 +25,10 @@ void DesertMap::loadPath() {
 	auto move3 = MoveTo::create(3, end);
 
 	/*创建动作序列*/
+<<<<<<< Updated upstream
 	movepath = Sequence::create(move1, move2, move3, NULL);
+=======
+>>>>>>> Stashed changes
 
 }
 

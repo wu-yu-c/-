@@ -7,6 +7,7 @@ void SkyMap::loadPath() {
 
 	float x, y;
 
+<<<<<<< Updated upstream
 	Corner = tiledmap->getObjectGroup("Corner");
 
 	/*创建几段移动动作，corner坐标从瓦片地图获取*/
@@ -44,6 +45,27 @@ void SkyMap::loadPath() {
 
 	/*创建动作序列*/
 	movepath = Sequence::create(move1, reverse, move2, move3, reverse, move4, move5, NULL);
+=======
+	char namesize[10] = { 0 };
+	for (int i = 1; i <= 41; i++) {
+		sprintf(namesize, "p%d", i);
+		ValueMap point = Point->getObject(namesize);
+		x = point["x"].asFloat();
+		y = point["y"].asFloat();
+		path.push_back(Vec2(x, y));
+	}
+	for (int i = 1; i <= 4; i++) {
+		sprintf(namesize, "corner%d", i);
+		ValueMap point = Corner->getObject(namesize);
+		x = point["x"].asFloat();
+		y = point["y"].asFloat();
+		corner.push_back(Vec2(x, y));
+	}
+	ValueMap carrotloc = Object->getObject("carrot");
+	x = carrotloc["x"].asFloat();
+	y = carrotloc["y"].asFloat();
+	corner.push_back(Vec2(x, y));
+>>>>>>> Stashed changes
 
 }
 
@@ -72,13 +94,22 @@ bool SkyMap::init() {
 		return false;
 
 	tiledmap = TMXTiledMap::create("MAP/SKY/TileMap1.tmx");
+<<<<<<< Updated upstream
+=======
+	Corner = tiledmap->getObjectGroup("Corner");
+	Object = tiledmap->getObjectGroup("Object");
+	Point = tiledmap->getObjectGroup("Point");
+>>>>>>> Stashed changes
 
 	addChild(tiledmap, -1);
 	if (tiledmap == nullptr)
 		return false;
 
+<<<<<<< Updated upstream
 	Object = tiledmap->getObjectGroup("Object");
 
+=======
+>>>>>>> Stashed changes
 	loadWave();
 
 	loadPath();

@@ -1,4 +1,5 @@
 #include"Monster.h"
+#include"MAP.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -12,6 +13,22 @@ Monster::Monster() :
 
 }
 
+<<<<<<< Updated upstream
+=======
+Monster* Monster::createMonster() {
+	return Monster::create();
+}
+
+void Monster::loadPoint() {
+	const std::vector<Point>& corner = static_cast<MAP*>(Director::getInstance()->getRunningScene())->getCorner();
+	const std::vector<Point>& path = static_cast<MAP*>(Director::getInstance()->getRunningScene())->getPath();
+	float width = path[0].getDistance(path[1]);
+	for (int i = 0, j = 0; i < path.size(); i++) {
+		next.push_back(path[i]);
+	}
+}
+
+>>>>>>> Stashed changes
 bool Monster::init() {
 	if (!Sprite::init())
 		return false;
@@ -19,16 +36,57 @@ bool Monster::init() {
 	return true;
 }
 
+<<<<<<< Updated upstream
+=======
+Vec2 Monster::nextPoint() {
+	auto maxCount = next.size();
+	pointCounter++;
+	if (pointCounter < maxCount)
+		return next[pointCounter];
+	else
+		pointCounter = maxCount - 1;
+	return current;
+}
+
+void Monster::runNextPoint() {
+
+	
+	tmp = nextPoint();
+	/*auto reverse = ScaleBy::create(1, 1);
+	for (int i = 0; i < turn.size(); i++) {
+		if (tmp == turn[i]) {
+			reverse = ScaleBy::create(-1, 1);
+			break;
+		}
+	}*/
+
+	if (tmp != current) {
+		auto duration = current.getDistance(tmp) / speed;
+		runAction(Sequence::create(MoveTo::create(duration, tmp)
+			, CallFuncN::create(CC_CALLBACK_0(Monster::runNextPoint, this))
+			/*, reverse*/
+			, NULL));
+		current = tmp;
+	}
+	else {
+		unscheduleAllCallbacks();
+	}
+}
+
+>>>>>>> Stashed changes
 
 Monster* NormalMonster::createMonster()
 {
 
 	/*先创建一个实例*/
 	auto normal = NormalMonster::create();
+<<<<<<< Updated upstream
 
 	//normal->setPosition(begin);
 
 	//normal->InitAnimation();
+=======
+>>>>>>> Stashed changes
 
 	return normal;
 
@@ -38,11 +96,48 @@ bool NormalMonster::init() {
 	if (!Sprite::init())
 		return false;
 
+<<<<<<< Updated upstream
 	InitAnimation();
 
 	return true;
 }
 
+=======
+	Hp = 35;
+
+	money = 10;
+
+	speed = 40;
+
+	scheduleUpdate();
+
+	loadPoint();
+
+	InitAnimation();
+
+	runNextPoint();
+
+	return true;
+}
+
+void NormalMonster::update(float dt) {
+	if (currentState != nextState) {
+		switch (nextState) {
+		case(Death):
+			
+			break;
+		case(Slow):
+			
+			
+			break;
+		default:
+			break;
+		}
+		currentState = nextState;
+	}
+}
+
+>>>>>>> Stashed changes
 /*初始化动画*/
 void NormalMonster::InitAnimation() {
 
@@ -61,7 +156,7 @@ void NormalMonster::InitAnimation() {
 	animation->setDelayPerUnit(0.1f);
 
 	/*创建动画*/
-	action = Animate::create(animation);
+	auto action = Animate::create(animation);
 	/*对象运行该动画*/
 	runAction(action);
 
@@ -80,8 +175,25 @@ bool FlyMonster::init() {
 	if (!Sprite::init())
 		return false;
 
+<<<<<<< Updated upstream
 	InitAnimation();
 
+=======
+	Hp = 30;
+
+	money = 15;
+
+	speed = 60;
+
+	scheduleUpdate();
+
+	loadPoint();
+
+	InitAnimation();
+
+	runNextPoint();
+
+>>>>>>> Stashed changes
 	return true;
 }
 
@@ -102,7 +214,7 @@ void FlyMonster::InitAnimation() {
 	animation->setDelayPerUnit(0.1f);
 
 	/*创建动画*/
-	action = Animate::create(animation);
+	auto action = Animate::create(animation);
 	/*对象运行该动画*/
 	runAction(action);
 
@@ -117,12 +229,33 @@ Monster* BigMonster::createMonster()
 	return big;
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 bool BigMonster::init() {
 	if (!Sprite::init())
 		return false;
 
+<<<<<<< Updated upstream
 	InitAnimation();
 
+=======
+	Hp = 50;
+
+	money = 20;
+
+	speed = 100;
+
+	scheduleUpdate();
+
+	loadPoint();
+
+	InitAnimation();
+
+	runNextPoint();
+
+>>>>>>> Stashed changes
 	return true;
 }
 
@@ -143,7 +276,7 @@ void BigMonster::InitAnimation() {
 	animation->setDelayPerUnit(0.1f);
 
 	/*创建动画*/
-	action = Animate::create(animation);
+	auto action = Animate::create(animation);
 	/*对象运行该动画*/
 	runAction(action);
 

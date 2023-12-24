@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< Updated upstream
 <map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="left-down" compressionlevel="1" width="16" height="9" tilewidth="64" tileheight="64" infinite="0" nextlayerid="25" nextobjectid="95">
+=======
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="left-down" compressionlevel="1" width="16" height="9" tilewidth="64" tileheight="64" infinite="0" nextlayerid="27" nextobjectid="188">
+>>>>>>> Stashed changes
  <editorsettings>
   <export target="TileMap1..tmx" format="tmx"/>
  </editorsettings>
@@ -51,24 +55,149 @@
   <object id="54" name="stopButton" x="801" y="33">
    <ellipse/>
   </object>
-  <object id="58" name="birth" x="417.333" y="100">
+  <object id="58" name="birth" x="417" y="100">
    <ellipse/>
   </object>
   <object id="93" name="carrot" x="629.333" y="445.333">
    <ellipse/>
   </object>
  </objectgroup>
- <objectgroup id="24" name="Corner">
-  <object id="71" name="corner1" x="807" y="100">
+ <objectgroup id="24" name="Point">
+  <object id="131" name="p1" x="467" y="100">
    <ellipse/>
   </object>
-  <object id="75" name="corner2" x="807" y="265">
+  <object id="132" name="p2" x="507" y="100">
    <ellipse/>
   </object>
-  <object id="84" name="corner3" x="216" y="265">
+  <object id="133" name="p3" x="547" y="100">
    <ellipse/>
   </object>
-  <object id="87" name="corner4" x="216" y="435">
+  <object id="134" name="p4" x="587" y="100">
+   <ellipse/>
+  </object>
+  <object id="135" name="p5" x="627" y="100">
+   <ellipse/>
+  </object>
+  <object id="136" name="p6" x="667" y="100">
+   <ellipse/>
+  </object>
+  <object id="137" name="p7" x="707" y="100">
+   <ellipse/>
+  </object>
+  <object id="138" name="p8" x="747" y="100">
+   <ellipse/>
+  </object>
+  <object id="139" name="p9" x="787" y="100">
+   <ellipse/>
+  </object>
+  <object id="140" name="p10" x="807" y="140">
+   <ellipse/>
+  </object>
+  <object id="141" name="p11" x="807" y="180">
+   <ellipse/>
+  </object>
+  <object id="142" name="p12" x="807" y="220">
+   <ellipse/>
+  </object>
+  <object id="143" name="p13" x="807" y="260">
+   <ellipse/>
+  </object>
+  <object id="146" name="p14" x="767" y="265">
+   <ellipse/>
+  </object>
+  <object id="147" name="p15" x="727" y="265">
+   <ellipse/>
+  </object>
+  <object id="148" name="p16" x="687" y="265">
+   <ellipse/>
+  </object>
+  <object id="149" name="p17" x="647" y="265">
+   <ellipse/>
+  </object>
+  <object id="150" name="p18" x="607" y="265">
+   <ellipse/>
+  </object>
+  <object id="151" name="p19" x="567" y="265">
+   <ellipse/>
+  </object>
+  <object id="152" name="p20" x="527" y="265">
+   <ellipse/>
+  </object>
+  <object id="153" name="p21" x="487" y="265">
+   <ellipse/>
+  </object>
+  <object id="154" name="p22" x="447" y="265">
+   <ellipse/>
+  </object>
+  <object id="155" name="p23" x="407" y="265">
+   <ellipse/>
+  </object>
+  <object id="156" name="p24" x="367" y="265">
+   <ellipse/>
+  </object>
+  <object id="157" name="p25" x="327" y="265">
+   <ellipse/>
+  </object>
+  <object id="158" name="p26" x="287" y="265">
+   <ellipse/>
+  </object>
+  <object id="159" name="p27" x="247" y="265">
+   <ellipse/>
+  </object>
+  <object id="160" name="p28" x="216" y="305">
+   <ellipse/>
+  </object>
+  <object id="161" name="p29" x="216" y="345">
+   <ellipse/>
+  </object>
+  <object id="162" name="p30" x="216" y="365">
+   <ellipse/>
+  </object>
+  <object id="163" name="p31" x="216" y="405">
+   <ellipse/>
+  </object>
+  <object id="165" name="p32" x="256" y="435">
+   <ellipse/>
+  </object>
+  <object id="167" name="p33" x="296" y="435">
+   <ellipse/>
+  </object>
+  <object id="168" name="p34" x="336" y="435">
+   <ellipse/>
+  </object>
+  <object id="169" name="p35" x="376" y="435">
+   <ellipse/>
+  </object>
+  <object id="170" name="p36" x="406" y="435">
+   <ellipse/>
+  </object>
+  <object id="171" name="p37" x="446" y="435">
+   <ellipse/>
+  </object>
+  <object id="172" name="p38" x="486" y="435">
+   <ellipse/>
+  </object>
+  <object id="173" name="p39" x="526" y="435">
+   <ellipse/>
+  </object>
+  <object id="174" name="p40" x="566" y="435">
+   <ellipse/>
+  </object>
+  <object id="175" name="p41" x="606" y="435">
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup id="26" name="Corner">
+  <object id="178" name="corner4" x="2116" y="435">
+   <ellipse/>
+  </object>
+  <object id="179" name="corner3" x="216" y="265">
+   <ellipse/>
+  </object>
+  <object id="180" name="corner2" x="807" y="265">
+   <ellipse/>
+  </object>
+  <object id="181" name="corner1" x="807" y="100">
    <ellipse/>
   </object>
  </objectgroup>

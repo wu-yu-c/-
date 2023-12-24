@@ -30,7 +30,13 @@ protected:
 
 	std::vector<std::vector<int>> waveMonster;        //存储每波怪物信息的容器
 
+<<<<<<< Updated upstream
 	std::vector<cocos2d::Point> path;                          //存储的路径
+=======
+	CC_SYNTHESIZE(std::vector<cocos2d::Point>,corner,Corner);                          //存储改变方向的位置
+
+	CC_SYNTHESIZE(std::vector<cocos2d::Point>, path, Path);
+>>>>>>> Stashed changes
 
 	cocos2d::Vector<Monster*> currentMonster;                      //存储当前波怪物
 
@@ -63,11 +69,12 @@ protected:
 	cocos2d::TMXTiledMap* tiledmap;
 	cocos2d::TMXObjectGroup* Object;
 	cocos2d::TMXObjectGroup* Corner;
+	cocos2d::TMXObjectGroup* Point;
 	cocos2d::ui::Button* stopButton;
 	cocos2d::ui::Button* menuButton;
 	cocos2d::Sprite* birthPlace;
+	cocos2d::Vec2 begin;
 	cocos2d::Sprite* Carrot;
-	cocos2d::Sequence* movepath;
 	cocos2d::Layer* chooseMenu;
 	cocos2d::ui::Button* continueButton;
 };
