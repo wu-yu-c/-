@@ -20,7 +20,9 @@ public:
 private:
 	void initEvent();
 
+	void initUI();
+
 	cocos2d::ui::Button* bottleIcon;
-	cocos2d::ui::Button* planeIcon;
+	cocos2d::ui::Button* sunFlowerIcon;
 	cocos2d::ui::Button* icedStarIcon;
 };
