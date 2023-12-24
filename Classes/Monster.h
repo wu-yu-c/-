@@ -5,7 +5,7 @@
 #include<vector>
 
 typedef enum {
-	None,Death,Slow
+	None,Death,Bite
 } state;
 
 typedef enum {
@@ -26,20 +26,28 @@ public:
 
 	void loadPoint();
 
+	void update(float dt) override;
+
 protected:
 
-	int Hp;                     //血量
+	int maxHp;                   //最大血量
+	int Hp;                      //当前血量
 	int speed;                  //速度
 	int money;                  //金币数
-	int pointCounter;        
+	float walklong;             //
+	int width;
+	int height;                 //高度，方便设置血条高度
+	int pointCounter;
+	cocos2d::ProgressTimer* hpbar;     //血条
+	cocos2d::Sprite* hpbar_bg;         //血条背景
 	std::vector<cocos2d::Point> next;
-	std::vector<cocos2d::Point> turn;
 	cocos2d::Vec2 nextPoint();
 	cocos2d::Vec2 tmp;         //下一步坐标
 	CC_SYNTHESIZE(cocos2d::Vec2,current,Current);      //当前坐标
 	bool isReverse;
-	state currentState;
-	state nextState;
+	state State;
+
+	void InitHpbar();
 
 	void runNextPoint();
 
@@ -51,7 +59,7 @@ public:
 
 	virtual bool init();
 
-	void update(float dt);
+	//void update(float dt);
 
 	void InitAnimation();
 

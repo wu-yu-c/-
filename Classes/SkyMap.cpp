@@ -26,7 +26,7 @@ void SkyMap::loadPath() {
 	ValueMap carrotloc = Object->getObject("carrot");
 	x = carrotloc["x"].asFloat();
 	y = carrotloc["y"].asFloat();
-	corner.push_back(Vec2(x, y));
+	corner.push_back(Vec2(x, y + 80));
 
 }
 
@@ -41,20 +41,18 @@ void SkyMap::addTerrains()
 		y = point["y"].asFloat();
 		terrains.push_back(Vec2(x, y));
 	}
-	Terrains* terrain[towerNum];
+	
 	for (int i = 0; i < towerNum; i++) {
-		terrain[i] = Terrains::createTerrain();
-		terrain[i]->setPosition(terrains.at(i));
-		terrain[i]->setTag(i + 1);
-		addChild(terrain[i], 0);
+		auto terrain = Terrains::createTerrain();
+		terrain->setPosition(terrains.at(i));
+		terrain->setTag(i + 1);
+		addChild(terrain, 0);
 	}
 }
 
 void SkyMap::loadWave() {
 	std::vector<std::vector<int>> skywave = {
-		{normal,normal,normal},
-		{fly,fly,fly},
-		{big,big,big}
+		{normal,normal,normal,fly,fly,big,big}
 	};
 
 	for (int i = 0; i < skywave.size(); i++)

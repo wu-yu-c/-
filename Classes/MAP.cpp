@@ -32,7 +32,6 @@ void MAP::addMonsters(float dt) {
 			break;
 		}
 		monster->setPosition(begin);
-		monster->setCurrent(begin);
 		addChild(monster);
 		currentMonster.pushBack(monster);
 		MonsterNum++;
@@ -59,9 +58,9 @@ void MAP::InitMap() {
 
 	MonsterNum = 0;
 
-	wave = -1;
+	currentLife = 10;
 
-	maxLife = life = 10;
+	wave = -1;
 
 	IsStart = IsEnd = false;
 
@@ -73,8 +72,51 @@ void MAP::InitMap() {
 
 }
 
+void MAP::Count(int i) {
+
+	auto fadein = FadeIn::create(0);
+	auto fadeout = FadeOut::create(0);
+	auto growBig = ScaleBy::create(0.5f, 1.5);
+	auto growSmall = growBig->reverse();
+	auto oneCount = Sequence::create(fadein, growBig, growSmall, fadeout, NULL);
+
+	if (i >= 0) {
+
+		Vec2 origin = Director::getInstance()->getVisibleOrigin();
+		Vec2 middle = Vec2(origin.x + 568, origin.y + 320);
+
+		char namesize[50] = { 0 };
+		sprintf(namesize, "MAP/Begin/count%d.png", i);
+		auto number = Sprite::create(namesize);
+		number->setPosition(middle);
+		addChild(number);
+		number->setTag(i);
+		number->runAction(Sequence::create(oneCount, CallFuncN::create(CC_CALLBACK_0(MAP::Count, this,--i)), NULL));
+	}
+	else {
+		unscheduleAllCallbacks();
+		schedule(schedule_selector(MAP::addWaves), 1.0f);
+	}
+
+}
+
 void MAP::beginAnimation() {
-	schedule(schedule_selector(MAP::addWaves), 1.0f);
+
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	Vec2 middle = Vec2(origin.x + 568, origin.y + 320);
+
+	auto BG = Sprite::create("MAP/Begin/BG.png");
+	BG->setPosition(middle);
+	//addChild(BG);
+
+	auto loop = Sprite::create("MAP/Begin/loop.png");
+	auto rotate = RotateBy::create(1.0f, 360.0f);
+	loop->setPosition(Vec2(0, 20));
+	loop->setAnchorPoint(middle);
+	//addChild(loop);
+
+	Count(3);
+
 }
 
 bool MAP::InitUI() {
@@ -113,6 +155,14 @@ bool MAP::InitUI() {
 	if (continueButton == nullptr)
 		return false;
 
+	/*添加怪物波数*/
+	ValueMap text = Object->getObject("text");
+	x = text["x"].asFloat();
+	y = text["y"].asFloat();
+	auto TEXT = Sprite::create("MAP/TEXT.png");
+	TEXT->setPosition(Vec2(x, y));
+	addChild(TEXT);
+
 	/*添加怪物出生点*/
 	ValueMap birth = Object->getObject("birth");
 	x = birth["x"].asFloat();
@@ -130,11 +180,10 @@ bool MAP::InitUI() {
 	x = carrotloc["x"].asFloat();
 	y = carrotloc["y"].asFloat();
 
-	Carrot = Sprite::create("Carrot/carrot_10.png");
-	Carrot->setPosition(x, y + 25);
-	Carrot->setScale(0.6f);
-	addChild(Carrot);
-	if (Carrot == nullptr)
+	carrot = Carrot::create();
+	carrot->setPosition(x, y + 80);
+	addChild(carrot);
+	if (carrot == nullptr)
 		return false;
 
 	return true;
@@ -175,6 +224,22 @@ void MAP::InitEvent() {
 			count++;
 		}
 		});
+}
+
+void MAP::BiteCarrot() {
+	
+	char namesize[20] = { 0 };
+	auto animation = Animation::create();
+	for (int i = 1; i <= 4; i++) {
+		sprintf(namesize, "MAP/smoke_%d.png", i);
+		animation->addSpriteFrameWithFile(namesize);
+	}
+
+	animation->setLoops(1);
+	animation->setDelayPerUnit(0.1f);
+	auto bite = Animate::create(animation);
+	carrot->runAction(Sequence::create(bite, CallFuncN::create(CC_CALLBACK_0(Carrot::setLife, carrot, --currentLife)), NULL));
+
 }
 
 Layer* ChooseMenu::createLayer() {

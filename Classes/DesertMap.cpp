@@ -21,7 +21,7 @@ void DesertMap::loadPath() {
 	y = corner2["y"].asFloat();
 	auto move2 = MoveTo::create(3, Vec2(x, y));
 
-	const Vec2 end = Carrot->getPosition();
+	const Vec2 end = carrot->getPosition();
 	auto move3 = MoveTo::create(3, end);
 
 	/*创建动作序列*/

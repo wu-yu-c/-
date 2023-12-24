@@ -3,12 +3,14 @@
 #include<vector>
 #include "ui/CocosGUI.h"
 #include"Monster.h"
+#include"Carrot.h"
 
 class MAP :public cocos2d::Scene {
 public:
 
 	CREATE_FUNC(MAP);
 
+	void BiteCarrot();
 
 protected:
 	 
@@ -16,13 +18,11 @@ protected:
 
 	int maxWave;            //最大波数
 
-	unsigned int MonsterNum;
+	CC_SYNTHESIZE(int, currentLife, CurrentLife);        //当前生命
+
+	int MonsterNum;
 
 	int money;              //钱数
-
-	int life;              //当前生命值
-
-	int maxLife;           //最大生命值
 
 	bool IsStart;          //游戏开始
 
@@ -39,6 +39,8 @@ protected:
 	cocos2d::Vector<Monster*> currentMonster;                      //存储当前波怪物
 
 	void beginAnimation();
+
+	void Count(int i);
 
 	void InitMap();             //初始化地图
 
@@ -74,8 +76,8 @@ protected:
 	cocos2d::ui::Button* stopButton;
 	cocos2d::ui::Button* menuButton;
 	cocos2d::Sprite* birthPlace;
-	cocos2d::Vec2 begin;
-	cocos2d::Sprite* Carrot;
+	CC_SYNTHESIZE(cocos2d::Vec2, begin, BirthPlace);
+	Carrot* carrot;
 	cocos2d::Layer* chooseMenu;
 	cocos2d::ui::Button* continueButton;
 };
