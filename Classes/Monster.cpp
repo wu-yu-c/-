@@ -13,8 +13,6 @@ Monster::Monster() :
 
 }
 
-<<<<<<< Updated upstream
-=======
 Monster* Monster::createMonster() {
 	return Monster::create();
 }
@@ -28,7 +26,6 @@ void Monster::loadPoint() {
 	}
 }
 
->>>>>>> Stashed changes
 bool Monster::init() {
 	if (!Sprite::init())
 		return false;
@@ -36,8 +33,6 @@ bool Monster::init() {
 	return true;
 }
 
-<<<<<<< Updated upstream
-=======
 Vec2 Monster::nextPoint() {
 	auto maxCount = next.size();
 	pointCounter++;
@@ -73,20 +68,12 @@ void Monster::runNextPoint() {
 	}
 }
 
->>>>>>> Stashed changes
 
 Monster* NormalMonster::createMonster()
 {
 
 	/*先创建一个实例*/
 	auto normal = NormalMonster::create();
-<<<<<<< Updated upstream
-
-	//normal->setPosition(begin);
-
-	//normal->InitAnimation();
-=======
->>>>>>> Stashed changes
 
 	return normal;
 
@@ -96,13 +83,6 @@ bool NormalMonster::init() {
 	if (!Sprite::init())
 		return false;
 
-<<<<<<< Updated upstream
-	InitAnimation();
-
-	return true;
-}
-
-=======
 	Hp = 35;
 
 	money = 10;
@@ -137,7 +117,6 @@ void NormalMonster::update(float dt) {
 	}
 }
 
->>>>>>> Stashed changes
 /*初始化动画*/
 void NormalMonster::InitAnimation() {
 
@@ -175,10 +154,6 @@ bool FlyMonster::init() {
 	if (!Sprite::init())
 		return false;
 
-<<<<<<< Updated upstream
-	InitAnimation();
-
-=======
 	Hp = 30;
 
 	money = 15;
@@ -193,7 +168,6 @@ bool FlyMonster::init() {
 
 	runNextPoint();
 
->>>>>>> Stashed changes
 	return true;
 }
 
@@ -229,18 +203,11 @@ Monster* BigMonster::createMonster()
 	return big;
 }
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 bool BigMonster::init() {
 	if (!Sprite::init())
 		return false;
 
-<<<<<<< Updated upstream
-	InitAnimation();
-
-=======
 	Hp = 50;
 
 	money = 20;
@@ -255,7 +222,6 @@ bool BigMonster::init() {
 
 	runNextPoint();
 
->>>>>>> Stashed changes
 	return true;
 }
 

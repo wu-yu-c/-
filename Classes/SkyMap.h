@@ -1,7 +1,7 @@
 #pragma once
 
 #include"MAP.h"
-
+const int towerNum = 8;
 class SkyMap :public MAP {
 public:
 	static SkyMap* createGame();
@@ -15,4 +15,5 @@ private:
 
 	virtual bool init();
 
+	void addTerrains()override;
 };

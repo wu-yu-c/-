@@ -5,13 +5,8 @@ using namespace cocos2d::ui;
 
 /*≥ı ºªØπ÷ŒÔ*/
 void MAP::addWaves(float dt) {
-<<<<<<< Updated upstream
-	
-	if (wave < maxWave&&currentMonster.size()==0) {
-=======
 
 	if (wave < maxWave - 1 && currentMonster.size() == 0) {
->>>>>>> Stashed changes
 
 		IsStart = true;
 		wave++;
@@ -26,38 +21,20 @@ void MAP::addMonsters(float dt) {
 		switch (waveMonster.at(wave).at(MonsterNum)) {
 		case(normal):
 			monster = NormalMonster::createMonster();
-<<<<<<< Updated upstream
-			addChild(monster);
-			currentMonster.pushBack(monster);
-			break;
-		case(fly):
-			monster = FlyMonster::createMonster();
-			addChild(monster);
-			currentMonster.pushBack(monster);
-			break;
-		case(big):
-			monster = BigMonster::createMonster();
-			addChild(monster);
-			currentMonster.pushBack(monster);
-=======
 			break;
 		case(fly):
 			monster = FlyMonster::createMonster();
 			break;
 		case(big):
 			monster = BigMonster::createMonster();
->>>>>>> Stashed changes
 			break;
 		default:
 			break;
 		}
-<<<<<<< Updated upstream
-=======
 		monster->setPosition(begin);
 		monster->setCurrent(begin);
 		addChild(monster);
 		currentMonster.pushBack(monster);
->>>>>>> Stashed changes
 		MonsterNum++;
 	}
 	else {
@@ -90,18 +67,10 @@ void MAP::InitMap() {
 
 	InitUI();
 
-<<<<<<< Updated upstream
-	beginAnimation();
-=======
 	InitEvent();
->>>>>>> Stashed changes
 
 	beginAnimation();
 
-}
-
-void MAP::beginAnimation() {
-	schedule(schedule_selector(MAP::addWaves), 1.0f);
 }
 
 void MAP::beginAnimation() {
@@ -163,10 +132,7 @@ bool MAP::InitUI() {
 
 	Carrot = Sprite::create("Carrot/carrot_10.png");
 	Carrot->setPosition(x, y + 25);
-<<<<<<< Updated upstream
-=======
 	Carrot->setScale(0.6f);
->>>>>>> Stashed changes
 	addChild(Carrot);
 	if (Carrot == nullptr)
 		return false;
