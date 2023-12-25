@@ -1,8 +1,7 @@
 #include "Terrains.h"
 #include "MAP.h"
-#include "TowerPanleLayer.h"
 #include "cocos2d.h"
-#include "BaseBuildIcon.h"
+#include "Tower.h"
 using namespace cocos2d::ui;
 Terrains* Terrains::createTerrain()
 {
@@ -30,19 +29,19 @@ void Terrains::initUI()
 	//auto nowObject = Director::getInstance()->getRunningScene()->getChildByTag(getTag());
 	//auto nowPosition = this->getPosition();
 
-	bottleIcon = Button::create("GamePlay/Bottle/Bottle01.png", "GamePlay/Bottle/Bottle01.png", "");
+	bottleIcon = Button::create("Bottle/Bottle01.png", "Bottle/Bottle01.png", "");
 	bottleIcon->setPosition(Vec2(-70, 70));
 	bottleIcon->setPressedActionEnabled(true);
 	bottleIcon->setVisible(false);
 	this->addChild(bottleIcon, 2);
 
-	sunFlowerIcon = Button::create("GamePlay/Bottle/Bottle01.png", "GamePlay/Bottle/Bottle01.png", "");
+	sunFlowerIcon = Button::create("Flower/Flower01.png", "Flower/Flower01.png", "");
 	sunFlowerIcon->setPosition(Vec2(0, 70));
 	sunFlowerIcon->setPressedActionEnabled(true);
 	sunFlowerIcon->setVisible(false);
 	this->addChild(sunFlowerIcon, 2);
 
-	icedStarIcon = Button::create("GamePlay/Bottle/Bottle01.png", "GamePlay/Bottle/Bottle01.png", "");
+	icedStarIcon = Button::create("Star/Star01.png", "Star/Star01.png", "");
 	icedStarIcon->setPosition(Vec2(70, 70));
 	icedStarIcon->setPressedActionEnabled(true);
 	icedStarIcon->setVisible(false);
@@ -63,10 +62,10 @@ void Terrains::initEvent()
 		{
 			auto nowScene = Director::getInstance()->getRunningScene();
 			auto nowTerrain = nowScene->getChildByTag(getTag());
-			auto bottle = Bottle::createBottleTower(1, 100);
+			auto bottle = Bottle::createBottleTower(this->getTag());
 			bottle->setTag(nowTerrain->getTag());
 			nowTerrain->removeFromParent();
-			nowScene->addChild(bottle);
+			nowScene->addChild(bottle, 0);
 		}
 		});
 
@@ -75,10 +74,10 @@ void Terrains::initEvent()
 		{
 			auto nowScene = Director::getInstance()->getRunningScene();
 			auto nowTerrain = nowScene->getChildByTag(getTag());
-			auto sunFlower = SunFlower::createSunFlowerTower(2, 180);
-			sunFlower->setTag(nowTerrain->getTag());
+			auto flower = Flower::createFlowerTower(this->getTag());
+			flower->setTag(nowTerrain->getTag());
 			nowTerrain->removeFromParent();
-			nowScene->addChild(sunFlower);
+			nowScene->addChild(flower, 0);
 		}
 		});
 
@@ -87,10 +86,10 @@ void Terrains::initEvent()
 		{
 			auto nowScene = Director::getInstance()->getRunningScene();
 			auto nowTerrain = nowScene->getChildByTag(getTag());
-			auto icedStar = IcedStar::createIcedStarTower(3, 180);
-			icedStar->setTag(nowTerrain->getTag());
+			auto star = Star::createStarTower(this->getTag());
+			star->setTag(nowTerrain->getTag());
 			nowTerrain->removeFromParent();
-			nowScene->addChild(icedStar);
+			nowScene->addChild(star, 0);
 		}
 		});
 }
@@ -142,7 +141,10 @@ void Terrains::onTouchEnded(Touch* touch, Event* event)
 	Rect rect = Rect(0, 0, size.width, size.height);
 	if (rect.containsPoint(locationInNode) && target->isVisible())
 	{
-		showTowerPanleLayer();
+		if (isTowerPanleLayerShown)
+			hideTowerPanleLayer();
+		else
+			showTowerPanleLayer();
 	}
 	else {
 		hideTowerPanleLayer();

@@ -45,7 +45,7 @@ void SkyMap::addTerrains()
 	for (int i = 0; i < towerNum; i++) {
 		auto terrain = Terrains::createTerrain();
 		terrain->setPosition(terrains.at(i));
-		terrain->setTag(i + 1);
+		terrain->setTag(i + 999);
 		addChild(terrain, 0);
 	}
 }
@@ -55,7 +55,7 @@ void SkyMap::loadWave() {
 		{normal,normal,normal,fly,fly,big,big}
 	};
 
-	for (int i = 0; i < skywave.size(); i++)
+	for (size_t i = 0; i < skywave.size(); i++)
 		waveMonster.push_back(skywave.at(i));
 
 	maxWave = skywave.size();

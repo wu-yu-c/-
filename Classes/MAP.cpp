@@ -181,7 +181,8 @@ bool MAP::InitUI() {
 	y = carrotloc["y"].asFloat();
 
 	carrot = Carrot::create();
-	carrot->setPosition(x, y + 80);
+	carrot->setPosition(x, y + 40);
+	carrot->setScale(0.75f);
 	addChild(carrot);
 	if (carrot == nullptr)
 		return false;
@@ -216,11 +217,15 @@ void MAP::InitEvent() {
 		if (type == ui::Widget::TouchEventType::ENDED) {
 			auto director = Director::getInstance();
 			//若为偶数次按下，则暂停动画
-			if (count % 2 == 0)
+			if (count % 2 == 0) {
+				stopButton->loadTextures("MAP/pause.png", "MAP/pause.png", "");
 				director->stopAnimation();
+			}
 			//否则，使动画重新开始
-			else
+			else {
+				stopButton->loadTextures("MAP/stopButton_normal.png", "MAP/stopButton_pressed.png", "");
 				director->startAnimation();
+			}
 			count++;
 		}
 		});

@@ -22,7 +22,7 @@ void Monster::loadPoint() {
 	const std::vector<Point>& corner = static_cast<MAP*>(Director::getInstance()->getRunningScene())->getCorner();
 	const std::vector<Point>& path = static_cast<MAP*>(Director::getInstance()->getRunningScene())->getPath();
 	walklong = path[0].getDistance(path[1]);
-	for (int i = 0, j = 0; i < path.size(); i++) {
+	for (size_t i = 0, j = 0; i < path.size(); i++) {
 		if (abs(path[i].x - corner[j].x) < walklong && abs(path[i].y - corner[j].y) < walklong) {
 			next.push_back(corner[j]);
 			j++;
@@ -51,7 +51,7 @@ void Monster::InitHpbar() {
 	hpbar->setMidpoint(Point(0, 0.5f));
 	hpbar->setBarChangeRate(Point(1, 0));
 	hpbar->setPercentage(100);
-	hpbar->setPosition(Vec2(22.5,5.8));
+	hpbar->setPosition(Vec2(22.5f,5.8f));
 	hpbar_bg->addChild(hpbar);
 
 }

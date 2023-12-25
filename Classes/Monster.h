@@ -37,7 +37,7 @@ protected:
 	float walklong;             //
 	int width;
 	int height;                 //高度，方便设置血条高度
-	int pointCounter;
+	size_t pointCounter;
 	cocos2d::ProgressTimer* hpbar;     //血条
 	cocos2d::Sprite* hpbar_bg;         //血条背景
 	std::vector<cocos2d::Point> next;

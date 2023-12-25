@@ -20,7 +20,7 @@ protected:
 
 	CC_SYNTHESIZE(int, currentLife, CurrentLife);        //当前生命
 
-	int MonsterNum;
+	size_t MonsterNum;
 
 	int money;              //钱数
 
