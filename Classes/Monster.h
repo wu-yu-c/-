@@ -22,23 +22,21 @@ public:
 
 	virtual bool init() override;
 
-	Sprite* baseSprite;
-
 	void loadPoint();
 
 	void update(float dt) override;
 
 protected:
 
-	int maxHp;                   //最大血量
-	int Hp;                      //当前血量
+	CC_SYNTHESIZE(int, maxHp, Maxhp);                  //最大血量
+	CC_SYNTHESIZE(int, Hp, Hp);                      //当前血量
 	int speed;                  //速度
 	int money;                  //金币数
 	float walklong;             //
 	int width;
 	int height;                 //高度，方便设置血条高度
 	size_t pointCounter;
-	cocos2d::ProgressTimer* hpbar;     //血条
+	CC_SYNTHESIZE(cocos2d::ProgressTimer*, hpbar, Hpbar);     //血条
 	cocos2d::Sprite* hpbar_bg;         //血条背景
 	std::vector<cocos2d::Point> next;
 	cocos2d::Vec2 nextPoint();
@@ -50,7 +48,7 @@ protected:
 	void InitHpbar();
 
 	void runNextPoint();
-
+	Sprite* baseSprite;
 };
 
 class NormalMonster :public Monster {

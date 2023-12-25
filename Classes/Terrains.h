@@ -13,7 +13,6 @@ public:
 	void hideTowerPanleLayer();
 	bool isTowerPanleLayerShown;
 
-	bool isBuilt;
 	bool onTouchBegan(Touch* touch, Event* event);
 	void onTouchEnded(Touch* touch, Event* event);
 	Sprite* terrain;

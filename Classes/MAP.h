@@ -36,8 +36,10 @@ protected:
 
 	std::vector<cocos2d::Point> terrains;
 
+public:
 	cocos2d::Vector<Monster*> currentMonster;                      //¥Ê¥¢µ±«∞≤®π÷ŒÔ
 
+protected:
 	void beginAnimation();
 
 	void Count(int i);

@@ -1,7 +1,47 @@
 #include "Tower.h"
 #include "cocos2d.h"
 #include "Terrains.h"
+#include "MAP.h"
+#include <vector>
+#include "Bullet.h"
 using namespace cocos2d::ui;
+//void BaseTower::checkNearestMonster()
+//{
+//	auto nowMonster = static_cast<MAP*>(Director::getInstance()->getRunningScene())->currentMonster;
+//	auto currMinDistant = this->scope;
+//
+//	Monster* monsterTemp = NULL;
+//	for (int i = 0; i < nowMonster.size(); i++)
+//	{
+//		auto monster = nowMonster.at(i);
+//		double distance = this->getParent()->getPosition().getDistance(monster->getPosition());
+//
+//		if (distance < currMinDistant) {
+//			currMinDistant = distance;
+//			monsterTemp = monster;
+//		}
+//	}
+//	nearestMonster = monsterTemp;
+//}
+//
+//void BaseBottleTower::shoot(float dt)
+//{
+//	checkNearestMonster();
+//	if (nearestMonster != NULL)
+//	{
+//		Point shootVector = nearestMonster->getPosition() - this->getPosition();
+//		float shootAngle = ccpToAngle(shootVector);//得到弧度值
+//		float cocosAngle = CC_RADIANS_TO_DEGREES(-1 * shootAngle);//将弧度转化为角度
+//
+//		float rotateSpeed = 0.5 / M_PI;
+//		float rotateDuration = fabs(shootAngle * rotateSpeed);
+//
+//		bottle->runAction(Sequence::create(RotateTo::create(rotateDuration, cocosAngle), NULL));
+//
+//		bottle->runAction(Sequence::create(RotateTo::create(rotateDuration, cocosAngle), CallFunc::create(this, callfunc_selector(BaseBottleTower::BottleTowerBullet)), NULL));
+//	}
+//}
+
 BaseTower* Bottle::createBottleTower(int tag)
 {
 	auto newbottle = new Bottle();
@@ -511,3 +551,53 @@ void Star::onTouchEnded(Touch* touch, Event* event)
 		hideUpdateMenu();
 	}
 }
+
+//Monster* BaseTower::getCloseMonster()
+//{
+//	Monster* closeMonster = NULL;
+//	double maxDistance = 99999;
+//	auto nowMonster = static_cast<MAP*>(Director::getInstance()->getRunningScene())->currentMonster;
+//	for (size_t i = 0; i < nowMonster.size(); i++) {
+//		auto monster = nowMonster.at(i);
+//		Vec2 towerPosition = this->getPosition();
+//		Vec2 monsterPosition = monster->getPosition();
+//		double distance = sqrt(pow(towerPosition.x - monsterPosition.x, 2) + pow(towerPosition.y - monsterPosition.y, 2));
+//		if (distance < maxDistance) {
+//			closeMonster = monster;
+//			maxDistance = distance;
+//		}
+//	}
+//	if (maxDistance < this->range)
+//		return closeMonster;
+//	return NULL;
+//}
+
+//void Bottle::Spin(float dt)
+//{
+//    this->targetMonster = this->getCloseMonster();
+//
+//    if (this->targetMonster != NULL) 
+//    {
+//        Point shootVector = this->targetMonster->getPosition() - this->getPosition();
+//        float shootAngle = ccpToAngle(shootVector);//得到弧度值
+//        float cocosAngle = CC_RADIANS_TO_DEGREES(-1 * shootAngle);//将弧度转化为角度
+//
+//        float rotateSpeed = 0.5 / M_PI;
+//        float rotateDuration = fabs(shootAngle * rotateSpeed);
+//
+//        bottle->runAction(Sequence::create(RotateTo::create(rotateDuration,cocosAngle),NULL));
+//
+//		bottle->runAction(Sequence::create(RotateTo::create(rotateDuration, cocosAngle), CallFunc::create(this, callfunc_selector(Bottle::shoot)), NULL));
+//    }
+//}
+//
+//void Bottle::shoot()
+//{
+//	if (this->targetMonster != NULL) {
+//		bullet = BottleBullet::create();
+//		bullet->setPosition(bottle->getPosition());
+//		Director::getInstance()->getRunningScene()->addChild(bullet, 1);
+//
+//
+//	}
+//}

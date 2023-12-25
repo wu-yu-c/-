@@ -5,53 +5,60 @@
 //#include "BaseMonster.h"
 //#include "SoundManager.h"
 #include "ui/CocosGUI.h"
+#include "Monster.h"
+#include "Bullet.h"
 USING_NS_CC;
-
-class BaseTower : public Sprite{
+typedef enum {
+	Bottle_1, Bottle_2, Bottle_3,
+	Flower_1, Flower_2, Flower_3,
+	Star_1, Star_2, Star_3
+}TowerType;
+class BaseTower : public Sprite
+{
 public:
-//	BaseTower();
-//	~BaseTower();
-//	virtual void updateTower() {};
-//	virtual void sellTower();
-//	virtual void removeTower();
-	virtual bool init() { return 1; };
-//	CC_SYNTHESIZE(TowerType, towerType, TowerType);
-//	CC_SYNTHESIZE(Terrain*, myTerrain, MyTerrain);
-//	CC_SYNTHESIZE(std::string, towerName, TowerName);
-//	CC_SYNTHESIZE(int, level, Level);
-//	CC_SYNTHESIZE(float, scope, Scope);
-//	CC_SYNTHESIZE(float, nextScope, NextScope);
-//	CC_SYNTHESIZE(float, rate, Rate);
-//	CC_SYNTHESIZE(int, force, Force);
-//	CC_SYNTHESIZE(int, updateMoney, UpdateMoney);
-//	CC_SYNTHESIZE(int, buildMoney, BuildMoney);
-//	virtual void showTowerInfo();
-	bool isUpdateMenuShown;
-//	virtual void update1() {};
-//	virtual void update2() {};
-//	virtual void setRallyPoint(Point point) {};
-//protected:
-//	virtual void checkNearestMonster();
-//	//BaseMonster* nearestMonster;
-//	bool onTouchBegan(Touch* touch, Event* event);
-//	void onTouchEnded(Touch* touch, Event* event);
+	BaseTower() {};
+	~BaseTower() {};
+	virtual void updateTower() {};//升级防御塔
+	virtual void sellTower() {};//出售防御塔
+	virtual void removeTower(){}
+	virtual bool init() { return 1; };//初始化防御塔
+	CC_SYNTHESIZE(TowerType, towerType, TowerType);//类型
+	CC_SYNTHESIZE(Terrain*, myTerrain, MyTerrain);//建造点
+	CC_SYNTHESIZE(std::string, towerName, TowerName);//塔名
+	CC_SYNTHESIZE(int, level, Level);//塔的等级
+	CC_SYNTHESIZE(float, scope, Scope);//攻击范围
+	CC_SYNTHESIZE(float, nextScope, NextScope);//升级后范围
+	CC_SYNTHESIZE(float, rate, Rate);//攻速
+	CC_SYNTHESIZE(int, force, Force);//攻击力
+	CC_SYNTHESIZE(int, updateMoney, UpdateMoney);//升级所需金钱
+	CC_SYNTHESIZE(int, buildMoney, BuildMoney);//售卖金钱
+	virtual void showTowerInfo(){}
+	bool isUpdateMenuShown;//
+	virtual void setRallyPoint(Point point) {};
+protected:
+	virtual void checkNearestMonster() {};//检测附近敌人
+	Monster* nearestMonster;//附近的敌人
+	bool onTouchBegan(Touch* touch, Event* event);
+	void onTouchEnded(Touch* touch, Event* event);
 	virtual void showUpdateMenu() {};
 	virtual void hideUpdateMenu() {};
-//	Sprite* terrain;
-//	void setListener();
-	virtual void initLevel(int tag) {};
-	virtual void initEvent() {};
-	virtual void showAttackRange() {};
-	virtual void hideAttackRange() {};
-	double range;
-	int level;
-	int damage;
-	double rate;
+	Sprite* terrain;//该塔的建造点
+	void setListener();//设置监听器
 	cocos2d::ui::Button* update;
 	cocos2d::ui::Button* remove;
 	Sprite* attackRange;
+	int damage;
 };
 
+//class BaseBottleTower : public BaseTower
+//{
+//protected:
+//	Sprite* bottle;//瓶子炮塔
+//	void initTower(int level);//初始化炮塔
+//	void addTerrain();//添加塔坯子（就是那个都是塔下面那个都是弓箭的地面，不同地图有不同的坯子~）
+//	virtual void BottleTowerBullet();//生成炮弹
+//	virtual void shoot(float dt);//发射炮弹
+//};
 class Bottle : public BaseTower
 {
 public:
@@ -62,6 +69,7 @@ public:
 	CREATE_FUNC(Bottle);
 	bool onTouchBegan(Touch* touch, Event* event);
 	void onTouchEnded(Touch* touch, Event* event);
+	void Spin(float dt);
 protected:
 	void initTower(int level);
 	//void addTerrain();
@@ -72,13 +80,15 @@ protected:
 	void fireAnimation();//发射炮弹动画
 	void fire(Point firePosition);//发射炮弹
 private:
-	void checkNearestMonster();
-	void initLevel(int tag)override;
-	void initEvent()override;
+	void checkNearestMonster() {};
+	void initLevel(int tag);
+	void initEvent();
 	void showUpdateMenu();
 	void hideUpdateMenu();
 	void showAttackRange();
 	void hideAttackRange();
+	void shoot();
+	BottleBullet* bullet;
 };
 
 class Flower : public BaseTower
@@ -101,9 +111,9 @@ protected:
 	void fireAnimation();//发射炮弹动画
 	void fire(Point firePosition);//发射炮弹
 private:
-	void checkNearestMonster();
-	void initLevel(int tag)override;
-	void initEvent()override;
+	void checkNearestMonster() {};
+	void initLevel(int tag);
+	void initEvent();
 	void showUpdateMenu();
 	void hideUpdateMenu();
 	void showAttackRange();
@@ -130,9 +140,9 @@ protected:
 	void fireAnimation();//发射炮弹动画
 	void fire(Point firePosition);//发射炮弹
 private:
-	void checkNearestMonster();
-	void initLevel(int tag)override;
-	void initEvent()override;
+	void checkNearestMonster() {};
+	void initLevel(int tag);
+	void initEvent();
 	void showUpdateMenu();
 	void hideUpdateMenu();
 	void showAttackRange();
