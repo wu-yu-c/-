@@ -1,4 +1,5 @@
 #include"SkyMap.h"
+#include"GameManager.h"
 #include<vector>
 #include "Terrains.h"
 USING_NS_CC;
@@ -52,7 +53,8 @@ void SkyMap::addTerrains()
 
 void SkyMap::loadWave() {
 	std::vector<std::vector<int>> skywave = {
-		{normal,normal,normal,fly,fly,big,big}
+		{normal,normal,normal,fly,fly,big,big},
+		{normal,normal}
 	};
 
 	for (size_t i = 0; i < skywave.size(); i++)
@@ -73,22 +75,20 @@ bool SkyMap::init() {
 		return false;
 
 	tiledmap = TMXTiledMap::create("MAP/SKY/TileMap1.tmx");
-	Corner = tiledmap->getObjectGroup("Corner");
-	Object = tiledmap->getObjectGroup("Object");
-	Point = tiledmap->getObjectGroup("Point");
-	MyTerrain = tiledmap->getObjectGroup("Tower");
 
 	addChild(tiledmap, -1);
 	if (tiledmap == nullptr)
 		return false;
 
+	GameManager::getGame()->Money = 1500;
+
 	loadWave();
 
-	loadPath();
+	InitMap();
 
 	addTerrains();
 
-	InitMap();
+	loadPath();
 
 	return true;
 

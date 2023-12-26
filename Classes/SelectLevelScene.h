@@ -16,6 +16,7 @@ private:
 
 	bool InitUI();
 private:
+
 	cocos2d::ui::Button* click_main_menu_button;//点击返回主菜单按钮
 	cocos2d::ui::Button* turn_left;//左按键
 	cocos2d::ui::Button* turn_right;//右按键

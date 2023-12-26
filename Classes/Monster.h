@@ -31,8 +31,8 @@ protected:
 	CC_SYNTHESIZE(int, maxHp, Maxhp);                  //最大血量
 	CC_SYNTHESIZE(int, Hp, Hp);                      //当前血量
 	int speed;                  //速度
-	int money;                  //金币数
-	float walklong;             //
+	CC_SYNTHESIZE(int, money, Money);                  //金币数
+	float walklong;             //一次移动的距离
 	int width;
 	int height;                 //高度，方便设置血条高度
 	size_t pointCounter;
@@ -48,12 +48,16 @@ protected:
 	void InitHpbar();
 
 	void runNextPoint();
-	Sprite* baseSprite;
+
+	void birthAnimation();
+
+	void killAnimation();
+
 };
 
 class NormalMonster :public Monster {
 public:
-	static Monster* createMonster();
+	static NormalMonster* createMonster();
 
 	virtual bool init();
 
@@ -66,7 +70,7 @@ public:
 
 class FlyMonster :public Monster {
 public:
-	static Monster* createMonster();
+	static FlyMonster* createMonster();
 
 	virtual bool init();
 
@@ -77,7 +81,7 @@ public:
 
 class BigMonster :public Monster {
 public:
-	static Monster* createMonster();
+	static BigMonster* createMonster();
 
 	virtual bool init();
 

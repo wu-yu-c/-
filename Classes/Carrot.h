@@ -8,17 +8,16 @@ public:
 
 	void setLife(int n);
 
+	void BiteCarrot(int n);
+
 private:
 	int Life;
 
-	cocos2d::Animate* shake;
 	cocos2d::Sprite* life;
 	cocos2d::Sprite* carrot;
 
 	virtual bool init();
 
-	virtual void Move(float dt);
-
-	void InitAnimation();
+	void shakeAnimation(float dt);
 
 };

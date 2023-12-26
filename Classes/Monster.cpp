@@ -1,10 +1,10 @@
 #include"Monster.h"
+#include"GameManager.h"
 #include"MAP.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
 Monster::Monster() :
-	baseSprite(NULL),
 	speed(0),
 	Hp(0),
 	State(None),
@@ -23,7 +23,7 @@ void Monster::loadPoint() {
 	const std::vector<Point>& path = static_cast<MAP*>(Director::getInstance()->getRunningScene())->getPath();
 	walklong = path[0].getDistance(path[1]);
 	for (size_t i = 0, j = 0; i < path.size(); i++) {
-		if (abs(path[i].x - corner[j].x) < walklong && abs(path[i].y - corner[j].y) < walklong) {
+		if (abs(path[i].x - corner[j].x) < walklong && abs(path[i].y - corner[j].y) < walklong && j < corner.size()) {
 			next.push_back(corner[j]);
 			j++;
 		}
@@ -56,6 +56,52 @@ void Monster::InitHpbar() {
 
 }
 
+void Monster::birthAnimation() {
+
+	auto animation = Animation::create();
+
+	/*读取动画的帧*/
+	animation->addSpriteFrameWithFile("MONSTER/birthaction1.png");
+	animation->addSpriteFrameWithFile("MONSTER/birthaction2.png");
+
+	/*动画设置为循环一次*/
+	animation->setLoops(1);
+	/*设置两帧间隔时间*/
+	animation->setDelayPerUnit(0.1f);
+
+	/*创建动画*/
+	auto action = Animate::create(animation);
+	/*对象运行该动画*/
+	runAction(action);
+
+}
+
+void Monster::killAnimation() {
+	stopAllActions();
+	removeAllChildrenWithCleanup(true);
+	GameManager::getGame()->Money += money;
+
+	auto killed = Animation::create();
+
+	char namesize[20] = { 0 };
+	for (int i = 1; i <= 4; i++) {
+		sprintf(namesize, "MONSTER/die_%d.png", i);
+		killed->addSpriteFrameWithFile(namesize);
+	}
+
+	killed->setLoops(1);
+	killed->setDelayPerUnit(0.1f);
+
+	auto smoke = Animate::create(killed);
+
+	runAction(Sequence::create(smoke,
+		CallFuncN::create(CC_CALLBACK_0(MAP::addMoney,static_cast<MAP*>(Director::getInstance()->getRunningScene()), money, getPosition())),
+		CallFuncN::create(CC_CALLBACK_0(Monster::removeFromParent, this)), NULL));
+
+	GameManager::getGame()->currentMonster.eraseObject(this);
+
+}
+
 Vec2 Monster::nextPoint() {
 	auto maxCount = next.size();
 	pointCounter++;
@@ -75,6 +121,7 @@ void Monster::runNextPoint() {
 		auto duration = current.getDistance(tmp) / speed;
 		
 		if (abs(tmp.x - current.x) > walklong && pointCounter > 1) {
+			//State = Death;
 			runAction(Sequence::create(MoveTo::create(duration, tmp)
 				,ScaleBy::create(0.1f, -1, 1)
 				, CallFuncN::create(CC_CALLBACK_0(Monster::runNextPoint, this))
@@ -93,7 +140,7 @@ void Monster::runNextPoint() {
 }
 
 
-Monster* NormalMonster::createMonster()
+NormalMonster* NormalMonster::createMonster()
 {
 
 	/*先创建一个实例*/
@@ -109,7 +156,7 @@ bool NormalMonster::init() {
 
 	maxHp=Hp = 35;
 
-	money = 10;
+	money = 50;
 
 	speed = 100;
 
@@ -129,15 +176,17 @@ bool NormalMonster::init() {
 	return true;
 }
 
+/*怪物的多种状态*/
 void Monster::update(float dt) {
 
 	switch (State) {
 	case(Bite):
-		static_cast<MAP*>(Director::getInstance()->getRunningScene())->BiteCarrot();
-
-	case(Death):
-
+		GameManager::getGame()->Life--;
+		unscheduleUpdate();
 		removeFromParentAndCleanup(true);
+		break;
+	case(Death):
+		killAnimation();
 		unscheduleUpdate();
 		break;
 	default:
@@ -166,11 +215,11 @@ void NormalMonster::InitAnimation() {
 	/*创建动画*/
 	auto action = Animate::create(animation);
 	/*对象运行该动画*/
-	runAction(action);
+	runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(Monster::birthAnimation, this)), action,NULL));
 
 }
 
-Monster* FlyMonster::createMonster()
+FlyMonster* FlyMonster::createMonster()
 {
 	auto fly = FlyMonster::create();
 	
@@ -185,7 +234,7 @@ bool FlyMonster::init() {
 
 	maxHp = Hp = 30;
 
-	money = 15;
+	money = 75;
 
 	speed = 200;
 
@@ -224,11 +273,11 @@ void FlyMonster::InitAnimation() {
 	/*创建动画*/
 	auto action = Animate::create(animation);
 	/*对象运行该动画*/
-	runAction(action);
+	runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(Monster::birthAnimation, this)), action,NULL));
 
 }
 
-Monster* BigMonster::createMonster()
+BigMonster* BigMonster::createMonster()
 {
 	auto big = BigMonster::create();
 
@@ -244,7 +293,7 @@ bool BigMonster::init() {
 
 	maxHp = Hp = 50;
 
-	money = 20;
+	money = 150;
 
 	speed = 100;
 
@@ -283,7 +332,7 @@ void BigMonster::InitAnimation() {
 	/*创建动画*/
 	auto action = Animate::create(animation);
 	/*对象运行该动画*/
-	runAction(action);
-
+	runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(Monster::birthAnimation, this)), action,NULL));
+	
 }
 

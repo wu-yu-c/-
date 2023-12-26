@@ -1,16 +1,27 @@
 #include"MAP.h"
+#include"GameManager.h"
 #include"Monster.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
+enum {
+	white, yellow
+};
+void setNumber(int num, Sprite* pos, int color = white);
+
 /*初始化怪物*/
 void MAP::addWaves(float dt) {
 
-	if (wave < maxWave - 1 && currentMonster.size() == 0) {
-
+	if (wave < maxWave - 1 && IsEnd&& GameManager::getGame()->currentMonster.size() == 0) {
 		IsStart = true;
+		IsEnd = false;
 		wave++;
-		schedule(schedule_selector(MAP::addMonsters), 1.0f, waveMonster.at(wave).size(), 0);
+		setNumber((wave+1) / 10, number_5,yellow);
+		setNumber((wave+1) % 10, number_6,yellow);
+		if (wave == 0)
+			schedule(schedule_selector(MAP::addMonsters), 1.0f, waveMonster.at(wave).size(), 0);
+		else
+			schedule(schedule_selector(MAP::addMonsters), 1.0f, waveMonster.at(wave).size(), 3.0f);
 	}
 
 }
@@ -33,36 +44,104 @@ void MAP::addMonsters(float dt) {
 		}
 		monster->setPosition(begin);
 		addChild(monster);
-		currentMonster.pushBack(monster);
+		GameManager::getGame()->currentMonster.pushBack(monster);
 		MonsterNum++;
 	}
 	else {
 		MonsterNum = 0;
-		if (wave == maxWave - 1)
-			IsEnd = true;
+		IsEnd = true;
 	}
 }
 
-void MAP::updateMoneyandLife() {
+void MAP::addMoney(int money,Vec2 pos) {
+
+	char namesize[20] = { 0 };
+	sprintf(namesize, "MAP/money_%d.png", money);
+	auto add = Sprite::create(namesize);
+	add->setPosition(pos);
+	addChild(add);
+
+	add->runAction(Sequence::create(MoveBy::create(0.5f, Vec2(0, 50)),
+		CallFuncN::create(CC_CALLBACK_0(Sprite::removeFromParentAndCleanup, add, true)), NULL));
 
 }
 
-void MAP::update(float dt){
+inline void setNumber(int num,Sprite* pos,int color) {
 
-	updateMoneyandLife();
+	pos->setVisible(true);
+	char namesize[25] = { 0 };
+	if (color == white)
+		sprintf(namesize, "Num/numWhite_%d.png", num);
+	else
+		sprintf(namesize, "Num/numYellow_%d.png", num);
+	pos->setTexture(namesize);
+
+}
+
+void MAP::update(float dt) {
+	
+	int money = GameManager::getGame()->Money;
+	currentLife = GameManager::getGame()->Life;
+
+
+	if (money >= 10000) {
+		setNumber(9, number_1);
+		setNumber(9, number_2);
+		setNumber(9, number_3);
+		setNumber(9, number_4);
+	}
+	else if (money >= 1000) {
+		setNumber(money / 1000, number_1);
+		setNumber((money % 1000) / 100, number_2);
+		setNumber((money % 100) / 10, number_3);
+		setNumber(money % 10, number_4);
+	}
+	else if (money >= 100) {
+		setNumber(money / 100, number_1);
+		setNumber((money % 100) / 10, number_2);
+		setNumber(money % 10, number_3);
+		number_4->setVisible(false);
+	}
+	else if (money >= 10) {
+		setNumber(money / 10, number_1);
+		setNumber(money % 10, number_2);
+		number_3->setVisible(false);
+		number_4->setVisible(false);
+	}
+	else {
+		setNumber(money, number_1);
+		number_2->setVisible(false);
+		number_3->setVisible(false);
+		number_4->setVisible(false);
+	}
+
+	if (currentLife != lastLife) {
+		if (currentLife < lastLife)
+			carrot->BiteCarrot(currentLife);
+		else
+			carrot->setLife(currentLife);
+		lastLife = currentLife;
+	}
 
 }
 
 void MAP::InitMap() {
-	scheduleUpdate();
 
 	MonsterNum = 0;
 
-	currentLife = 10;
+	currentLife = lastLife = 10;
 
 	wave = -1;
 
-	IsStart = IsEnd = false;
+	IsStart = false;
+	IsEnd = true;
+
+	Corner = tiledmap->getObjectGroup("Corner");
+	Object = tiledmap->getObjectGroup("Object");
+	Point = tiledmap->getObjectGroup("Point");
+	MyTerrain = tiledmap->getObjectGroup("Tower");
+
+	InitNumber();
 
 	InitUI();
 
@@ -95,6 +174,7 @@ void MAP::Count(int i) {
 	}
 	else {
 		unscheduleAllCallbacks();
+		scheduleUpdate();
 		schedule(schedule_selector(MAP::addWaves), 1.0f);
 	}
 
@@ -161,7 +241,7 @@ bool MAP::InitUI() {
 	y = text["y"].asFloat();
 	auto TEXT = Sprite::create("MAP/TEXT.png");
 	TEXT->setPosition(Vec2(x, y));
-	addChild(TEXT);
+	addChild(TEXT, 0);
 
 	/*添加怪物出生点*/
 	ValueMap birth = Object->getObject("birth");
@@ -181,9 +261,8 @@ bool MAP::InitUI() {
 	y = carrotloc["y"].asFloat();
 
 	carrot = Carrot::create();
-	carrot->setPosition(x, y + 40);
-	carrot->setScale(0.75f);
-	addChild(carrot);
+	carrot->setPosition(x, y + 80);
+	addChild(carrot, 1);
 	if (carrot == nullptr)
 		return false;
 
@@ -229,22 +308,6 @@ void MAP::InitEvent() {
 			count++;
 		}
 		});
-}
-
-void MAP::BiteCarrot() {
-	
-	char namesize[20] = { 0 };
-	auto animation = Animation::create();
-	for (int i = 1; i <= 4; i++) {
-		sprintf(namesize, "MAP/smoke_%d.png", i);
-		animation->addSpriteFrameWithFile(namesize);
-	}
-
-	animation->setLoops(1);
-	animation->setDelayPerUnit(0.1f);
-	auto bite = Animate::create(animation);
-	carrot->runAction(Sequence::create(bite, CallFuncN::create(CC_CALLBACK_0(Carrot::setLife, carrot, --currentLife)), NULL));
-
 }
 
 Layer* ChooseMenu::createLayer() {
@@ -310,4 +373,95 @@ void ChooseMenu::InitEvent() {
 		}
 		});
 
+}
+
+void MAP::InitNumber() {
+
+	int x, y;
+
+	auto Number = tiledmap->getObjectGroup("Number");
+	ValueMap num1 = Number->getObject("number_1");
+	x = num1["x"].asFloat();
+	y = num1["y"].asFloat();
+	number_1 = Sprite::create();
+	number_1->setPosition(x, y);
+	addChild(number_1);
+
+	ValueMap num2 = Number->getObject("number_2");
+	x = num2["x"].asFloat();
+	y = num2["y"].asFloat();
+	number_2 = Sprite::create();
+	number_2->setPosition(x, y);
+	addChild(number_2);
+
+	ValueMap num3 = Number->getObject("number_3");
+	x = num3["x"].asFloat();
+	y = num3["y"].asFloat();
+	number_3 = Sprite::create();
+	number_3->setPosition(x, y);
+	addChild(number_3);
+
+	ValueMap num4 = Number->getObject("number_4");
+	x = num4["x"].asFloat();
+	y = num4["y"].asFloat();
+	number_4 = Sprite::create();
+	number_4->setPosition(x, y);
+	addChild(number_4);
+
+	ValueMap num5 = Number->getObject("number_5");
+	x = num5["x"].asFloat();
+	y = num5["y"].asFloat();
+	number_5 = Sprite::create();
+	number_5->setPosition(x, y);
+	setNumber(0, number_5,yellow);
+	addChild(number_5,1);
+
+	ValueMap num6 = Number->getObject("number_6");
+	x = num6["x"].asFloat();
+	y = num6["y"].asFloat();
+	number_6 = Sprite::create();
+	number_6->setPosition(x, y);
+	setNumber(0, number_6,yellow);
+	addChild(number_6,1);
+
+	ValueMap num7 = Number->getObject("number_7");
+	x = num7["x"].asFloat();
+	y = num7["y"].asFloat();
+	auto number_7 = Sprite::create();
+	number_7->setPosition(x, y);
+	addChild(number_7);
+	setNumber(maxWave / 10, number_7);
+
+	ValueMap num8 = Number->getObject("number_8");
+	x = num8["x"].asFloat();
+	y = num8["y"].asFloat();
+	auto number_8 = Sprite::create();
+	number_8->setPosition(x, y);
+	addChild(number_8);
+	setNumber(maxWave % 10, number_8);
+}
+
+void MAP::Lose() {
+
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	auto lose = Layer::create();
+	lose->setPosition(origin.x + 568, origin.y + 320);
+	addChild(lose, 5);
+
+	auto bg = Sprite::create("MAP/lose.png");
+	lose->addChild(bg);
+
+	/*添加选择关卡按钮*/
+	auto returnButton = Button::create("MAP/returnButton_normal.png", "MAP/returnButton_pressed.png");
+	returnButton->setScale(0.8f);
+	returnButton->setPosition(Vec2(-100, -80));
+	lose->addChild(returnButton, 2);
+
+	/*添加继续游戏按钮*/
+	auto continueButton = Button::create("MAP/continueButton_normal.png", "MAP/continueButton5_pressed.png");
+	continueButton->setScale(0.8f);
+	continueButton->setPosition(Vec2(80, -80));
+	lose->addChild(continueButton, 2);
+	
 }

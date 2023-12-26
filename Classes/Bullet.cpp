@@ -1,5 +1,6 @@
 #include "Bullet.h"
 #include "MAP.h"
+#include"GameManager.h"
 bool BottleBullet::init()
 {
 	if (!Sprite::init())
@@ -24,7 +25,7 @@ void BottleBullet::removeBullet()
 		this->sprite->getContentSize().width,
 		this->sprite->getContentSize().height);
 
-	auto nowMonster = static_cast<MAP*>(Director::getInstance()->getRunningScene())->currentMonster;
+	auto nowMonster = GameManager::getGame()->currentMonster;
 
 	for (int j = 0; j < nowMonster.size(); j++)
 	{

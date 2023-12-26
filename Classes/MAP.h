@@ -10,19 +10,16 @@ public:
 
 	CREATE_FUNC(MAP);
 
-	void BiteCarrot();
-
 protected:
-	 
+
 	int wave;               //当前波数
 
 	int maxWave;            //最大波数
 
-	CC_SYNTHESIZE(int, currentLife, CurrentLife);        //当前生命
-
 	size_t MonsterNum;
 
-	int money;              //钱数
+	int currentLife;
+	int lastLife;
 
 	bool IsStart;          //游戏开始
 
@@ -30,16 +27,12 @@ protected:
 
 	std::vector<std::vector<int>> waveMonster;        //存储每波怪物信息的容器
 
-	CC_SYNTHESIZE(std::vector<cocos2d::Point>,corner,Corner);                          //存储改变方向的位置
+	CC_SYNTHESIZE(std::vector<cocos2d::Point>, corner, Corner);                          //存储改变方向的位置
 
 	CC_SYNTHESIZE(std::vector<cocos2d::Point>, path, Path);
 
 	std::vector<cocos2d::Point> terrains;
 
-public:
-	cocos2d::Vector<Monster*> currentMonster;                      //存储当前波怪物
-
-protected:
 	void beginAnimation();
 
 	void Count(int i);
@@ -56,17 +49,23 @@ protected:
 
 	void InitEvent();           //添加监听器
 
+	void InitNumber();
+
 	virtual void addWaves(float dt);
 
 	virtual void addMonsters(float dt);
 
 	virtual void addTerrains() { }
 
+	void addMoney(int m, cocos2d::Vec2 pos);
+
 	void update(float dt);
 
-	void updateMoneyandLife();
+	void updateMoneyandLife(float dt);
 
 	void Victory();
+
+	void Lose();
 
 	cocos2d::Vector<Monster*> liveMonster;
 
@@ -75,13 +74,22 @@ protected:
 	cocos2d::TMXObjectGroup* Corner;
 	cocos2d::TMXObjectGroup* Point;
 	cocos2d::TMXObjectGroup* MyTerrain;
+
 	cocos2d::ui::Button* stopButton;
 	cocos2d::ui::Button* menuButton;
-	cocos2d::Sprite* birthPlace;
-	CC_SYNTHESIZE(cocos2d::Vec2, begin, BirthPlace);
-	Carrot* carrot;
-	cocos2d::Layer* chooseMenu;
 	cocos2d::ui::Button* continueButton;
+
+	cocos2d::Sprite* number_1;
+	cocos2d::Sprite* number_2;
+	cocos2d::Sprite* number_3;
+	cocos2d::Sprite* number_4;
+	cocos2d::Sprite* number_5;
+	cocos2d::Sprite* number_6;
+
+	cocos2d::Sprite* birthPlace;
+	Carrot* carrot;
+	CC_SYNTHESIZE(cocos2d::Vec2, begin, BirthPlace);
+	cocos2d::Layer* chooseMenu;
 };
 
 class ChooseMenu :public cocos2d::Layer {

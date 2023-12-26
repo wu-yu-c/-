@@ -13,6 +13,8 @@ typedef enum {
 	Flower_1, Flower_2, Flower_3,
 	Star_1, Star_2, Star_3
 }TowerType;
+
+
 class BaseTower : public Sprite
 {
 public:
@@ -36,6 +38,7 @@ public:
 	bool isUpdateMenuShown;//
 	virtual void setRallyPoint(Point point) {};
 protected:
+	void buildAnimation();
 	virtual void checkNearestMonster() {};//检测附近敌人
 	Monster* nearestMonster;//附近的敌人
 	bool onTouchBegan(Touch* touch, Event* event);

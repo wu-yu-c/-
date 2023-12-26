@@ -42,6 +42,22 @@ using namespace cocos2d::ui;
 //	}
 //}
 
+void BaseTower::buildAnimation() {
+
+	char namesize[20] = { 0 };
+	auto animation = Animation::create();
+	for (int i = 1; i <= 4; i++) {
+		sprintf(namesize, "MAP/smoke_%d.png", i);
+		animation->addSpriteFrameWithFile(namesize);
+	}
+
+	animation->setLoops(1);
+	animation->setDelayPerUnit(0.1f);
+	auto build = Animate::create(animation);
+
+	runAction(build);
+}
+
 BaseTower* Bottle::createBottleTower(int tag)
 {
 	auto newbottle = new Bottle();

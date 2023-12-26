@@ -1,4 +1,5 @@
 #include"DesertMap.h"
+#include"GameManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -6,25 +7,25 @@ void DesertMap::loadPath() {
 
 	float x, y;
 
-	Corner =tiledmap->getObjectGroup("Corner");
-
-	/*创建几段移动动作，corner坐标从瓦片地图获取*/
-	const Vec2 begin = birthPlace->getPosition();
-
-	ValueMap corner1 = Corner->getObject("corner1");
-	x = corner1["x"].asFloat();
-	y = corner1["y"].asFloat();
-	auto move1 = MoveTo::create(3, Vec2(x, y));
-
-	ValueMap corner2 = Corner->getObject("corner2");
-	x = corner2["x"].asFloat();
-	y = corner2["y"].asFloat();
-	auto move2 = MoveTo::create(3, Vec2(x, y));
-
-	const Vec2 end = carrot->getPosition();
-	auto move3 = MoveTo::create(3, end);
-
-	/*创建动作序列*/
+	char namesize[10] = { 0 };
+	for (int i = 1; i <= 29; i++) {
+		sprintf(namesize, "p%d", i);
+		ValueMap point = Point->getObject(namesize);
+		x = point["x"].asFloat();
+		y = point["y"].asFloat();
+		path.push_back(Vec2(x, y));
+	}
+	for (int i = 1; i <= 2; i++) {
+		sprintf(namesize, "corner%d", i);
+		ValueMap point = Corner->getObject(namesize);
+		x = point["x"].asFloat();
+		y = point["y"].asFloat();
+		corner.push_back(Vec2(x, y));
+	}
+	ValueMap carrotloc = Object->getObject("carrot");
+	x = carrotloc["x"].asFloat();
+	y = carrotloc["y"].asFloat();
+	corner.push_back(Vec2(x, y + 80));
 
 }
 
@@ -36,7 +37,25 @@ DesertMap* DesertMap::createGame() {
 
 }
 
+void DesertMap::loadWave() {
+
+	std::vector<std::vector<int>> wave = {
+		{normal,normal,normal,fly,fly,big,big}
+	};
+
+	for (size_t i = 0; i < wave.size(); i++)
+		waveMonster.push_back(wave.at(i));
+
+	maxWave = wave.size();
+}
+
+void DesertMap::addTerrains() {
+
+
+}
+
 bool DesertMap::init() {
+
 	if (!Scene::init())
 		return false;
 
@@ -46,11 +65,16 @@ bool DesertMap::init() {
 	if (tiledmap == nullptr)
 		return false;
 
-	Object = tiledmap->getObjectGroup("Object");
+	GameManager::getGame()->Money = 1500;
 
-	InitUI();
+	loadWave();
 
-	InitEvent();
+	InitMap();
+
+	addTerrains();
+
+	loadPath();
 
 	return true;
+
 }

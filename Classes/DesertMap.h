@@ -6,10 +6,14 @@ class DesertMap :public MAP {
 public:
 	static DesertMap* createGame();
 
+	CREATE_FUNC(DesertMap);
+private:
 	void loadPath();
+
+	void loadWave();
 
 	virtual bool init();
 
-	CREATE_FUNC(DesertMap);
+	void addTerrains() override;
 
 };
