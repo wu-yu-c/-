@@ -8,20 +8,17 @@ public:
 	virtual bool init();
 	static Terrains* createTerrain();
 	CREATE_FUNC(Terrains);
-
 	void showTowerPanleLayer();
 	void hideTowerPanleLayer();
-	bool isTowerPanleLayerShown;
-
-	bool onTouchBegan(Touch* touch, Event* event);
-	void onTouchEnded(Touch* touch, Event* event);
-	Sprite* terrain;
+	void showTowerInfo(){}
+	void hideTowerInfo(){}
+	bool isShow;
+	bool isBuilt;
 private:
 	void initEvent();
-
 	void initUI();
-
 	cocos2d::ui::Button* bottleIcon;
 	cocos2d::ui::Button* sunFlowerIcon;
 	cocos2d::ui::Button* icedStarIcon;
+	void Terrains::removeTowerPanleLayer();
 };

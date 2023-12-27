@@ -1,32 +1,79 @@
 #include "TouchLayer.h"
-void TouchLayer::setTouchShield()
+#include "cocos2d.h"
+#include "ui/CocosGUI.h"
+#include "Tower.h"
+#include "MAP.h"
+#include <vector>
+USING_NS_CC;
+using namespace cocos2d::ui;
+TouchLayer* TouchLayer::createTouchLayer()
 {
-	touchlistener = EventListenerTouchOneByOne::create();
-	touchlistener->onTouchBegan = CC_CALLBACK_2(TouchLayer::onTouchBegan, this);
-	touchlistener->onTouchEnded = CC_CALLBACK_2(TouchLayer::onTouchEnded, this);
-	touchlistener->onTouchMoved = CC_CALLBACK_2(TouchLayer::onTouchMoved, this);
-	touchlistener->setSwallowTouches(true);
-	_eventDispatcher->addEventListenerWithFixedPriority(touchlistener, -1);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchlistener, this);
-}
-
-void TouchLayer::removeTouchShield()
-{
-	if (touchlistener != NULL)
-		_eventDispatcher->removeEventListener(touchlistener);
+	return TouchLayer::create();
 }
 
 bool TouchLayer::init()
 {
 	if (!Layer::init())
-	{
 		return false;
-	}
-	winSize = Director::getInstance()->getWinSize();
-	SpriteFrame* frame = NULL;
-	
-	isFlag = false;
-	setTouchShield();
-
+	initEvent();
 	return true;
+}
+
+void TouchLayer::initEvent()
+{
+	touchlistener = EventListenerTouchOneByOne::create();
+	touchlistener->onTouchBegan = CC_CALLBACK_2(TouchLayer::onTouchBegan, this);
+	touchlistener->onTouchEnded = CC_CALLBACK_2(TouchLayer::onTouchEnded, this);
+	touchlistener->setSwallowTouches(false);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchlistener,this);
+}
+
+void TouchLayer::addWrongPlace(Point location)
+{
+	auto wrong = Sprite::create("GamePlay/warning.png");
+	wrong->setPosition(location);
+	wrong->runAction(Sequence::create(FadeOut::create(0.6f)
+		, CallFuncN::create(CC_CALLBACK_0(Sprite::removeFromParent, wrong))
+		, NULL));
+	addChild(wrong);
+}
+
+bool TouchLayer::onTouchBegan(Touch* touch, Event* event)
+{
+	return true;
+}
+
+void TouchLayer::onTouchEnded(Touch* touch, Event* event)
+{
+	bool isRightPlace = 0;
+	auto map = static_cast<MAP*>(Director::getInstance()->getRunningScene());
+	Point pos = touch->getLocation();//得到触摸位置
+	for (size_t i = 0; i < map->terrain.size(); i++) {
+		auto element = map->terrain[i];
+		//若存在显示信息，则隐藏
+		if (element->isShow) {
+			//若没有建炮塔，隐藏建塔菜单
+			if (!element->isBuilt)
+				element->hideTowerPanleLayer();
+			//若建造了炮塔，隐藏炮塔信息
+			else
+				element->hideTowerInfo();
+			return;
+		}
+	}
+	for (size_t i = 0; i < map->terrain.size(); i++) {
+		auto element = map->terrain[i];
+		Rect rect = element->getBoundingBox();
+		if (rect.containsPoint(pos))
+		{
+			if (!element->isBuilt)
+				element->showTowerPanleLayer();
+			else
+				element->showTowerInfo();
+			isRightPlace = 1;
+			break;
+		}
+	}
+	if (!isRightPlace)
+		addWrongPlace(pos);
 }

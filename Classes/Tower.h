@@ -1,9 +1,5 @@
 #pragma once
 #include "cocos2d.h"
-//#include "Circle.h"
-//#include "Terrain.h"
-//#include "BaseMonster.h"
-//#include "SoundManager.h"
 #include "ui/CocosGUI.h"
 #include "Monster.h"
 #include "Bullet.h"
@@ -31,7 +27,7 @@ public:
 
 	void updateTower();//升级防御塔
 	virtual void sellTower() {};//出售防御塔
-	virtual void removeTower(){}
+	virtual void removeTower() {}
 	virtual bool init();                   //初始化防御塔
 	CC_SYNTHESIZE(TowerType, towerType, TowerType);//类型
 	CC_SYNTHESIZE(Terrain*, myTerrain, MyTerrain);//建造点
@@ -43,9 +39,9 @@ public:
 	CC_SYNTHESIZE(int, force, Force);//攻击力
 	CC_SYNTHESIZE(int, updateMoney, UpdateMoney);//升级所需金钱
 	CC_SYNTHESIZE(int, sellMoney, sellMoney);//售卖金钱
-	virtual void showTowerInfo(){}
+	virtual void showTowerInfo() {}
 	bool isUpdateMenuShown;//
-	virtual void setRallyPoint(Point point) {};
+
 protected:
 
 	bool InattackRange(Monster* monster);
@@ -80,7 +76,7 @@ private:
 	void shootWeapon();
 
 	void attack(float dt);
-	
+
 };
 
 class Flower : public BaseTower

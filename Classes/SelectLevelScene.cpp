@@ -149,7 +149,7 @@ void SkyLine::InitEvent()
 			//进入天际地图
 			auto skyMap = SkyMap::createGame();
 			Director::getInstance()->pushScene(skyMap);
-			
+
 		}
 		});
 }
@@ -192,7 +192,7 @@ void Desert::InitEvent()
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			//进入沙漠地图
-			auto desertMap = DesertMap::createGame();			
+			auto desertMap = DesertMap::createGame();
 			Director::getInstance()->pushScene(desertMap);
 
 		}

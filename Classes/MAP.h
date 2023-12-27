@@ -4,14 +4,14 @@
 #include "ui/CocosGUI.h"
 #include"Monster.h"
 #include"Carrot.h"
-
+#include "Terrains.h"
 enum {
 	white, yellow
 };
 
 class MAP :public cocos2d::Scene {
 public:
-
+	std::vector<Terrains*>terrain;
 	CREATE_FUNC(MAP);
 
 protected:

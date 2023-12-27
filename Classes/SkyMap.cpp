@@ -42,11 +42,12 @@ void SkyMap::addTerrains()
 		y = point["y"].asFloat();
 		terrains.push_back(Vec2(x, y));
 	}
-
 	for (int i = 0; i < towerNum; i++) {
-		auto terrain = Terrains::createTerrain();
-		terrain->setPosition(terrains.at(i));
-		addChild(terrain, 0);
+		Terrains* newTerrain = Terrains::createTerrain();
+		newTerrain->setPosition(terrains.at(i));
+		newTerrain->setTag(i + 999);
+		addChild(newTerrain, 0);
+		terrain.push_back(newTerrain);
 	}
 }
 

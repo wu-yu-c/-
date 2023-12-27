@@ -1,11 +1,11 @@
 #pragma once
-
+#include"Terrains.h"
 #include"MAP.h"
 const int towerNum = 8;
 class SkyMap :public MAP {
 public:
 	static SkyMap* createGame();
-
+	
 	CREATE_FUNC(SkyMap);
 private:
 

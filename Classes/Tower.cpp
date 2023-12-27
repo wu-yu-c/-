@@ -36,7 +36,6 @@ void BaseTower::buildAnimation(char* name,int i) {
 	animation->setDelayPerUnit(0.1f);
 	auto build = Animate::create(animation);
 
-	sprintf(namesize, "Bottle/Bottle_3.png");
 	runAction(build);
 }
 
@@ -125,21 +124,24 @@ void Bottle::attack(float dt) {
 
 void Bottle::shootWeapon() {
 
-	BottleBullet* bullet = BottleBullet::create();
+	if (chosenEnemy != NULL) {
 
-	Point src = chosenEnemy->convertToNodeSpace(getParent()->convertToWorldSpace(getPosition()));
+		BottleBullet* bullet = BottleBullet::create();
 
-	Point dst = Vec2(chosenEnemy->getContentSize().width / 2, chosenEnemy->getContentSize().height / 2);
+		Point src = chosenEnemy->convertToNodeSpace(getParent()->convertToWorldSpace(getPosition()));
 
-	chosenEnemy->addChild(bullet);
-	bullet->setPosition(src);
-	bullet->setRotation(getAngle(chosenEnemy));
+		Point dst = Vec2(chosenEnemy->getContentSize().width / 2, chosenEnemy->getContentSize().height / 2);
 
-	bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(BottleBullet::shoot, bullet))
-		, MoveTo::create(0.2f, dst)
-		, CallFuncN::create(CC_CALLBACK_0(BottleBullet::removeFromParent, bullet))
-		, NULL));
+		chosenEnemy->addChild(bullet);
+		bullet->setPosition(src);
+		bullet->setRotation(getAngle(chosenEnemy));
 
+		bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(BottleBullet::shoot, bullet))
+			, MoveTo::create(0.2f, dst)
+			, CallFuncN::create(CC_CALLBACK_0(BottleBullet::removeFromParent, bullet))
+			, NULL));
+
+	}
 }
 
 bool Bottle::init() {

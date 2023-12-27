@@ -3,7 +3,6 @@
 #include "cocos2d.h"
 #include "Tower.h"
 using namespace cocos2d::ui;
-
 Terrains* Terrains::createTerrain()
 {
 	return  Terrains::create();
@@ -15,9 +14,10 @@ bool Terrains::init()
 	{
 		return false;
 	}
-
-	isTowerPanleLayerShown = false;
+	isShow = false;
+	isBuilt = false;
 	setTexture("GamePlay/select.png");
+	setOpacity(0);
 
 	initUI();
 
@@ -26,7 +26,6 @@ bool Terrains::init()
 }
 void Terrains::initUI()
 {
-
 	bottleIcon = Button::create("Bottle/Bottle01.png", "Bottle/Bottle01.png", "");
 	bottleIcon->setPosition(Vec2(-30, 110));
 	bottleIcon->setPressedActionEnabled(true);
@@ -49,17 +48,13 @@ void Terrains::initUI()
 
 void Terrains::initEvent()
 {
-	auto listener = EventListenerTouchOneByOne::create();
-	//listener->setSwallowTouches(true);
-	listener->onTouchBegan = CC_CALLBACK_2(Terrains::onTouchBegan, this);
-	listener->onTouchEnded = CC_CALLBACK_2(Terrains::onTouchEnded, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-
 	bottleIcon->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
+			isBuilt = 1;
 			hideTowerPanleLayer();
 			auto bottle = Bottle::create();
+			bottle->setName("bottle");
 			bottle->setPosition(Vec2(getContentSize().width / 2, getContentSize().height / 2));
 			addChild(bottle, 0);
 			setTexture("Bottle/Bottle_3.png");
@@ -93,49 +88,24 @@ void Terrains::initEvent()
 
 void Terrains::showTowerPanleLayer()
 {
-	if (isTowerPanleLayerShown == false) {
-		isTowerPanleLayerShown = true;
-
+	if (isShow == false) {
+		isShow = true;
+		setOpacity(255);
 		bottleIcon->setVisible(true);
 		sunFlowerIcon->setVisible(true);
 		icedStarIcon->setVisible(true);
 	}
-
 }
-
 
 void Terrains::hideTowerPanleLayer()
 {
-	if (isTowerPanleLayerShown) {
-		isTowerPanleLayerShown = false;
-
+	if (isShow) {
+		isShow = false;
+		if (!isBuilt)
+			setOpacity(0);
 		bottleIcon->setVisible(false);
 		sunFlowerIcon->setVisible(false);
 		icedStarIcon->setVisible(false);
 	}
 }
 
-bool Terrains::onTouchBegan(Touch* touch, Event* event)
-{
-	return true;
-}
-
-void Terrains::onTouchEnded(Touch* touch, Event* event)
-{
-	auto target = static_cast<Sprite*>(event->getCurrentTarget());//取当前点击的加号
-
-	Point locationInNode = target->convertTouchToNodeSpace(touch);
-
-	Size size = target->getContentSize();
-	Rect rect = Rect(0, 0, size.width, size.height);
-	if (rect.containsPoint(locationInNode) && target->isVisible())
-	{
-		if (isTowerPanleLayerShown)
-			hideTowerPanleLayer();
-		else
-			showTowerPanleLayer();
-	}
-	else {
-		hideTowerPanleLayer();
-	}
-}

@@ -1,17 +1,14 @@
 #pragma once
 #include "cocos2d.h"
 USING_NS_CC;
-class TouchLayer :public Layer
-{
+class TouchLayer :public Layer {
 public:
 	virtual bool init();
 	CREATE_FUNC(TouchLayer);
-	EventListenerTouchOneByOne* listener;
+	static TouchLayer* createTouchLayer();
 	EventListenerTouchOneByOne* touchlistener;
-	bool isFlag;
+	void initEvent();
+	void addWrongPlace(Point location);
 	bool onTouchBegan(Touch* touch, Event* event);
 	void onTouchEnded(Touch* touch, Event* event);
-	void removeTouchShield();
-	void setTouchShield();
-	Size winSize;
 };

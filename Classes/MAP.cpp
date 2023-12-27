@@ -2,6 +2,7 @@
 #include"GameManager.h"
 #include"Monster.h"
 #include"Menu.h"
+#include "TouchLayer.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -149,6 +150,8 @@ void MAP::InitMap() {
 
 	beginAnimation();
 
+	auto touchLayer = TouchLayer::createTouchLayer();
+	addChild(touchLayer);
 }
 
 void MAP::Count(int i) {
