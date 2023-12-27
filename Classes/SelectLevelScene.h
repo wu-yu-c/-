@@ -28,7 +28,6 @@ private:
 
 class SkyLine : public cocos2d::Layer {
 private:
-	SkyMap* skyMap;
 	cocos2d::ui::Button* skyline_button;
 	void InitEvent();
 	bool InitUI();
@@ -40,7 +39,6 @@ public:
 
 class Desert : public cocos2d::Layer {
 private:
-	MAP* desertMap;
 	cocos2d::ui::Button* desert_button;
 	void InitEvent();
 	bool InitUI();

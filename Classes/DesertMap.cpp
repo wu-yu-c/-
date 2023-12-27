@@ -59,6 +59,8 @@ bool DesertMap::init() {
 	if (!Scene::init())
 		return false;
 
+	GameManager::getGame()->init();
+
 	tiledmap = TMXTiledMap::create("MAP/DESERT/TileMap2.tmx");
 
 	addChild(tiledmap, -1);
@@ -66,6 +68,7 @@ bool DesertMap::init() {
 		return false;
 
 	GameManager::getGame()->Money = 1500;
+	GameManager::getGame()->currentLevel = 2;
 
 	loadWave();
 

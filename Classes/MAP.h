@@ -5,6 +5,10 @@
 #include"Monster.h"
 #include"Carrot.h"
 
+enum {
+	white, yellow
+};
+
 class MAP :public cocos2d::Scene {
 public:
 
@@ -59,13 +63,13 @@ protected:
 
 	void addMoney(int m, cocos2d::Vec2 pos);
 
+	static void setNumber(int num, cocos2d::Sprite* pos, int color = white);
+
 	void update(float dt);
 
 	void updateMoneyandLife(float dt);
 
-	void Victory();
-
-	void Lose();
+	void GameOver(bool win);
 
 	cocos2d::Vector<Monster*> liveMonster;
 
@@ -90,21 +94,4 @@ protected:
 	Carrot* carrot;
 	CC_SYNTHESIZE(cocos2d::Vec2, begin, BirthPlace);
 	cocos2d::Layer* chooseMenu;
-};
-
-class ChooseMenu :public cocos2d::Layer {
-public:
-	static cocos2d::Layer* createLayer();
-
-	virtual bool init();
-
-	CREATE_FUNC(ChooseMenu);
-private:
-	bool InitUI();
-
-	void InitEvent();
-
-	cocos2d::ui::Button* restartButton;
-	//cocos2d::ui::Button* continueButton;
-	cocos2d::ui::Button* returnButton;
 };

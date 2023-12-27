@@ -42,19 +42,18 @@ void SkyMap::addTerrains()
 		y = point["y"].asFloat();
 		terrains.push_back(Vec2(x, y));
 	}
-	
+
 	for (int i = 0; i < towerNum; i++) {
 		auto terrain = Terrains::createTerrain();
 		terrain->setPosition(terrains.at(i));
-		terrain->setTag(i + 999);
 		addChild(terrain, 0);
 	}
 }
 
 void SkyMap::loadWave() {
 	std::vector<std::vector<int>> skywave = {
-		{normal,normal,normal,fly,fly,big,big},
-		{normal,normal}
+		{fly,fly,fly,fly,fly,fly},
+		{fly,fly,fly,fly,fly,fly}
 	};
 
 	for (size_t i = 0; i < skywave.size(); i++)
@@ -74,6 +73,8 @@ bool SkyMap::init() {
 	if (!Scene::init())
 		return false;
 
+	GameManager::getGame()->init();
+
 	tiledmap = TMXTiledMap::create("MAP/SKY/TileMap1.tmx");
 
 	addChild(tiledmap, -1);
@@ -81,6 +82,7 @@ bool SkyMap::init() {
 		return false;
 
 	GameManager::getGame()->Money = 1500;
+	GameManager::getGame()->currentLevel = 1;
 
 	loadWave();
 

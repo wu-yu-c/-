@@ -3,155 +3,191 @@
 #include "Terrains.h"
 #include "MAP.h"
 #include <vector>
+#include"GameManager.h"
 #include "Bullet.h"
+#include<math.h>
 using namespace cocos2d::ui;
-//void BaseTower::checkNearestMonster()
-//{
-//	auto nowMonster = static_cast<MAP*>(Director::getInstance()->getRunningScene())->currentMonster;
-//	auto currMinDistant = this->scope;
-//
-//	Monster* monsterTemp = NULL;
-//	for (int i = 0; i < nowMonster.size(); i++)
-//	{
-//		auto monster = nowMonster.at(i);
-//		double distance = this->getParent()->getPosition().getDistance(monster->getPosition());
-//
-//		if (distance < currMinDistant) {
-//			currMinDistant = distance;
-//			monsterTemp = monster;
-//		}
-//	}
-//	nearestMonster = monsterTemp;
-//}
-//
-//void BaseBottleTower::shoot(float dt)
-//{
-//	checkNearestMonster();
-//	if (nearestMonster != NULL)
-//	{
-//		Point shootVector = nearestMonster->getPosition() - this->getPosition();
-//		float shootAngle = ccpToAngle(shootVector);//得到弧度值
-//		float cocosAngle = CC_RADIANS_TO_DEGREES(-1 * shootAngle);//将弧度转化为角度
-//
-//		float rotateSpeed = 0.5 / M_PI;
-//		float rotateDuration = fabs(shootAngle * rotateSpeed);
-//
-//		bottle->runAction(Sequence::create(RotateTo::create(rotateDuration, cocosAngle), NULL));
-//
-//		bottle->runAction(Sequence::create(RotateTo::create(rotateDuration, cocosAngle), CallFunc::create(this, callfunc_selector(BaseBottleTower::BottleTowerBullet)), NULL));
-//	}
-//}
 
-void BaseTower::buildAnimation() {
+char basename[3][30] = {
+	"Bottle/Bottle_3.png",
+};
 
-	char namesize[20] = { 0 };
+bool BaseTower::init() {
+
+	if (!Sprite::init())
+		return false;
+
+	chosenEnemy = NULL;
+
+	return true;
+}
+
+void BaseTower::buildAnimation(char* name,int i) {
+
+	char namesize[30] = { 0 };
 	auto animation = Animation::create();
 	for (int i = 1; i <= 4; i++) {
 		sprintf(namesize, "MAP/smoke_%d.png", i);
 		animation->addSpriteFrameWithFile(namesize);
 	}
+	animation->addSpriteFrameWithFile(name);
 
 	animation->setLoops(1);
 	animation->setDelayPerUnit(0.1f);
 	auto build = Animate::create(animation);
 
+	sprintf(namesize, "Bottle/Bottle_3.png");
 	runAction(build);
 }
 
-BaseTower* Bottle::createBottleTower(int tag)
-{
-	auto newbottle = new Bottle();
+/*有时间搞升级动画*/
+void BaseTower::updateTower() {
 
-	if (newbottle && newbottle->myInit(tag))
-	{
-		newbottle->autorelease();
-		return newbottle;
-	}
-	CC_SAFE_DELETE(newbottle);
-	return NULL;
 }
 
-bool Bottle::myInit(int tag)
+void BaseTower::InitBase(int i) {
+
+	auto base = Sprite::create(basename[i]);
+	base->setPosition(40, 40);
+	addChild(base,-1);
+
+}
+
+void BaseTower::showAttackRange()
 {
+	// 显示攻击范围的圆形精灵
+	attackRange->setVisible(true);
+	attackRange->setScale(0.1f);
+	attackRange->runAction(ScaleTo::create(0.2f, scope));
+
+}
+
+void BaseTower::showUpdateMenu() {
+
+	isUpdateMenuShown = true;
+	showAttackRange();
+	upgrade->setVisible(true);
+	remove->setVisible(true);
+
+}
+
+void BaseTower::hideUpdateMenu() {
+
+	isUpdateMenuShown = false;
+	attackRange->setVisible(false);
+	upgrade->setVisible(false);
+	remove->setVisible(false);
+
+}
+
+bool BaseTower::InattackRange(Monster* monster) {
+
+	Point monsterPos = monster->getParent()->convertToWorldSpace(monster->getPosition());
+	Point Pos = getParent()->convertToWorldSpace(getPosition());
+
+	float distance = Pos.distance(monsterPos);
+
+	if (distance < attackRange->getContentSize().width/2 || distance < attackRange->getContentSize().height/2)
+		return true;
+	else
+		return false;
+
+}
+
+void Bottle::attack(float dt) {
+
+	if (chosenEnemy != NULL) {
+
+		auto animation = Animation::create();
+
+		char namesize[30] = { 0 };
+
+		sprintf(namesize, "Bottle/Bottle%d1.png", level);
+		animation->addSpriteFrameWithFile(namesize);
+		sprintf(namesize, "Bottle/Bottle%d2.png", level);
+		animation->addSpriteFrameWithFile(namesize);
+		sprintf(namesize, "Bottle/Bottle%d3.png", level);
+		animation->addSpriteFrameWithFile(namesize);
+		sprintf(namesize, "Bottle/Bottle%d1.png", level);
+		animation->addSpriteFrameWithFile(namesize);
+
+		animation->setLoops(1);
+		animation->setDelayPerUnit(0.1f);
+
+		auto shoot = Animate::create(animation);
+		runAction(Sequence::create(shoot
+			, CallFuncN::create(CC_CALLBACK_0(Bottle::shootWeapon, this))
+			, NULL));
+
+	}
+
+}
+
+void Bottle::shootWeapon() {
+
+	BottleBullet* bullet = BottleBullet::create();
+
+	Point src = chosenEnemy->convertToNodeSpace(getParent()->convertToWorldSpace(getPosition()));
+
+	Point dst = Vec2(chosenEnemy->getContentSize().width / 2, chosenEnemy->getContentSize().height / 2);
+
+	chosenEnemy->addChild(bullet);
+	bullet->setPosition(src);
+	bullet->setRotation(getAngle(chosenEnemy));
+
+	bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(BottleBullet::shoot, bullet))
+		, MoveTo::create(0.2f, dst)
+		, CallFuncN::create(CC_CALLBACK_0(BottleBullet::removeFromParent, bullet))
+		, NULL));
+
+}
+
+bool Bottle::init() {
+
 	if (!Sprite::init())
 		return false;
 
-	initLevel(tag);
+	buildAnimation("Bottle/Bottle11.png", 0);
+
+	initLevel();
 
 	initEvent();
 
+	scheduleUpdate();
+
+	schedule(schedule_selector(Bottle::attack), rate);
+
 	return true;
+
 }
 
-void Bottle::initLevel(int tag)
+void Bottle::initLevel()
 {
-	auto nowScene = Director::getInstance()->getRunningScene();
-	auto nowTerrain = nowScene->getChildByTag(tag);
-
-	//添加底座
-	auto dizuo = Sprite::create("Bottle/Bottle_3.png");
-	dizuo->setPosition(nowTerrain->getPosition());
-	this->addChild(dizuo, 1);
-
-	//添加瓶子炮塔
-	bottle = Sprite::create("Bottle/Bottle11.png");
-	bottle->setPosition(nowTerrain->getPosition());
-	this->addChild(bottle, 2);
 
 	//添加升级按钮
-	update = Button::create("Money/update_180.png", "Money/update_180.png", "");
-	update->setPosition(Vec2(nowTerrain->getPositionX(), nowTerrain->getPositionY() + 60));
-	update->setPressedActionEnabled(true);
-	update->setVisible(false);
-	this->addChild(update, 3);
+	upgrade = Button::create("Money/update_180.png", "Money/update_180.png", "");
+	upgrade->setPosition(Vec2(40,110));
+	upgrade->setPressedActionEnabled(true);
+	upgrade->setVisible(false);
+	this->addChild(upgrade, 3);
 
 	//添加拆除按钮
 	remove = Button::create("Money/remove_80.png", "Money/remove_80.png", "");
-	remove->setPosition(Vec2(nowTerrain->getPositionX(), nowTerrain->getPositionY() - 60));
+	remove->setPosition(Vec2(40,-30));
 	remove->setPressedActionEnabled(true);
 	remove->setVisible(false);
 	this->addChild(remove, 3);
 
 	//初始化数据
 	level = 1;
-	damage = 10;
-	isUpdateMenuShown = false;
-}
-
-void Bottle::showAttackRange() 
-{
-	// 创建并显示攻击范围的圆形精灵
+	rate = 1.0f;
+	scope = 0.8f;
 	attackRange = cocos2d::Sprite::create("GamePlay/range.png");
-	attackRange->setPosition(bottle->getPosition());
-	attackRange->setScale(1.5f);
-	this->addChild(attackRange);
-}
-
-//显示升级菜单
-void Bottle::showUpdateMenu()
-{
-	if (isUpdateMenuShown == false) {
-		isUpdateMenuShown = true;
-		showAttackRange();
-		update->setVisible(true);
-		remove->setVisible(true);
-	}
-}
-
-void Bottle::hideAttackRange()
-{
-	attackRange->removeFromParent();
-}
-
-//隐藏升级菜单
-void Bottle::hideUpdateMenu()
-{
-	if (isUpdateMenuShown == true) {
-		isUpdateMenuShown = false;
-		hideAttackRange();
-		update->setVisible(false);
-		remove->setVisible(false);
-	}
+	attackRange->setPosition(40,40);
+	attackRange->setScale(scope);
+	addChild(attackRange);
+	attackRange->setVisible(false);
+	isUpdateMenuShown = false;
 }
 
 //添加事件监听器
@@ -160,23 +196,23 @@ void Bottle::initEvent()
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = CC_CALLBACK_2(Bottle::onTouchBegan, this);
 	listener->onTouchEnded = CC_CALLBACK_2(Bottle::onTouchEnded, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, bottle);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener,this);
 
-	update->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
+	upgrade->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			if (level == 1) {
 				level++;
 				damage += 10;
-				update->loadTextures("Money/update_220.png", "Money/update_220.png");
-				bottle->setTexture("GamePlay/Bottle/Bottle21.png");
+				upgrade->loadTextures("Money/update_220.png", "Money/update_220.png");
+				setTexture("Bottle/Bottle21.png");
 				remove->loadTextures("Money/remove_224.png", "Money/remove_224.png");
 			}
 			else if (level == 2) {
 				level++;
 				damage += 10;
-				update->loadTextures("Money/update_max.png", "Money/update_max.png");
-				bottle->setTexture("GamePlay/Bottle/Bottle31.png");
+				upgrade->loadTextures("Money/update_max.png", "Money/update_max.png");
+				setTexture("Bottle/Bottle31.png");
 				remove->loadTextures("Money/remove_432.png", "Money/remove_432.png");
 			}
 		}
@@ -185,22 +221,10 @@ void Bottle::initEvent()
 	remove->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			auto nowScene = Director::getInstance()->getRunningScene();
-			auto nowTower = nowScene->getChildByTag(getTag());
-			auto newTerrain = Terrains::createTerrain();
-			newTerrain->setTag(nowTower->getTag());
-			newTerrain->setPosition(bottle->getPosition());
-			nowTower->removeFromParent();
-			nowScene->addChild(newTerrain, 0);
-			if (level == 1) {
+			/*此处应将基座设为可触摸*/
+			removeFromParent();
+			GameManager::getGame()->Money += sellMoney;
 
-			}
-			else if (level == 2) {
-
-			}
-			else if (level == 3) {
-
-			}
 		}
 		});
 
@@ -215,9 +239,9 @@ bool Bottle::onTouchBegan(Touch* touch, Event* event)
 void Bottle::onTouchEnded(Touch* touch, Event* event)
 {
 	//转换坐标系
-	Point locationInNode = bottle->convertTouchToNodeSpace(touch);
+	Point locationInNode = convertTouchToNodeSpace(touch);
 
-	Size size = bottle->getContentSize();
+	Size size = getContentSize();
 	Rect rect = Rect(0, 0, size.width, size.height);
 	if (rect.containsPoint(locationInNode))
 	{
@@ -230,6 +254,60 @@ void Bottle::onTouchEnded(Touch* touch, Event* event)
 		hideUpdateMenu();
 	}
 }
+
+float BaseTower::getAngle(Monster* monster) {
+
+
+	Point to = monster->getParent()->convertToWorldSpace(monster->getPosition());
+	Point from = getParent()->convertToWorldSpace(getPosition());
+	float y = to.y - from.y;
+	float x = to.x - from.x;
+
+	float angle = atan(y / x);
+	float degrees = CC_RADIANS_TO_DEGREES(angle);
+
+	if (x > 0 && y > 0)
+		return -degrees;
+	else if (x > 0 && y < 0)
+		return -degrees;
+	else if (x < 0 && y>0)
+		return -degrees-180;
+	else
+		return -degrees - 180;
+
+}
+
+void Bottle::update(float dt) {
+
+	if (GameManager::getGame()->currentMonster.contains(chosenEnemy) == false)
+		chosenEnemy = NULL;
+
+	/*有攻击目标*/
+	if (chosenEnemy) {
+
+		setRotation(getAngle(chosenEnemy));
+
+		if (!InattackRange(chosenEnemy)) {
+			chosenEnemy = NULL;
+		}
+
+	}
+	else {
+
+		auto monsters = GameManager::getGame()->currentMonster;
+		Vector<Monster*>::iterator it = monsters.begin();
+		for (; it != monsters.end(); it++) {
+			if (InattackRange((*it))) {
+				chosenEnemy = (*it);
+				break;
+			}
+		}
+
+	}
+
+}
+
+/**********************************************************/
 
 BaseTower* Flower::createFlowerTower(int tag)
 {
@@ -266,11 +344,11 @@ void Flower::initLevel(int tag)
 	this->addChild(flower, 2);
 
 	//添加升级按钮
-	update = Button::create("Money/update_220.png", "Money/update_220.png", "");
-	update->setPosition(Vec2(nowTerrain->getPositionX(), nowTerrain->getPositionY() + 60));
-	update->setPressedActionEnabled(true);
-	update->setVisible(false);
-	this->addChild(update, 3);
+	upgrade = Button::create("Money/update_220.png", "Money/update_220.png", "");
+	upgrade->setPosition(Vec2(nowTerrain->getPositionX(), nowTerrain->getPositionY() + 60));
+	upgrade->setPressedActionEnabled(true);
+	upgrade->setVisible(false);
+	this->addChild(upgrade, 3);
 
 	//添加拆除按钮
 	remove = Button::create("Money/remove_144.png", "Money/remove_144.png", "");
@@ -300,7 +378,7 @@ void Flower::showUpdateMenu()
 	if (isUpdateMenuShown == false) {
 		isUpdateMenuShown = true;
 		showAttackRange();
-		update->setVisible(true);
+		upgrade->setVisible(true);
 		remove->setVisible(true);
 	}
 }
@@ -316,7 +394,7 @@ void Flower::hideUpdateMenu()
 	if (isUpdateMenuShown == true) {
 		isUpdateMenuShown = false;
 		hideAttackRange();
-		update->setVisible(false);
+		upgrade->setVisible(false);
 		remove->setVisible(false);
 	}
 }
@@ -329,20 +407,20 @@ void Flower::initEvent()
 	listener->onTouchEnded = CC_CALLBACK_2(Flower::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, flower);
 
-	update->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
+	upgrade->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			if (level == 1) {
 				level++;
 				damage += 10;
-				update->loadTextures("Money/update_260.png", "Money/update_260.png");
+				upgrade->loadTextures("Money/update_260.png", "Money/update_260.png");
 				flower->setTexture("Flower/merge2.png");
 				remove->loadTextures("Money/remove_336.png", "Money/remove_336.png");
 			}
 			else if (level == 2) {
 				level++;
 				damage += 10;
-				update->loadTextures("Money/update_max.png", "Money/update_max.png");
+				upgrade->loadTextures("Money/update_max.png", "Money/update_max.png");
 				flower->setTexture("Flower/merge3.png");
 				remove->loadTextures("Money/remove_560.png", "Money/remove_560.png");
 			}
@@ -437,11 +515,11 @@ void Star::initLevel(int tag)
 	this->addChild(star, 2);
 
 	//添加升级按钮
-	update = Button::create("Money/update_220.png", "Money/update_220.png", "");
-	update->setPosition(Vec2(nowTerrain->getPositionX(), nowTerrain->getPositionY() + 60));
-	update->setPressedActionEnabled(true);
-	update->setVisible(false);
-	this->addChild(update, 3);
+	upgrade = Button::create("Money/update_220.png", "Money/update_220.png", "");
+	upgrade->setPosition(Vec2(nowTerrain->getPositionX(), nowTerrain->getPositionY() + 60));
+	upgrade->setPressedActionEnabled(true);
+	upgrade->setVisible(false);
+	this->addChild(upgrade, 3);
 
 	//添加拆除按钮
 	remove = Button::create("Money/remove_144.png", "Money/remove_144.png", "");
@@ -471,7 +549,7 @@ void Star::showUpdateMenu()
 	if (isUpdateMenuShown == false) {
 		isUpdateMenuShown = true;
 		showAttackRange();
-		update->setVisible(true);
+		upgrade->setVisible(true);
 		remove->setVisible(true);
 	}
 }
@@ -487,7 +565,7 @@ void Star::hideUpdateMenu()
 	if (isUpdateMenuShown == true) {
 		isUpdateMenuShown = false;
 		hideAttackRange();
-		update->setVisible(false);
+		upgrade->setVisible(false);
 		remove->setVisible(false);
 	}
 }
@@ -500,20 +578,20 @@ void Star::initEvent()
 	listener->onTouchEnded = CC_CALLBACK_2(Star::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, star);
 
-	update->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
+	upgrade->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			if (level == 1) {
 				level++;
 				damage += 10;
-				update->loadTextures("Money/update_260.png", "Money/update_260.png");
+				upgrade->loadTextures("Money/update_260.png", "Money/update_260.png");
 				star->setTexture("Star/level2.png");
 				remove->loadTextures("Money/remove_336.png", "Money/remove_336.png");
 			}
 			else if (level == 2) {
 				level++;
 				damage += 10;
-				update->loadTextures("Money/update_max.png", "Money/update_max.png");
+				upgrade->loadTextures("Money/update_max.png", "Money/update_max.png");
 				star->setTexture("Star/level3.png");
 				remove->loadTextures("Money/remove_560.png", "Money/remove_560.png");
 			}

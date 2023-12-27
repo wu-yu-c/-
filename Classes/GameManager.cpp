@@ -10,9 +10,17 @@ GameManager::GameManager() {
 
 	level[1] = false;
 
-	Life = 10;
+}
+
+void GameManager::init() {
+
+	currentMonster.clear();
+
+	currentTower.clear();
 
 	Money = 0;
+
+	Life = 10;
 
 }
 
@@ -25,20 +33,13 @@ GameManager* GameManager::getGame() {
 
 }
 
-void GameManager::GameOver(int levelnum) {
+void GameManager::setResult() {
 
 	if (Life > 0)
-		level[levelnum] = true;
+		level[currentLevel-1] = true;
 	else
-		level[levelnum] = false;
+		level[currentLevel] = false;
 
-	currentMonster.clear();
-
-	currentTower.clear();
-
-	Money = 0;
-
-	Life = 10;
 }
 
 GameManager::~GameManager() {

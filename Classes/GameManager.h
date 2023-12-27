@@ -10,7 +10,9 @@ public:
 
 	static GameManager* getGame();
 
-	void GameOver(int levelnum);
+	void init();
+
+	void setResult();
 
 	GameManager();
 
@@ -24,8 +26,13 @@ public:
 
 	int Life;
 
+	int currentLevel;
+
+	int maxLevel;
+
 private:
 
-	bool level[2];
+	bool level[2];       //记录关卡是否胜利
+
 
 };

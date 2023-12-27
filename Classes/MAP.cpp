@@ -1,13 +1,9 @@
 #include"MAP.h"
 #include"GameManager.h"
 #include"Monster.h"
+#include"Menu.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
-
-enum {
-	white, yellow
-};
-void setNumber(int num, Sprite* pos, int color = white);
 
 /*初始化怪物*/
 void MAP::addWaves(float dt) {
@@ -66,7 +62,7 @@ void MAP::addMoney(int money,Vec2 pos) {
 
 }
 
-inline void setNumber(int num,Sprite* pos,int color) {
+void MAP::setNumber(int num,Sprite* pos,int color) {
 
 	pos->setVisible(true);
 	char namesize[25] = { 0 };
@@ -83,6 +79,10 @@ void MAP::update(float dt) {
 	int money = GameManager::getGame()->Money;
 	currentLife = GameManager::getGame()->Life;
 
+	if (currentLife <= 0)
+		GameOver(false);
+	else if (wave == maxWave - 1 && IsEnd && GameManager::getGame()->currentMonster.empty())
+		GameOver(true);
 
 	if (money >= 10000) {
 		setNumber(9, number_1);
@@ -173,7 +173,6 @@ void MAP::Count(int i) {
 		number->runAction(Sequence::create(oneCount, CallFuncN::create(CC_CALLBACK_0(MAP::Count, this,--i)), NULL));
 	}
 	else {
-		unscheduleAllCallbacks();
 		scheduleUpdate();
 		schedule(schedule_selector(MAP::addWaves), 1.0f);
 	}
@@ -310,70 +309,6 @@ void MAP::InitEvent() {
 		});
 }
 
-Layer* ChooseMenu::createLayer() {
-	return ChooseMenu::create();
-}
-
-bool ChooseMenu::init() {
-	if (!Layer::init())
-		return false;
-
-	InitUI();
-
-	InitEvent();
-
-	return true;
-}
-
-bool ChooseMenu::InitUI() {
-
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	/*添加菜单背景*/
-	Sprite* choosemenu = Sprite::create("MAP/Menu.png");
-	choosemenu->setPosition(Vec2(origin.x + 568, origin.y + 320));
-	this->addChild(choosemenu, 1);
-	if (choosemenu == nullptr)
-		return false;
-
-	/*添加重新开始按钮*/
-	restartButton = Button::create("MAP/restartButton_normal.png", "MAP/restartButton_pressed.png");
-	restartButton->setPosition(Vec2(origin.x + 560, origin.y + 325));
-	this->addChild(restartButton, 2);
-	if (restartButton == nullptr)
-		return false;
-
-	/*添加选择关卡按钮*/
-	returnButton = Button::create("MAP/returnButton_normal.png", "MAP/returnButton_pressed.png");
-	returnButton->setPosition(Vec2(origin.x + 558, origin.y + 255));
-	this->addChild(returnButton, 2);
-	if (returnButton == nullptr)
-		return false;
-
-	return true;
-}
-
-void ChooseMenu::InitEvent() {
-	/*设置重新开始按钮*/
-	restartButton->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
-		if (type == ui::Widget::TouchEventType::ENDED) {
-			auto director = Director::getInstance();
-			director->resume();
-			Director::getInstance()->popScene();
-
-		}
-		});
-
-	/*设置返回按钮*/
-	returnButton->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
-		if (type == ui::Widget::TouchEventType::ENDED) {
-			auto director = Director::getInstance();
-			director->resume();
-			Director::getInstance()->popScene();
-
-		}
-		});
-
-}
 
 void MAP::InitNumber() {
 
@@ -441,27 +376,17 @@ void MAP::InitNumber() {
 	setNumber(maxWave % 10, number_8);
 }
 
-void MAP::Lose() {
+void::MAP::GameOver(bool win) {
+
+	Director::getInstance()->pause();
 
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto lose = Layer::create();
-	lose->setPosition(origin.x + 568, origin.y + 320);
-	addChild(lose, 5);
+	auto menu = OverMenu::createMenu(win, maxWave, wave);
 
-	auto bg = Sprite::create("MAP/lose.png");
-	lose->addChild(bg);
+	addChild(menu, 5);
 
-	/*添加选择关卡按钮*/
-	auto returnButton = Button::create("MAP/returnButton_normal.png", "MAP/returnButton_pressed.png");
-	returnButton->setScale(0.8f);
-	returnButton->setPosition(Vec2(-100, -80));
-	lose->addChild(returnButton, 2);
+	menu->setPosition(Vec2(origin.x + 568, origin.y + 320));
 
-	/*添加继续游戏按钮*/
-	auto continueButton = Button::create("MAP/continueButton_normal.png", "MAP/continueButton5_pressed.png");
-	continueButton->setScale(0.8f);
-	continueButton->setPosition(Vec2(80, -80));
-	lose->addChild(continueButton, 2);
 	
 }

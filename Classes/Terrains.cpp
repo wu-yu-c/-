@@ -3,6 +3,7 @@
 #include "cocos2d.h"
 #include "Tower.h"
 using namespace cocos2d::ui;
+
 Terrains* Terrains::createTerrain()
 {
 	return  Terrains::create();
@@ -16,8 +17,7 @@ bool Terrains::init()
 	}
 
 	isTowerPanleLayerShown = false;
-	terrain = Sprite::create("GamePlay/select.png");
-	addChild(terrain);
+	setTexture("GamePlay/select.png");
 
 	initUI();
 
@@ -26,46 +26,43 @@ bool Terrains::init()
 }
 void Terrains::initUI()
 {
-	//auto nowObject = Director::getInstance()->getRunningScene()->getChildByTag(getTag());
-	//auto nowPosition = this->getPosition();
 
 	bottleIcon = Button::create("Bottle/Bottle01.png", "Bottle/Bottle01.png", "");
-	bottleIcon->setPosition(Vec2(-70, 70));
+	bottleIcon->setPosition(Vec2(-30, 110));
 	bottleIcon->setPressedActionEnabled(true);
 	bottleIcon->setVisible(false);
 	this->addChild(bottleIcon, 2);
 
 	sunFlowerIcon = Button::create("Flower/Flower01.png", "Flower/Flower01.png", "");
-	sunFlowerIcon->setPosition(Vec2(0, 70));
+	sunFlowerIcon->setPosition(Vec2(40, 110));
 	sunFlowerIcon->setPressedActionEnabled(true);
 	sunFlowerIcon->setVisible(false);
 	this->addChild(sunFlowerIcon, 2);
 
 	icedStarIcon = Button::create("Star/Star01.png", "Star/Star01.png", "");
-	icedStarIcon->setPosition(Vec2(70, 70));
+	icedStarIcon->setPosition(Vec2(110, 110));
 	icedStarIcon->setPressedActionEnabled(true);
 	icedStarIcon->setVisible(false);
 	this->addChild(icedStarIcon, 2);
 
-	isTowerPanleLayerShown = false;
 }
 
 void Terrains::initEvent()
 {
 	auto listener = EventListenerTouchOneByOne::create();
+	//listener->setSwallowTouches(true);
 	listener->onTouchBegan = CC_CALLBACK_2(Terrains::onTouchBegan, this);
 	listener->onTouchEnded = CC_CALLBACK_2(Terrains::onTouchEnded, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, terrain);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
 	bottleIcon->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			auto nowScene = Director::getInstance()->getRunningScene();
-			auto nowTerrain = nowScene->getChildByTag(getTag());
-			auto bottle = Bottle::createBottleTower(this->getTag());
-			bottle->setTag(nowTerrain->getTag());
-			nowTerrain->removeFromParent();
-			nowScene->addChild(bottle, 0);
+			hideTowerPanleLayer();
+			auto bottle = Bottle::create();
+			bottle->setPosition(Vec2(getContentSize().width / 2, getContentSize().height / 2));
+			addChild(bottle, 0);
+			setTexture("Bottle/Bottle_3.png");
 		}
 		});
 
@@ -103,18 +100,10 @@ void Terrains::showTowerPanleLayer()
 		sunFlowerIcon->setVisible(true);
 		icedStarIcon->setVisible(true);
 	}
-	//towerPanleLayer->setMyTerrain(this);
-	//Director::getInstance()->getRunningScene()->addChild(towerPanleLayer);
-	//towerPanleLayer->inAnimation();
+
 }
 
-//void Terrains::hideTowerPanleLayer()
-//{
-//	if (isTowerPanleLayerShown) {
-//		static_cast<MAP*>(this->getParent())->removeChildByTag(getTag());
-//		isTowerPanleLayerShown = false;
-//	}
-//}
+
 void Terrains::hideTowerPanleLayer()
 {
 	if (isTowerPanleLayerShown) {

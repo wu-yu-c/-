@@ -1,55 +1,40 @@
 #include "Bullet.h"
 #include "MAP.h"
 #include"GameManager.h"
-bool BottleBullet::init()
+
+
+bool Bullet::init()
 {
 	if (!Sprite::init())
 		return false;
-	sprite = Sprite::create("PBottle11.png");
-	addChild(sprite);
+
 	return true;
 }
 
-void BottleBullet::shoot()
-{
-	//BulletSound::BottleSound();//²¥·ÅÒôÐ§
-	runAction(Sequence::create(bulletAction,
-		CallFuncN::create(CC_CALLBACK_0(BottleBullet::removeBullet, this)),
-		NULL));
+bool BottleBullet::init() {
+
+	if (!Sprite::init())
+		return false;
+
+	return true;
+
 }
 
-void BottleBullet::removeBullet()
-{
-	auto bulletRect = Rect(this->getPositionX() + this->getParent()->getPositionX() - this->getContentSize().width / 2,
-		this->getPositionY() + this->getParent()->getPositionY() - this->getContentSize().height / 2,
-		this->sprite->getContentSize().width,
-		this->sprite->getContentSize().height);
+void BottleBullet::shoot() {
 
-	auto nowMonster = GameManager::getGame()->currentMonster;
+	Sprite* bullet = Sprite::create();
+	
+	auto animation = Animation::create();
+	animation->addSpriteFrameWithFile("Bottle/PBottle11.png");
+	animation->addSpriteFrameWithFile("Bottle/PBottle12.png");
+	animation->addSpriteFrameWithFile("Bottle/PBottle13.png");
 
-	for (int j = 0; j < nowMonster.size(); j++)
-	{
-		auto monster = nowMonster.at(j);
-		auto monsterRect = monster->getBoundingBox();
+	animation->setLoops(1);
+	animation->setDelayPerUnit(0.1f);
 
-		if (monsterRect.intersectsRect(bulletRect))
-		{
-			auto currHp = monster->getHp();
+	auto shoot = Animate::create(animation);
+	runAction(shoot);
 
-			currHp = currHp - this->getMaxForce();
-
-			if (currHp <= 0) {
-				currHp = 0;
-			}
-			monster->setHp(currHp);
-
-			monster->getHpbar()->setPercentage((currHp / monster->getMaxhp()) * 100);
-
-			/*if (currHp == 0) {
-				monster->death();
-			}*/
-			break;
-		}
-	}
-	this->removeFromParent();
 }
+
+

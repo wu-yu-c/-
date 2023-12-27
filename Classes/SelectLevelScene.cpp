@@ -1,5 +1,6 @@
 #include "SelectLevelScene.h"
 #include "MainScene.h"
+#include"GameManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -12,6 +13,8 @@ bool SelectLevelScene::init()
 {
 	if (!Scene::init())
 		return false;
+
+	GameManager::getGame()->maxLevel = 2;
 
 	InitUI();
 
@@ -144,9 +147,9 @@ void SkyLine::InitEvent()
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			//进入天际地图
-			skyMap = SkyMap::createGame();
+			auto skyMap = SkyMap::createGame();
 			Director::getInstance()->pushScene(skyMap);
-
+			
 		}
 		});
 }
@@ -189,7 +192,7 @@ void Desert::InitEvent()
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			//进入沙漠地图
-			desertMap = DesertMap::createGame();			
+			auto desertMap = DesertMap::createGame();			
 			Director::getInstance()->pushScene(desertMap);
 
 		}

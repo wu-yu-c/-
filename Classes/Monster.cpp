@@ -126,11 +126,13 @@ void Monster::runNextPoint() {
 				,ScaleBy::create(0.1f, -1, 1)
 				, CallFuncN::create(CC_CALLBACK_0(Monster::runNextPoint, this))
 				, NULL));
+			
 		}
 		else {
 			runAction(Sequence::create(MoveTo::create(duration, tmp)
 				, CallFuncN::create(CC_CALLBACK_0(Monster::runNextPoint, this))
 				, NULL));
+			
 		}
 		current = tmp;
 	}
@@ -182,6 +184,8 @@ void Monster::update(float dt) {
 	switch (State) {
 	case(Bite):
 		GameManager::getGame()->Life--;
+		GameManager::getGame()->currentMonster.eraseObject(this);
+
 		unscheduleUpdate();
 		removeFromParentAndCleanup(true);
 		break;
@@ -236,7 +240,7 @@ bool FlyMonster::init() {
 
 	money = 75;
 
-	speed = 200;
+	speed = 100;
 
 	width = 40;
 	height = 65;
