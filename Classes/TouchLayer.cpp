@@ -25,7 +25,7 @@ void TouchLayer::initEvent()
 	touchlistener->onTouchBegan = CC_CALLBACK_2(TouchLayer::onTouchBegan, this);
 	touchlistener->onTouchEnded = CC_CALLBACK_2(TouchLayer::onTouchEnded, this);
 	touchlistener->setSwallowTouches(false);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchlistener,this);
+	_eventDispatcher->addEventListenerWithFixedPriority(touchlistener,10);
 }
 
 void TouchLayer::addWrongPlace(Point location)
@@ -48,12 +48,13 @@ void TouchLayer::onTouchEnded(Touch* touch, Event* event)
 	bool isRightPlace = 0;
 	auto map = static_cast<MAP*>(Director::getInstance()->getRunningScene());
 	Point pos = touch->getLocation();//得到触摸位置
+
 	for (size_t i = 0; i < map->terrain.size(); i++) {
 		auto element = map->terrain[i];
 		//若存在显示信息，则隐藏
-		if (element->isShow) {
+		if (element->getIsShow()) {
 			//若没有建炮塔，隐藏建塔菜单
-			if (!element->isBuilt)
+			if (!element->getIsBuilt())
 				element->hideTowerPanleLayer();
 			//若建造了炮塔，隐藏炮塔信息
 			else
@@ -66,12 +67,12 @@ void TouchLayer::onTouchEnded(Touch* touch, Event* event)
 		Rect rect = element->getBoundingBox();
 		if (rect.containsPoint(pos))
 		{
-			if (!element->isBuilt)
+			if (!element->getIsBuilt())
 				element->showTowerPanleLayer();
 			else
 				element->showTowerInfo();
 			isRightPlace = 1;
-			break;
+			return;
 		}
 	}
 	if (!isRightPlace)

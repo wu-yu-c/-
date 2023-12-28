@@ -15,8 +15,6 @@ protected:
 
 	int speed;
 
-	CC_SYNTHESIZE(int, maxForce, MaxForce);//¹¥»÷Á¦
-	CC_SYNTHESIZE(int, bulletScope, BulletScope);//ËþµÄ×Óµ¯¹¥»÷·¶Î§
 	virtual void shoot() {};//¹¥»÷
 
 };
@@ -25,13 +23,12 @@ class BottleBullet :public Bullet {
 public:
 	bool init();
 	CREATE_FUNC(BottleBullet);
-	void shoot();
+	void shoot(int level);
 };
 
 class FlowerBullet :public Bullet {
 public:
 	virtual bool init();
 	CREATE_FUNC(FlowerBullet);
-	void shoot();
-	void removeBullet();
+	void shoot(int level);
 };

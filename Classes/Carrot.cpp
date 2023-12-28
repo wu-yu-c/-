@@ -9,15 +9,59 @@ bool Carrot::init() {
 		return false;
 
 	Life = 10;
-
+	isUpdateMenuShown = false;
 	this->setTexture("Carrot/hlb1_10.png");
 	life = Sprite::create("Carrot/life_10.png");
 	this->addChild(life);
 	life->setPosition(Vec2(80,-20));
 
+	updateButton = Button::create("Money/update_180.png");
+	updateButton->setVisible(false);
+	auto size = this->getContentSize();
+	updateButton->setPosition(Vec2(size.width / 2, size.height / 2) + Vec2(0, 50));
+	this->addChild(updateButton);
+
+	initEvent();
+
 	schedule(schedule_selector(Carrot::shakeAnimation), 5.0f);
 
 	return true;
+}
+
+void Carrot::initEvent()
+{
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->onTouchBegan = CC_CALLBACK_2(Carrot::onTouchBegan, this);
+	listener->onTouchEnded = CC_CALLBACK_2(Carrot::onTouchEnded, this);
+	_eventDispatcher->addEventListenerWithFixedPriority(listener, 20);
+}
+
+bool Carrot::onTouchBegan(Touch* touch, Event* event)
+{
+	return true;
+}
+
+void Carrot::onTouchEnded(Touch* touch, Event* event)
+{
+	//×ª»»×ø±êÏµ
+	Point locationInNode = convertTouchToNodeSpace(touch);
+	Size size = getContentSize();
+	Rect rect = Rect(0, 0, size.width, size.height);
+	if (rect.containsPoint(locationInNode))
+	{
+		if (isUpdateMenuShown) {
+			isUpdateMenuShown = false;
+			updateButton->setVisible(false);
+		}
+		else {
+			isUpdateMenuShown = true;
+			updateButton->setVisible(true);
+		}
+	}
+	else {
+		isUpdateMenuShown = false;
+		updateButton->setVisible(false);
+	}
 }
 
 void Carrot::setLife(int n) {

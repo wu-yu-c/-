@@ -12,8 +12,8 @@ public:
 	void hideTowerPanleLayer();
 	void showTowerInfo(){}
 	void hideTowerInfo(){}
-	bool isShow;
-	bool isBuilt;
+	CC_SYNTHESIZE(bool, isShow, IsShow);
+	CC_SYNTHESIZE(bool, isBuilt, IsBuilt);
 private:
 	void initEvent();
 	void initUI();

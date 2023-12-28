@@ -2,6 +2,7 @@
 #include "MAP.h"
 #include "cocos2d.h"
 #include "Tower.h"
+#include "GameManager.h"
 using namespace cocos2d::ui;
 Terrains* Terrains::createTerrain()
 {
@@ -54,9 +55,11 @@ void Terrains::initEvent()
 			isBuilt = 1;
 			hideTowerPanleLayer();
 			auto bottle = Bottle::create();
-			bottle->setName("bottle");
 			bottle->setPosition(Vec2(getContentSize().width / 2, getContentSize().height / 2));
-			addChild(bottle, 0);
+			this->addChild(bottle, 0);
+			bottle->addButton();
+			bottle->initEvent();
+			GameManager::getGame()->Money -= bottle->getBuildMoney();
 			setTexture("Bottle/Bottle_3.png");
 		}
 		});
@@ -64,24 +67,24 @@ void Terrains::initEvent()
 	sunFlowerIcon->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			auto nowScene = Director::getInstance()->getRunningScene();
-			auto nowTerrain = nowScene->getChildByTag(getTag());
-			auto flower = Flower::createFlowerTower(this->getTag());
-			flower->setTag(nowTerrain->getTag());
-			nowTerrain->removeFromParent();
-			nowScene->addChild(flower, 0);
+			isBuilt = 1;
+			hideTowerPanleLayer();
+			auto flower = Flower::create();
+			flower->setPosition(Vec2(25, 23));
+			addChild(flower, -1);
+			setTexture("Flower/level1.png");
 		}
 		});
 
 	icedStarIcon->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			auto nowScene = Director::getInstance()->getRunningScene();
-			auto nowTerrain = nowScene->getChildByTag(getTag());
-			auto star = Star::createStarTower(this->getTag());
-			star->setTag(nowTerrain->getTag());
-			nowTerrain->removeFromParent();
-			nowScene->addChild(star, 0);
+			isBuilt = 1;
+			hideTowerPanleLayer();
+			auto star = Star::create();
+			star->setPosition(Vec2(36, 36));
+			addChild(star, 0);
+			setTexture("Star/level1_base.png");
 		}
 		});
 }

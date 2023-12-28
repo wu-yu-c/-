@@ -15,7 +15,7 @@ typedef enum {
 class BaseTower : public Sprite
 {
 public:
-	void buildAnimation(char* name, int i);
+	void buildAnimation(char* name);
 
 	void InitBase(int i);
 
@@ -32,13 +32,20 @@ public:
 	CC_SYNTHESIZE(TowerType, towerType, TowerType);//类型
 	CC_SYNTHESIZE(Terrain*, myTerrain, MyTerrain);//建造点
 	CC_SYNTHESIZE(std::string, towerName, TowerName);//塔名
+
 	CC_SYNTHESIZE(int, level, Level);//塔的等级
+
 	CC_SYNTHESIZE(float, scope, Scope);//攻击范围
-	CC_SYNTHESIZE(float, nextScope, NextScope);//升级后范围
+
 	CC_SYNTHESIZE(float, rate, Rate);//攻速
+
 	CC_SYNTHESIZE(int, force, Force);//攻击力
+
+	int speed;      //子弹速度
+	CC_SYNTHESIZE(int, buildMoney, BuildMoney);
 	CC_SYNTHESIZE(int, updateMoney, UpdateMoney);//升级所需金钱
 	CC_SYNTHESIZE(int, sellMoney, sellMoney);//售卖金钱
+
 	virtual void showTowerInfo() {}
 	bool isUpdateMenuShown;//
 
@@ -49,8 +56,8 @@ protected:
 	float getAngle(Monster* monster);
 
 	Monster* chosenEnemy;
-	cocos2d::ui::Button* upgrade;
-	cocos2d::ui::Button* remove;
+	cocos2d::ui::Button* upgrade = NULL;
+	cocos2d::ui::Button* remove = NULL;
 	Sprite* attackRange;
 	int damage;
 
@@ -64,14 +71,14 @@ public:
 	bool init();
 
 	void update(float dt);
-
+	void addButton();
 	bool onTouchBegan(Touch* touch, Event* event);
 	void onTouchEnded(Touch* touch, Event* event);
-
+	void initEvent();
 private:
 
-	void initLevel();
-	void initEvent();
+	void initData();
+	
 
 	void shootWeapon();
 
@@ -84,55 +91,40 @@ class Flower : public BaseTower
 public:
 	static BaseTower* createFlowerTower(int tag);
 
-	virtual bool myInit(int tag);
-
 	CREATE_FUNC(Flower);
 	bool onTouchBegan(Touch* touch, Event* event);
 	void onTouchEnded(Touch* touch, Event* event);
+
 protected:
-	void initTower(int level);
-	//void addTerrain();
-	//virtual Bullet* ArtilleryTowerBullet();//创建炮弹
-	void shoot(float dt);//攻击
-	Sprite* flower;
-	void filledAnimation();//填充炮弹动画
-	void fireAnimation();//发射炮弹动画
-	void fire(Point firePosition);//发射炮弹
-private:
-	void checkNearestMonster() {};
-	void initLevel(int tag);
+
+	bool IsAttack;
+
+	bool init();
+
+	void update(float dt);
+
+	void attack(float dt);//攻击
+
+	void initLevel();
+
 	void initEvent();
-	void showUpdateMenu();
-	void hideUpdateMenu();
-	void showAttackRange();
-	void hideAttackRange();
 };
 
 class Star : public BaseTower
 {
 public:
-	static BaseTower* createStarTower(int tag);
-
-	virtual bool myInit(int tag);
 
 	CREATE_FUNC(Star);
+
 	bool onTouchBegan(Touch* touch, Event* event);
 	void onTouchEnded(Touch* touch, Event* event);
+
 protected:
-	void initTower(int level);
-	//void addTerrain();
-	//virtual Bullet* ArtilleryTowerBullet();//创建炮弹
-	void shoot(float dt);//攻击
-	Sprite* star;
-	void filledAnimation();//填充炮弹动画
-	void fireAnimation();//发射炮弹动画
-	void fire(Point firePosition);//发射炮弹
+	bool init();
+
 private:
-	void checkNearestMonster() {};
-	void initLevel(int tag);
+
+	void initLevel();
 	void initEvent();
-	void showUpdateMenu();
-	void hideUpdateMenu();
-	void showAttackRange();
-	void hideAttackRange();
+
 };

@@ -52,7 +52,7 @@ void MAP::addMonsters(float dt) {
 
 void MAP::addMoney(int money,Vec2 pos) {
 
-	char namesize[20] = { 0 };
+	char namesize[30] = { 0 };
 	sprintf(namesize, "MAP/money_%d.png", money);
 	auto add = Sprite::create(namesize);
 	add->setPosition(pos);
@@ -66,7 +66,7 @@ void MAP::addMoney(int money,Vec2 pos) {
 void MAP::setNumber(int num,Sprite* pos,int color) {
 
 	pos->setVisible(true);
-	char namesize[25] = { 0 };
+	char namesize[40] = { 0 };
 	if (color == white)
 		sprintf(namesize, "Num/numWhite_%d.png", num);
 	else
@@ -265,6 +265,7 @@ bool MAP::InitUI() {
 	carrot = Carrot::create();
 	carrot->setPosition(x, y + 80);
 	addChild(carrot, 1);
+	carrot->setName("carrot");
 	if (carrot == nullptr)
 		return false;
 
