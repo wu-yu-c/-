@@ -97,8 +97,6 @@ protected:
 
 	void attack(float dt);//¹¥»÷
 
-	void shootWeapon();
-
 	void initLevel();
 
 	void initEvent();

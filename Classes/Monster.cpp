@@ -41,6 +41,8 @@ bool Monster::init() {
 
 	slowspeed = 30;
 
+	IsReverse = false;
+
 	return true;
 }
 
@@ -116,6 +118,12 @@ Vec2 Monster::nextPoint() {
 	return current;
 }
 
+void Monster::reverseHpbar() {
+
+	hpbar_bg->runAction(ScaleBy::create(0, -1, 1));
+
+}
+
 void Monster::runNextPoint() {
 
 
@@ -125,12 +133,12 @@ void Monster::runNextPoint() {
 		auto duration = current.getDistance(tmp) / speed;
 		
 		if (abs(tmp.x - current.x) > walklong && pointCounter > 1) {
-			//State = Death;
 			runAction(Sequence::create(MoveTo::create(duration, tmp)
-				//,ScaleBy::create(0.1f, -1, 1)
+				,ScaleBy::create(0.1f, -1, 1)
+				,CallFuncN::create(CC_CALLBACK_0(Monster::reverseHpbar,this))
 				, CallFuncN::create(CC_CALLBACK_0(Monster::runNextPoint, this))
 				, NULL));
-			
+			IsReverse = !IsReverse;
 		}
 		else {
 			runAction(Sequence::create(MoveTo::create(duration, tmp)

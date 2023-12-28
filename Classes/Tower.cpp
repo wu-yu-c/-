@@ -80,7 +80,7 @@ bool BaseTower::InattackRange(Monster* monster) {
 
 	float distance = Pos.distance(monsterPos);
 
-	if (distance < attackRange->getContentSize().width/2 || distance < attackRange->getContentSize().height/2)
+	if (distance < attackRange->getContentSize().width / 2 * scope || distance < attackRange->getContentSize().height / 2 * scope)
 		return true;
 	else
 		return false;
@@ -92,6 +92,7 @@ float BaseTower::getAngle(Monster* monster) {
 
 	Point to = monster->getParent()->convertToWorldSpace(monster->getPosition());
 	Point from = getParent()->convertToWorldSpace(getPosition());
+
 	float y = to.y - from.y;
 	float x = to.x - from.x;
 
@@ -156,14 +157,17 @@ void Bottle::shootWeapon() {
 
 		float dur = src.distance(dst) / speed;
 
-		bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(BottleBullet::shoot, bullet,level))
+		if (chosenEnemy->IsReverse)
+			bullet->setRotation(180 - getRotation());
+
+
+		bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(BottleBullet::shoot, bullet, level))
 			, MoveTo::create(dur, dst)
 			, CallFuncN::create(CC_CALLBACK_0(BottleBullet::removeFromParent, bullet))
-			,CallFuncN::create(CC_CALLBACK_0(Monster::getHurt,chosenEnemy,damage,Boom))
+			, CallFuncN::create(CC_CALLBACK_0(Monster::getHurt, chosenEnemy, damage, Boom))
 			, NULL));
 
 	}
-
 }
 
 bool Bottle::init() {
@@ -197,7 +201,6 @@ void Bottle::initData()
 	attackRange = cocos2d::Sprite::create("GamePlay/range.png");
 	attackRange->setPosition(40, 40);
 	attackRange->setScale(scope);
-	addChild(attackRange);
 	attackRange->setVisible(false);
 	isUpdateMenuShown = false;
 
@@ -230,6 +233,8 @@ void Bottle::initEvent()
 	listener->onTouchBegan = CC_CALLBACK_2(Bottle::onTouchBegan, this);
 	listener->onTouchEnded = CC_CALLBACK_2(Bottle::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
+	getParent()->addChild(attackRange);
 
 	upgrade->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
@@ -388,9 +393,9 @@ void Flower::initLevel()
 	speed = 300;
 	damage = 10;
 	attackRange = cocos2d::Sprite::create("GamePlay/range.png");
+	addChild(attackRange);
 	attackRange->setPosition(40, 40);
 	attackRange->setScale(scope);
-	addChild(attackRange);
 	attackRange->setVisible(false);
 	isUpdateMenuShown = false;
 }
@@ -468,22 +473,18 @@ void Flower::attack(float dt) {
 		else
 			setRotation(0);
 
-		auto bullet = FlowerBullet::create();
+		char namesize[30] = { 0 };
+		sprintf(namesize, "Flower/PFlower%d.png", level);
 
-		Director::getInstance()->getRunningScene()->addChild(bullet);
-		bullet->setPosition(500,500);
+		auto bullet = Sprite::create("Flower/PFlower1.png");
 
-		bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(FlowerBullet::shoot, bullet, level))
-			,CallFuncN::create(CC_CALLBACK_0(Flower::shootWeapon,this))
-			, CallFuncN::create(CC_CALLBACK_0(FlowerBullet::removeFromParent, bullet))
+		getParent()->addChild(bullet);
+		bullet->setPosition(getParent()->getContentSize().width / 2, getParent()->getContentSize().height / 2);
+
+		bullet->runAction(Sequence::create(ScaleTo::create(0.3f, scope+0.8)
+			,DelayTime::create(0.2f)
+			,CallFuncN::create(CC_CALLBACK_0(Sprite::removeFromParent,bullet))
 			, NULL));
-	}
-
-}
-
-void Flower::shootWeapon() {
-
-	if (IsAttack) {
 
 		auto monsters = GameManager::getGame()->currentMonster;
 		Vector<Monster*>::iterator it = monsters.begin();
@@ -643,9 +644,9 @@ void Star::initLevel()
 	speed = 300;
 	damage = 10;
 	attackRange = cocos2d::Sprite::create("GamePlay/range.png");
+	addChild(attackRange);
 	attackRange->setPosition(40, 40);
 	attackRange->setScale(scope);
-	addChild(attackRange);
 	attackRange->setVisible(false);
 	isUpdateMenuShown = false;
 }

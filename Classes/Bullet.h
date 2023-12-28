@@ -26,13 +26,6 @@ public:
 	void shoot(int level);
 };
 
-class FlowerBullet :public Bullet {
-public:
-	bool init();
-	CREATE_FUNC(FlowerBullet);
-	void shoot(int level);
-};
-
 class StarBullet :public Bullet {
 public:
 	bool init();

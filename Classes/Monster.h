@@ -28,6 +28,8 @@ public:
 
 	void getHurt(int hurt, state effect = None);
 
+	bool IsReverse;
+
 protected:
 
 	CC_SYNTHESIZE(float, maxHp, Maxhp);                  //×î´óÑªÁ¿
@@ -60,6 +62,8 @@ protected:
 	void killAnimation();
 
 	void attackAnimation();
+
+	void reverseHpbar();
 
 };
 
