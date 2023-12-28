@@ -12,16 +12,16 @@ public:
 
 private:
 	int Life;
-
+	int count;
 	cocos2d::Sprite* life;
 	cocos2d::Sprite* carrot;
 	cocos2d::ui::Button* updateButton;
 	bool isUpdateMenuShown;
-	//void showUpdateMenu();
-	//void hideUpdateMenu();
 	virtual bool init();
 	bool onTouchBegan(Touch* touch, Event* event);
 	void onTouchEnded(Touch* touch, Event* event);
+	void updateCarrot();
 	void shakeAnimation(float dt);
+	void showUpdateMenu();
 	void initEvent();
 };

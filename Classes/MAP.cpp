@@ -9,12 +9,12 @@ using namespace cocos2d::ui;
 /*初始化怪物*/
 void MAP::addWaves(float dt) {
 
-	if (wave < maxWave - 1 && IsEnd&& GameManager::getGame()->currentMonster.size() == 0) {
+	if (wave < maxWave - 1 && IsEnd && GameManager::getGame()->currentMonster.size() == 0) {
 		IsStart = true;
 		IsEnd = false;
 		wave++;
-		setNumber((wave+1) / 10, number_5,yellow);
-		setNumber((wave+1) % 10, number_6,yellow);
+		setNumber((wave + 1) / 10, number_5, yellow);
+		setNumber((wave + 1) % 10, number_6, yellow);
 		if (wave == 0)
 			schedule(schedule_selector(MAP::addMonsters), 1.0f, waveMonster.at(wave).size(), 0);
 		else
@@ -50,7 +50,7 @@ void MAP::addMonsters(float dt) {
 	}
 }
 
-void MAP::addMoney(int money,Vec2 pos) {
+void MAP::addMoney(int money, Vec2 pos) {
 
 	char namesize[30] = { 0 };
 	sprintf(namesize, "MAP/money_%d.png", money);
@@ -63,7 +63,7 @@ void MAP::addMoney(int money,Vec2 pos) {
 
 }
 
-void MAP::setNumber(int num,Sprite* pos,int color) {
+void MAP::setNumber(int num, Sprite* pos, int color) {
 
 	pos->setVisible(true);
 	char namesize[40] = { 0 };
@@ -76,7 +76,7 @@ void MAP::setNumber(int num,Sprite* pos,int color) {
 }
 
 void MAP::update(float dt) {
-	
+
 	int money = GameManager::getGame()->Money;
 	currentLife = GameManager::getGame()->Life;
 
@@ -148,6 +148,8 @@ void MAP::InitMap() {
 
 	InitEvent();
 
+	scheduleUpdate();
+
 	beginAnimation();
 
 	auto touchLayer = TouchLayer::createTouchLayer();
@@ -172,12 +174,11 @@ void MAP::Count(int i) {
 		auto number = Sprite::create(namesize);
 		number->setPosition(middle);
 		addChild(number);
-		number->setTag(i);
-		number->runAction(Sequence::create(oneCount, CallFuncN::create(CC_CALLBACK_0(MAP::Count, this,--i)), NULL));
+		number->runAction(Sequence::create(oneCount, CallFuncN::create(CC_CALLBACK_0(MAP::Count, this, --i)), NULL));
 	}
 	else {
-		scheduleUpdate();
 		schedule(schedule_selector(MAP::addWaves), 1.0f);
+		getChildByName("BG")->removeFromParent();
 	}
 
 }
@@ -189,13 +190,8 @@ void MAP::beginAnimation() {
 
 	auto BG = Sprite::create("MAP/Begin/BG.png");
 	BG->setPosition(middle);
-	//addChild(BG);
-
-	auto loop = Sprite::create("MAP/Begin/loop.png");
-	auto rotate = RotateBy::create(1.0f, 360.0f);
-	loop->setPosition(Vec2(0, 20));
-	loop->setAnchorPoint(middle);
-	//addChild(loop);
+	addChild(BG);
+	BG->setName("BG");
 
 	Count(3);
 
@@ -208,7 +204,7 @@ bool MAP::InitUI() {
 	float x = menu["x"].asFloat();                                 //获取该对象在地图上的x坐标
 	float y = menu["y"].asFloat();                                 //获取该对象在地图上的y坐标
 
-	menuButton = Button::create("MAP/menuButton_normal.png", "MAP/menuButton_pressed.png","");             //创建按钮
+	menuButton = Button::create("MAP/menuButton_normal.png", "MAP/menuButton_pressed.png", "");             //创建按钮
 	menuButton->setPosition(Vec2(x, y));                           //放到对象位置
 	menuButton->setPressedActionEnabled(true);
 	addChild(menuButton, 1);
@@ -352,16 +348,16 @@ void MAP::InitNumber() {
 	y = num5["y"].asFloat();
 	number_5 = Sprite::create();
 	number_5->setPosition(x, y);
-	setNumber(0, number_5,yellow);
-	addChild(number_5,1);
+	setNumber(0, number_5, yellow);
+	addChild(number_5, 1);
 
 	ValueMap num6 = Number->getObject("number_6");
 	x = num6["x"].asFloat();
 	y = num6["y"].asFloat();
 	number_6 = Sprite::create();
 	number_6->setPosition(x, y);
-	setNumber(0, number_6,yellow);
-	addChild(number_6,1);
+	setNumber(0, number_6, yellow);
+	addChild(number_6, 1);
 
 	ValueMap num7 = Number->getObject("number_7");
 	x = num7["x"].asFloat();
@@ -392,5 +388,5 @@ void::MAP::GameOver(bool win) {
 
 	menu->setPosition(Vec2(origin.x + 568, origin.y + 320));
 
-	
+
 }

@@ -5,7 +5,7 @@
 #include<vector>
 
 typedef enum {
-	None,Death,Bite
+	None,Death,Bite,Burn,Ice,Boom
 } state;
 
 typedef enum {
@@ -26,11 +26,15 @@ public:
 
 	void update(float dt) override;
 
+	void getHurt(int hurt, state effect = None);
+
 protected:
 
-	CC_SYNTHESIZE(int, maxHp, Maxhp);                  //最大血量
-	CC_SYNTHESIZE(int, Hp, Hp);                      //当前血量
-	int speed;                  //速度
+	CC_SYNTHESIZE(float, maxHp, Maxhp);                  //最大血量
+	CC_SYNTHESIZE(float, Hp, Hp);                      //当前血量
+	int speed;                                         //速度
+	int normalspeed;
+	int slowspeed;                                     //减速后速度
 	CC_SYNTHESIZE(int, money, Money);                  //金币数
 	float walklong;             //一次移动的距离
 	int width;
@@ -43,7 +47,9 @@ protected:
 	cocos2d::Vec2 tmp;         //下一步坐标
 	CC_SYNTHESIZE(cocos2d::Vec2,current,Current);      //当前坐标
 	bool isReverse;
-	state State;
+	CC_SYNTHESIZE(state, State, nextState);
+
+	CC_SYNTHESIZE(bool, IsEffect, Effect);
 
 	void InitHpbar();
 
@@ -52,6 +58,8 @@ protected:
 	void birthAnimation();
 
 	void killAnimation();
+
+	void attackAnimation();
 
 };
 

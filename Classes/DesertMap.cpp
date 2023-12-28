@@ -50,14 +50,30 @@ void DesertMap::loadWave() {
 }
 
 void DesertMap::addTerrains() {
-
-
+	float x, y;
+	char namesize[10] = { 0 };
+	for (int i = 1; i <= towerNum; i++) {
+		sprintf(namesize, "Tower%d", i);
+		ValueMap point = MyTerrain->getObject(namesize);
+		x = point["x"].asFloat();
+		y = point["y"].asFloat();
+		terrains.push_back(Vec2(x, y));
+	}
+	for (int i = 0; i < towerNum; i++) {
+		Terrains* newTerrain = Terrains::createTerrain();
+		newTerrain->setPosition(terrains.at(i));
+		newTerrain->setTag(i + 888);
+		addChild(newTerrain, 0);
+		terrain.push_back(newTerrain);
+	}
 }
 
 bool DesertMap::init() {
 
 	if (!Scene::init())
 		return false;
+
+	GameManager::getGame()->init();
 
 	tiledmap = TMXTiledMap::create("MAP/DESERT/TileMap2.tmx");
 
@@ -66,6 +82,7 @@ bool DesertMap::init() {
 		return false;
 
 	GameManager::getGame()->Money = 1500;
+	GameManager::getGame()->currentLevel = 2;
 
 	loadWave();
 

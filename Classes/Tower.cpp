@@ -80,7 +80,7 @@ bool BaseTower::InattackRange(Monster* monster) {
 
 	float distance = Pos.distance(monsterPos);
 
-	if (distance < attackRange->getContentSize().width / 2 || distance < attackRange->getContentSize().height / 2)
+	if (distance < attackRange->getContentSize().width/2 || distance < attackRange->getContentSize().height/2)
 		return true;
 	else
 		return false;
@@ -156,9 +156,10 @@ void Bottle::shootWeapon() {
 
 		float dur = src.distance(dst) / speed;
 
-		bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(BottleBullet::shoot, bullet, level))
+		bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(BottleBullet::shoot, bullet,level))
 			, MoveTo::create(dur, dst)
 			, CallFuncN::create(CC_CALLBACK_0(BottleBullet::removeFromParent, bullet))
+			,CallFuncN::create(CC_CALLBACK_0(Monster::getHurt,chosenEnemy,damage,Boom))
 			, NULL));
 
 	}
@@ -173,9 +174,6 @@ bool Bottle::init() {
 	buildAnimation("Bottle/Bottle11.png");
 
 	initData();
-	//initLevel();
-
-	//initEvent();
 
 	scheduleUpdate();
 
@@ -184,6 +182,7 @@ bool Bottle::init() {
 	return true;
 
 }
+
 void Bottle::initData()
 {
 	//³õÊ¼»¯Êý¾Ý
@@ -191,7 +190,7 @@ void Bottle::initData()
 	rate = 1.0f;
 	scope = 0.8f;
 	speed = 300;
-	force = 10;
+	damage = 10;
 	buildMoney = 100;
 	sellMoney = 80;
 	updateMoney = 180;
@@ -201,6 +200,7 @@ void Bottle::initData()
 	addChild(attackRange);
 	attackRange->setVisible(false);
 	isUpdateMenuShown = false;
+
 }
 
 void Bottle::addButton()
@@ -209,18 +209,19 @@ void Bottle::addButton()
 	auto position = getParent()->getPosition();
 	//Ìí¼ÓÉý¼¶°´Å¥
 	upgrade = Button::create("Money/update_180.png", "Money/update_180.png", "");
-	upgrade->setPosition(position+Vec2(0,70)); //+Vec2(40, 110)
+	upgrade->setPosition(position + Vec2(0, 70)); //+Vec2(40, 110)
 	upgrade->setPressedActionEnabled(true);
 	upgrade->setVisible(false);
 	nowScene->addChild(upgrade, 3);
 
 	//Ìí¼Ó²ð³ý°´Å¥
 	remove = Button::create("Money/remove_80.png", "Money/remove_80.png", "");
-	remove->setPosition(position+Vec2(0,-70));// +Vec2(40, -30)
+	remove->setPosition(position + Vec2(0, -70));// +Vec2(40, -30)
 	remove->setPressedActionEnabled(true);
 	remove->setVisible(false);
 	nowScene->addChild(remove, 3);
 }
+
 
 //Ìí¼ÓÊÂ¼þ¼àÌýÆ÷
 void Bottle::initEvent()
@@ -235,7 +236,7 @@ void Bottle::initEvent()
 		{
 			if (level == 1) {
 				level++;
-				force += 10;
+				damage += 10;
 				sellMoney = 224;
 				rate = 0.7f;
 				scope = 1.0f;
@@ -248,7 +249,7 @@ void Bottle::initEvent()
 			}
 			else if (level == 2) {
 				level++;
-				force += 10;
+				damage += 10;
 				sellMoney = 432;
 				rate = 0.4f;
 				scope = 1.2f;
@@ -260,6 +261,9 @@ void Bottle::initEvent()
 				upgrade->setPressedActionEnabled(false);
 			}
 			hideUpdateMenu();
+			unschedule(schedule_selector(Bottle::attack));
+			schedule(schedule_selector(Bottle::attack), rate);
+			attackRange->setScale(scope);
 		}
 		});
 
@@ -275,7 +279,7 @@ void Bottle::initEvent()
 			parent->setIsBuilt(0);
 			upgrade->removeFromParent();
 			remove->removeFromParent();
-			removeFromParent();
+			removeFromParentAndCleanup(true);
 		}
 		});
 
@@ -346,7 +350,7 @@ bool Flower::init() {
 
 	buildAnimation("Flower/level1_bg.png");
 
-
+	
 	initLevel();
 
 	initEvent();
@@ -371,7 +375,7 @@ void Flower::initLevel()
 
 	//Ìí¼Ó²ð³ý°´Å¥
 	remove = Button::create("Money/remove_144.png", "Money/remove_144.png", "");
-	remove->setPosition(Vec2(37, -40));
+	remove->setPosition(Vec2(37,-40));
 	remove->setPressedActionEnabled(true);
 	remove->setVisible(false);
 	this->addChild(remove, 3);
@@ -382,6 +386,7 @@ void Flower::initLevel()
 	rate = 2.0f;
 	scope = 0.8f;
 	speed = 300;
+	damage = 10;
 	attackRange = cocos2d::Sprite::create("GamePlay/range.png");
 	attackRange->setPosition(40, 40);
 	attackRange->setScale(scope);
@@ -422,8 +427,8 @@ void Flower::initEvent()
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 
-			removeFromParent();
 			GameManager::getGame()->Money += sellMoney;
+			removeFromParent();
 
 		}
 		});
@@ -458,17 +463,35 @@ void Flower::attack(float dt) {
 
 	if (IsAttack) {
 
-		runAction(RotateBy::create(0.1f, 60));
+		if (getRotation() == 0)
+			setRotation(30);
+		else
+			setRotation(0);
 
 		auto bullet = FlowerBullet::create();
 
 		Director::getInstance()->getRunningScene()->addChild(bullet);
-		bullet->setPosition(convertToWorldSpace(getPosition()));
+		bullet->setPosition(500,500);
 
 		bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(FlowerBullet::shoot, bullet, level))
-			, DelayTime::create(0.5f)
+			,CallFuncN::create(CC_CALLBACK_0(Flower::shootWeapon,this))
 			, CallFuncN::create(CC_CALLBACK_0(FlowerBullet::removeFromParent, bullet))
 			, NULL));
+	}
+
+}
+
+void Flower::shootWeapon() {
+
+	if (IsAttack) {
+
+		auto monsters = GameManager::getGame()->currentMonster;
+		Vector<Monster*>::iterator it = monsters.begin();
+		for (; it != monsters.end(); it++) {
+			if (InattackRange(*it))
+				(*it)->getHurt(damage, Burn);
+		}
+
 	}
 
 }
@@ -519,28 +542,96 @@ bool Star::init() {
 
 	initEvent();
 
-	//scheduleUpdate();
+	scheduleUpdate();
 
-	//schedule(schedule_selector(Flower::attack), rate);
+	schedule(schedule_selector(Star::attack), rate);
 
 	return true;
 
 }
 
+void Star::update(float dt) {
+
+	if (GameManager::getGame()->currentMonster.contains(chosenEnemy) == false)
+		chosenEnemy = NULL;
+
+	/*ÓÐ¹¥»÷Ä¿±ê*/
+	if (chosenEnemy) {
+
+		if (!InattackRange(chosenEnemy)) {
+			chosenEnemy = NULL;
+		}
+
+	}
+	else {
+
+		auto monsters = GameManager::getGame()->currentMonster;
+		Vector<Monster*>::iterator it = monsters.begin();
+		for (; it != monsters.end(); it++) {
+			if (InattackRange((*it))) {
+				chosenEnemy = (*it);
+				break;
+			}
+		}
+
+	}
+
+}
+
+void Star::shootWeapon() {
+
+	if (chosenEnemy != NULL) {
+
+		StarBullet* bullet = StarBullet::create();
+
+		Point src = chosenEnemy->convertToNodeSpace(getParent()->convertToWorldSpace(getPosition()));
+
+		Point dst = Vec2(chosenEnemy->getContentSize().width / 2, chosenEnemy->getContentSize().height / 2);
+
+		chosenEnemy->addChild(bullet);
+		bullet->setPosition(src);
+		bullet->setRotation(getAngle(chosenEnemy));
+
+		float dur = src.distance(dst) / speed;
+
+		bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(StarBullet::shoot, bullet, level))
+			, MoveTo::create(dur, dst)
+			, CallFuncN::create(CC_CALLBACK_0(BottleBullet::removeFromParent, bullet))
+			,CallFuncN::create(CC_CALLBACK_0(Monster::getHurt,chosenEnemy,damage,Ice))
+			, NULL));
+
+	}
+
+}
+
+void Star::attack(float dt) {
+
+	if (chosenEnemy != NULL) {
+
+		auto rotate = RotateTo::create(0.05f, getAngle(chosenEnemy));
+		auto rerotate = RotateTo::create(0.05f, 0);
+
+		runAction(Sequence::create(rotate
+			, rerotate
+			,CallFuncN::create(CC_CALLBACK_0(Star::shootWeapon,this))
+			,NULL));
+
+	}
+}
 
 void Star::initLevel()
 {
 
 	//Ìí¼ÓÉý¼¶°´Å¥
 	upgrade = Button::create("Money/update_220.png", "Money/update_220.png", "");
-	upgrade->setPosition(Vec2(35, 100));
+	upgrade->setPosition(Vec2(35,100));
 	upgrade->setPressedActionEnabled(true);
 	upgrade->setVisible(false);
 	this->addChild(upgrade, 3);
 
 	//Ìí¼Ó²ð³ý°´Å¥
 	remove = Button::create("Money/remove_144.png", "Money/remove_144.png", "");
-	remove->setPosition(Vec2(30, -40));
+	remove->setPosition(Vec2(30,-40));
 	remove->setPressedActionEnabled(true);
 	remove->setVisible(false);
 	this->addChild(remove, 3);
@@ -550,6 +641,7 @@ void Star::initLevel()
 	rate = 1.0f;
 	scope = 0.8f;
 	speed = 300;
+	damage = 10;
 	attackRange = cocos2d::Sprite::create("GamePlay/range.png");
 	attackRange->setPosition(40, 40);
 	attackRange->setScale(scope);

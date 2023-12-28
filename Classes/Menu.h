@@ -41,6 +41,7 @@ private:
 
 	void InitUI();
 
+	void Result();
 
 	void InitEvent();
 };

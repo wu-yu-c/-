@@ -77,7 +77,10 @@ Layer* OverMenu::createMenu(bool IsWin, int max,int current) {
 
 	menu->maxWave = max;
 
-	menu->wave = current + 1;
+	if (IsWin)
+		menu->wave = current + 1;
+	else
+		menu->wave = current;
 
 	menu->InitMenu();
 
@@ -99,6 +102,7 @@ bool OverMenu::InitMenu() {
 	auto bg = Sprite::create(namesize);
 
 	addChild(bg, -1);
+	bg->setName("bg");
 
 	InitUI();
 
@@ -110,12 +114,37 @@ bool OverMenu::InitMenu() {
 
 }
 
+void OverMenu::Result() {
+
+	Size size = getChildByName("bg")->getContentSize();
+
+	int life = GameManager::getGame()->Life;
+
+	auto bg = getChildByName("bg");
+
+	auto result = Sprite::create();
+
+	result->setPosition(size.width / 2 - 5, size.height);
+
+	bg->addChild(result);
+
+	if (life >= 10)
+		result->setTexture("MAP/goldcarrot.png");
+	else if (life >= 4)
+		result->setTexture("MAP/silvercarrot.png");
+	else
+		result->setTexture("MAP/woodcarrot.png");
+
+}
+
 void OverMenu::InitUI() {
 
 	Vec2 adjust;
 
-	if (Win)         //调整差距
+	if (Win) {         //调整差距
 		adjust = Vec2(12, 10);
+		Result();
+	}
 	else
 		adjust = Vec2(0, 0);
 

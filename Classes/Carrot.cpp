@@ -1,5 +1,6 @@
 #include"Carrot.h"
 #include"MAP.h"
+#include"GameManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -8,12 +9,13 @@ bool Carrot::init() {
 	if (!Sprite::init())
 		return false;
 
+	count = 0;
 	Life = 10;
 	isUpdateMenuShown = false;
 	this->setTexture("Carrot/hlb1_10.png");
 	life = Sprite::create("Carrot/life_10.png");
 	this->addChild(life);
-	life->setPosition(Vec2(80,-20));
+	life->setPosition(Vec2(80, -20));
 
 	updateButton = Button::create("Money/update_180.png");
 	updateButton->setVisible(false);
@@ -33,7 +35,28 @@ void Carrot::initEvent()
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = CC_CALLBACK_2(Carrot::onTouchBegan, this);
 	listener->onTouchEnded = CC_CALLBACK_2(Carrot::onTouchEnded, this);
-	_eventDispatcher->addEventListenerWithFixedPriority(listener, 20);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
+	updateButton->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
+		if (type == ui::Widget::TouchEventType::ENDED)
+		{
+			if (count++ < 2)
+				updateCarrot();
+			if (count >= 2) {
+				updateButton->setPressedActionEnabled(false);
+				updateButton->loadTextures("Money/update_max.png", "Money/update_max.png", "");
+			}
+		}
+		});
+
+}
+
+void Carrot::updateCarrot()
+{
+	setLife(Life + 1);
+	GameManager::getGame()->Money -= 180;
+	isUpdateMenuShown = false;
+	updateButton->setVisible(false);
 }
 
 bool Carrot::onTouchBegan(Touch* touch, Event* event)
@@ -53,15 +76,23 @@ void Carrot::onTouchEnded(Touch* touch, Event* event)
 			isUpdateMenuShown = false;
 			updateButton->setVisible(false);
 		}
-		else {
-			isUpdateMenuShown = true;
-			updateButton->setVisible(true);
-		}
+		else
+			showUpdateMenu();
 	}
 	else {
 		isUpdateMenuShown = false;
 		updateButton->setVisible(false);
 	}
+}
+
+void Carrot::showUpdateMenu()
+{
+	isUpdateMenuShown = true;
+	updateButton->setVisible(true);
+	if (GameManager::getGame()->Money < 180 && count < 2)
+		updateButton->loadTextures("Money/less_180.png", "Money/less_180.png", "");
+	else if (GameManager::getGame()->Money > 180 && count < 2)
+		updateButton->loadTextures("Money/update_180.png", "Money/update_180.png", "");
 }
 
 void Carrot::setLife(int n) {
@@ -95,14 +126,14 @@ void Carrot::BiteCarrot(int n) {
 
 }
 
-void Carrot::shakeAnimation(float dt){
+void Carrot::shakeAnimation(float dt) {
 
 	if (Life >= 10) {
 		auto animation = Animation::create();
 
 		char namesize[25] = { 0 };
 		for (int i = 10; i <= 21; i++) {
-			sprintf(namesize, "Carrot/hlb1_%d.png", i);
+			sprintf(namesize, "Carrot/shakehlb1_%d.png", i);
 			animation->addSpriteFrameWithFile(namesize);
 		}
 
@@ -116,7 +147,7 @@ void Carrot::shakeAnimation(float dt){
 		/*对象运行该动画*/
 
 		runAction(shake->clone());
-		
+
 	}
 	else
 		unschedule(schedule_selector(Carrot::shakeAnimation));

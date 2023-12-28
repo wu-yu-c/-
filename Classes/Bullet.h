@@ -28,7 +28,15 @@ public:
 
 class FlowerBullet :public Bullet {
 public:
-	virtual bool init();
+	bool init();
 	CREATE_FUNC(FlowerBullet);
 	void shoot(int level);
+};
+
+class StarBullet :public Bullet {
+public:
+	bool init();
+	CREATE_FUNC(StarBullet);
+	void shoot(int level);
+
 };

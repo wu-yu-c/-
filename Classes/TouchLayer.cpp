@@ -25,7 +25,7 @@ void TouchLayer::initEvent()
 	touchlistener->onTouchBegan = CC_CALLBACK_2(TouchLayer::onTouchBegan, this);
 	touchlistener->onTouchEnded = CC_CALLBACK_2(TouchLayer::onTouchEnded, this);
 	touchlistener->setSwallowTouches(false);
-	_eventDispatcher->addEventListenerWithFixedPriority(touchlistener,10);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(touchlistener, this);
 }
 
 void TouchLayer::addWrongPlace(Point location)
@@ -75,6 +75,10 @@ void TouchLayer::onTouchEnded(Touch* touch, Event* event)
 			return;
 		}
 	}
-	if (!isRightPlace)
+
+	auto carrot = map->getChildByName("carrot");
+	Rect rect = carrot->getBoundingBox();
+	if (!isRightPlace && !rect.containsPoint(pos))
 		addWrongPlace(pos);
+
 }

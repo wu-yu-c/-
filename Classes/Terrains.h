@@ -10,8 +10,8 @@ public:
 	CREATE_FUNC(Terrains);
 	void showTowerPanleLayer();
 	void hideTowerPanleLayer();
-	void showTowerInfo(){}
-	void hideTowerInfo(){}
+	void showTowerInfo() {}
+	void hideTowerInfo() {}
 	CC_SYNTHESIZE(bool, isShow, IsShow);
 	CC_SYNTHESIZE(bool, isBuilt, IsBuilt);
 private:

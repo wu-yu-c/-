@@ -2,7 +2,6 @@
 #include "MAP.h"
 #include "cocos2d.h"
 #include "Tower.h"
-#include "GameManager.h"
 using namespace cocos2d::ui;
 Terrains* Terrains::createTerrain()
 {
@@ -56,10 +55,9 @@ void Terrains::initEvent()
 			hideTowerPanleLayer();
 			auto bottle = Bottle::create();
 			bottle->setPosition(Vec2(getContentSize().width / 2, getContentSize().height / 2));
-			this->addChild(bottle, 0);
+			addChild(bottle, 0);
 			bottle->addButton();
 			bottle->initEvent();
-			GameManager::getGame()->Money -= bottle->getBuildMoney();
 			setTexture("Bottle/Bottle_3.png");
 		}
 		});

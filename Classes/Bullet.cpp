@@ -21,7 +21,7 @@ bool BottleBullet::init() {
 }
 
 void BottleBullet::shoot(int level) {
-
+	
 	auto animation = Animation::create();
 
 	char namesize[30] = { 0 };
@@ -30,10 +30,11 @@ void BottleBullet::shoot(int level) {
 		animation->addSpriteFrameWithFile(namesize);
 	}
 
-	animation->setLoops(1);
+	animation->setLoops(-1);
 	animation->setDelayPerUnit(0.1f);
 
 	auto shoot = Animate::create(animation);
+
 	runAction(shoot);
 
 }
@@ -49,28 +50,38 @@ bool FlowerBullet::init() {
 
 void FlowerBullet::shoot(int level) {
 
+	char namesize[30] = { 0 };
+
 	auto animation = Animation::create();
 
-	char namesize[30] = { 0 };
 	for (int i = 1; i <= 3; i++) {
-		sprintf(namesize, "Flower/PFlower%d%d.png", level, i);
+		sprintf(namesize, "Flower/PFlower%d.png", i);
 		animation->addSpriteFrameWithFile(namesize);
 	}
 
 	animation->setLoops(1);
 	animation->setDelayPerUnit(0.1f);
 
-	auto shoot = Animate::create(animation);
-	runAction(shoot);
+	auto attack = Animate::create(animation);
+
+	runAction(attack);
 
 }
 
-//void StarBullet::shoot(int level) {
-//
-//
-//	char namseize[30] = { 0 };
-//	//setTexture("")
-//
-//}
+bool StarBullet::init() {
+	if (!Sprite::init())
+		return false;
+
+	return true;
+}
+
+void StarBullet::shoot(int level) {
+
+	char namesize[30] = { 0 };
+	sprintf(namesize, "Star/PStar%d.png", level);
+	setTexture(namesize);
+	runAction(RepeatForever::create(RotateBy::create(0.5f, 360)));
+
+}
 
 

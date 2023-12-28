@@ -41,7 +41,7 @@
  </layer>
  <layer id="23" name="barrier" width="16" height="9" locked="1">
   <data encoding="base64" compression="zlib">
-   eAGlUdkKgDAM26f6Td7Hg7egX2kqBkIRJ1jI0m4p6xHCP0uRngEHkAMF8MVqiBqgBwbAbASmy4sfKyTbLWvBnaTs4ptrtXmrQkgWgOzfY3GJ3Bkgez3703vOyu5YI1l15mt/fOOs2I9n6t7Y/nvak9bh58mY/+meToCTIWk=
+   eAGlUVsKgDAM21E9k+/Hh29BT2kqBkJRJliIyWrK2i6Ef5GiPAMOIAcK4EvUMDVADwyAxQhMl4p/Vli229aCOynZRZu03nxUISQLQPb/Y+cStTNAVj9n05xp7so0eyRbjqGzMWfMXXEez+p903bf0ztpH36fPPM+facTioMhaQ==
   </data>
  </layer>
  <objectgroup id="21" name="Object">
@@ -227,10 +227,10 @@
   </object>
  </objectgroup>
  <objectgroup id="25" name="Tower">
-  <object id="125" name="tower5" x="558" y="366">
+  <object id="125" name="tower5" x="504.5" y="367.5">
    <ellipse/>
   </object>
-  <object id="127" name="tower4" x="325" y="368">
+  <object id="127" name="tower4" x="292" y="366.5">
    <ellipse/>
   </object>
   <object id="129" name="tower7" x="511" y="533">

@@ -37,6 +37,10 @@ bool Monster::init() {
 	if (!Sprite::init())
 		return false;
 
+	IsEffect = false;
+
+	slowspeed = 30;
+
 	return true;
 }
 
@@ -48,7 +52,7 @@ void Monster::InitHpbar() {
 
 	hpbar = ProgressTimer::create(Sprite::create("Monster/hpbar.png"));
 	hpbar->setType(ProgressTimer::Type::BAR);
-	hpbar->setMidpoint(Point(0, 0.5f));
+	hpbar->setMidpoint(Point(0, 0));
 	hpbar->setBarChangeRate(Point(1, 0));
 	hpbar->setPercentage(100);
 	hpbar->setPosition(Vec2(22.5f,5.8f));
@@ -123,7 +127,7 @@ void Monster::runNextPoint() {
 		if (abs(tmp.x - current.x) > walklong && pointCounter > 1) {
 			//State = Death;
 			runAction(Sequence::create(MoveTo::create(duration, tmp)
-				,ScaleBy::create(0.1f, -1, 1)
+				//,ScaleBy::create(0.1f, -1, 1)
 				, CallFuncN::create(CC_CALLBACK_0(Monster::runNextPoint, this))
 				, NULL));
 			
@@ -141,6 +145,22 @@ void Monster::runNextPoint() {
 	}
 }
 
+void Monster::getHurt(int hurt, state effect) {
+
+	Hp -= hurt;
+
+	if (Hp <= 0) {
+		State = Death;
+	}
+	else {
+
+		hpbar->setPercentage((Hp / maxHp) * 100);
+		State = effect;
+
+	}
+
+}
+
 
 NormalMonster* NormalMonster::createMonster()
 {
@@ -153,14 +173,14 @@ NormalMonster* NormalMonster::createMonster()
 }
 
 bool NormalMonster::init() {
-	if (!Sprite::init())
+	if (!Monster::init())
 		return false;
 
 	maxHp=Hp = 35;
 
 	money = 50;
 
-	speed = 100;
+	normalspeed = speed = 80;
 
 	width = 27;
 	height = 55;
@@ -178,6 +198,65 @@ bool NormalMonster::init() {
 	return true;
 }
 
+void Monster::attackAnimation() {
+
+	char namesize[30] = { 0 };
+
+	if (!IsEffect) {
+
+		IsEffect = true;
+
+		auto animation = Animation::create();
+
+		auto delay = DelayTime::create(0);
+
+		switch (State) {
+		case(Boom):
+			animation->addSpriteFrameWithFile("Bottle/Boom1.png");
+			animation->addSpriteFrameWithFile("Bottle/Boom2.png");
+			animation->setDelayPerUnit(0.05f);
+			break;
+		case(Burn):
+			for (int i = 1; i <= 3; i++) {
+				sprintf(namesize, "Flower/Burn%d.png", i);
+				animation->addSpriteFrameWithFile(namesize);
+			}
+			animation->setDelayPerUnit(0.1f);
+			delay->setDuration(0.5f);
+			break;
+		case(Ice):
+			for (int i = 1; i <= 3; i++) {
+				sprintf(namesize, "Star/star%d.png", i);
+				animation->addSpriteFrameWithFile(namesize);
+			}
+			animation->addSpriteFrameWithFile("Star/Ice.png");
+			animation->setDelayPerUnit(0.1f);
+			delay->setDuration(2.0f);
+			speed = slowspeed;
+			break;
+		default:
+			break;
+		}
+
+		animation->setLoops(1);
+
+		auto effect = Sprite::create();
+		addChild(effect);
+		effect->setPosition(getContentSize().width / 2, getContentSize().height / 4);
+
+		auto attack = Animate::create(animation);
+
+		effect->runAction(Sequence::create(attack
+			, delay
+			, CallFuncN::create(CC_CALLBACK_0(Sprite::removeFromParent, effect))
+			,CallFuncN::create(CC_CALLBACK_0(Monster::setEffect,this,false))
+			,CallFuncN::create(CC_CALLBACK_0(Monster::setnextState,this,None))
+			, NULL));
+
+	}
+
+}
+
 /*怪物的多种状态*/
 void Monster::update(float dt) {
 
@@ -185,13 +264,21 @@ void Monster::update(float dt) {
 	case(Bite):
 		GameManager::getGame()->Life--;
 		GameManager::getGame()->currentMonster.eraseObject(this);
-
 		unscheduleUpdate();
 		removeFromParentAndCleanup(true);
 		break;
 	case(Death):
 		killAnimation();
 		unscheduleUpdate();
+		break;
+	case(Boom):
+	case(Burn):
+	case(Ice):
+		attackAnimation();
+		break;
+	case(None):
+		if (speed < normalspeed && !IsEffect)
+			speed = normalspeed;
 		break;
 	default:
 		break;
@@ -233,14 +320,14 @@ FlyMonster* FlyMonster::createMonster()
 }
 
 bool FlyMonster::init() {
-	if (!Sprite::init())
+	if (!Monster::init())
 		return false;
 
 	maxHp = Hp = 30;
 
 	money = 75;
 
-	speed = 100;
+	normalspeed = speed = 100;
 
 	width = 40;
 	height = 65;
@@ -272,7 +359,7 @@ void FlyMonster::InitAnimation() {
 	/*动画设置为无限循环*/
 	animation->setLoops(-1);
 	/*设置两帧间隔时间*/
-	animation->setDelayPerUnit(0.1f);
+	animation->setDelayPerUnit(0.2f);
 
 	/*创建动画*/
 	auto action = Animate::create(animation);
@@ -292,14 +379,14 @@ BigMonster* BigMonster::createMonster()
 
 
 bool BigMonster::init() {
-	if (!Sprite::init())
+	if (!Monster::init())
 		return false;
 
 	maxHp = Hp = 50;
 
 	money = 150;
 
-	speed = 100;
+	normalspeed = speed = 50;
 
 	width = 40;
 	height = 85;

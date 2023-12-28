@@ -5,7 +5,7 @@ const int towerNum = 8;
 class SkyMap :public MAP {
 public:
 	static SkyMap* createGame();
-	
+
 	CREATE_FUNC(SkyMap);
 private:
 
