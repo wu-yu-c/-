@@ -378,7 +378,9 @@ void MAP::InitNumber() {
 
 void::MAP::GameOver(bool win) {
 
-	Director::getInstance()->pause();
+	unscheduleAllCallbacks();
+
+	//Director::getInstance()->stopAnimation();
 
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 

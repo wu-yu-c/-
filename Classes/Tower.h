@@ -17,9 +17,10 @@ public:
 
 	void showAttackRange();
 
-	void updateTower();//Éý¼¶·ÀÓùËþ
-	virtual void sellTower() {};//³öÊÛ·ÀÓùËþ
-	virtual void removeTower(){}
+	void checkMoney(int neddMoney);
+
+	void addButton(int needMoney, int removeMoney);
+	virtual void sellTower();//³öÊÛ·ÀÓùËþ
 	virtual bool init();                   //³õÊ¼»¯·ÀÓùËþ
 
 
@@ -42,15 +43,17 @@ public:
 
 protected:
 
+	bool onTouchBegan(Touch* touch, Event* event) { return true; };
+	void onTouchEnded(Touch* touch, Event* event);
 	bool InattackRange(Monster* monster);
-
+	virtual void updateTower();//Éý¼¶·ÀÓùËþ
 	float getAngle(Monster* monster);
 
 	Monster* chosenEnemy;
 	cocos2d::ui::Button* upgrade = NULL;
 	cocos2d::ui::Button* remove = NULL;
 	Sprite* attackRange;
-
+	Sprite* updateSignal = NULL;
 };
 
 class Bottle : public BaseTower
@@ -62,11 +65,6 @@ public:
 
 	void update(float dt);
 
-	void addButton();
-
-	bool onTouchBegan(Touch* touch, Event* event);
-	void onTouchEnded(Touch* touch, Event* event);
-
 	void initEvent();
 
 private:
@@ -77,15 +75,15 @@ private:
 
 	void attack(float dt);
 	
+	void updateTower()override;
 };
 
 class Flower : public BaseTower
 {
 public:
+	void initEvent();
 
 	CREATE_FUNC(Flower);
-	bool onTouchBegan(Touch* touch, Event* event);
-	void onTouchEnded(Touch* touch, Event* event);
 
 protected:
 
@@ -97,32 +95,29 @@ protected:
 
 	void attack(float dt);//¹¥»÷
 
-	void initLevel();
+	void initData();
 
-	void initEvent();
+	void updateTower()override;
 };
 
 class Star : public BaseTower
 {
 public:
+	void initEvent();
 
 	CREATE_FUNC(Star);
-
-	bool onTouchBegan(Touch* touch, Event* event);
-	void onTouchEnded(Touch* touch, Event* event);
 
 protected:
 	bool init();
 
+	void initData();
 private:
-	
-	void initLevel();
-
-	void initEvent();
 
 	void update(float dt);
 
 	void attack(float dt);
 
 	void shootWeapon();
+
+	void updateTower()override;
 };

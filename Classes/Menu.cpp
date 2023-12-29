@@ -188,7 +188,7 @@ void OverMenu::InitEvent() {
 	returnButton->addTouchEventListener([this](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED) {
 
-			Director::getInstance()->resume();
+			//Director::getInstance()->resume();
 			Director::getInstance()->popScene();
 
 		}

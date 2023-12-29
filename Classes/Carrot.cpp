@@ -40,7 +40,7 @@ void Carrot::initEvent()
 	updateButton->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			if (count++ < 2)
+			if (GameManager::getGame()->Money >= 180 && count++ < 2)
 				updateCarrot();
 			if (count >= 2) {
 				updateButton->setPressedActionEnabled(false);
