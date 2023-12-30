@@ -380,7 +380,11 @@ void::MAP::GameOver(bool win) {
 
 	unscheduleAllCallbacks();
 
-	//Director::getInstance()->stopAnimation();
+	auto monsters = GameManager::getGame()->currentMonster;
+	if (!monsters.empty()) {
+		for (Vector<Monster*>::iterator it = monsters.begin(); it != monsters.end(); it++)
+			(*it)->stopAllActions();
+	}
 
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 

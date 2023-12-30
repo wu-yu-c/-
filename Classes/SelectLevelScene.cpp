@@ -149,7 +149,7 @@ void SkyLine::InitEvent()
 			//进入天际地图
 			auto skyMap = SkyMap::createGame();
 			Director::getInstance()->pushScene(skyMap);
-			
+
 		}
 		});
 }
@@ -173,13 +173,21 @@ bool Desert::init()
 
 bool Desert::InitUI()
 {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
+
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	auto visibleSize = Director::getInstance()->getVisibleSize();
 	//选关图片
 	desert_button = Button::create("ChooseLevel/desert.png", "ChooseLevel/desert.png", "null.png");
-	//此处未使用problemloading检查错误
 	desert_button->setPosition(Vec2(origin.x + 568, origin.y + 320));
 	this->addChild(desert_button, 1);
+
+	if (GameManager::getGame()->getResult(1) == false) {
+		auto lock = Sprite::create("ChooseLevel/lock.png");
+		desert_button->addChild(lock, 1);
+		lock->setName("lock");
+		lock->setPosition(desert_button->getContentSize().width / 2, desert_button->getContentSize().height / 2);
+	}
+
 	if (desert_button == nullptr)
 		return false;
 	return true;
@@ -192,8 +200,10 @@ void Desert::InitEvent()
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			//进入沙漠地图
-			auto desertMap = DesertMap::createGame();			
-			Director::getInstance()->pushScene(desertMap);
+			if (GameManager::getGame()->getResult(1)) {
+				auto desertMap = DesertMap::createGame();
+				Director::getInstance()->pushScene(desertMap);
+			}
 
 		}
 		});

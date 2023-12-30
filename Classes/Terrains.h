@@ -14,6 +14,8 @@ public:
 	void hideTowerInfo() {}
 	CC_SYNTHESIZE(bool, isShow, IsShow);
 	CC_SYNTHESIZE(bool, isBuilt, IsBuilt);
+	void updateTerrain(char* name);
+
 private:
 	void initEvent();
 	void initUI();

@@ -14,6 +14,8 @@ public:
 
 	void setResult();
 
+	bool getResult(int level);
+
 	GameManager();
 
 	~GameManager();

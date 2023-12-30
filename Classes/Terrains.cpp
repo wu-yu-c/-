@@ -15,6 +15,7 @@ bool Terrains::init()
 	{
 		return false;
 	}
+
 	isShow = false;
 	isBuilt = false;
 	setTexture("GamePlay/select.png");
@@ -58,9 +59,7 @@ void Terrains::initEvent()
 				auto bottle = Bottle::create();
 				bottle->setPosition(Vec2(getContentSize().width / 2, getContentSize().height / 2));
 				addChild(bottle, 0);
-				bottle->addButton(bottle->getUpdateMoney(), bottle->getsellMoney());
-				bottle->initEvent();
-				setTexture("Bottle/Bottle_3.png");
+				bottle->buildTower("Bottle/Bottle_3.png", "Bottle/Bottle11.png");
 			}
 		}
 		});
@@ -74,9 +73,7 @@ void Terrains::initEvent()
 				auto flower = Flower::create();
 				flower->setPosition(Vec2(25, 23));
 				addChild(flower, -1);
-				flower->addButton(flower->getUpdateMoney(), flower->getsellMoney());
-				flower->initEvent();
-				setTexture("Flower/level1.png");
+				flower->buildTower("Flower/level1.png", "Flower/level1_bg.png");
 			}
 		}
 		});
@@ -90,9 +87,7 @@ void Terrains::initEvent()
 				auto star = Star::create();
 				star->setPosition(Vec2(36, 36));
 				addChild(star, 0);
-				star->addButton(star->getUpdateMoney(), star->getsellMoney());
-				star->initEvent();
-				setTexture("Star/level1_base.png");
+				star->buildTower("Star/level1_base.png", "Star/level1.png");
 			}
 		}
 		});
@@ -132,5 +127,15 @@ void Terrains::hideTowerPanleLayer()
 		sunFlowerIcon->setVisible(false);
 		icedStarIcon->setVisible(false);
 	}
+}
+
+void Terrains::updateTerrain(char* name) {
+
+	auto attackrange = getChildByName("attackRange");
+
+	setTexture(name);
+
+	attackrange->setPosition(getContentSize().width / 2, getContentSize().height / 2);
+
 }
 

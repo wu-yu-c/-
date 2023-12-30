@@ -154,8 +154,11 @@ void OverMenu::InitUI() {
 	returnButton->setPosition(Vec2(-100, -80) + adjust);
 	addChild(returnButton);
 
-	/*添加继续游戏按钮*/
-	continueButton = Button::create("MAP/continueButton_normal.png", "MAP/continueButton_pressed.png");
+	/*添加继续游戏按钮或重新开始按钮*/
+	if (Win)
+		continueButton = Button::create("MAP/continueButton_normal.png", "MAP/continueButton_pressed.png");
+	else
+		continueButton = Button::create("MAP/restartButton_normal.png", "MAP/restartButton_pressed.png");
 	continueButton->setScale(0.8f);
 	continueButton->setPosition(Vec2(70, -80) + adjust);
 	addChild(continueButton);
@@ -188,7 +191,6 @@ void OverMenu::InitEvent() {
 	returnButton->addTouchEventListener([this](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED) {
 
-			//Director::getInstance()->resume();
 			Director::getInstance()->popScene();
 
 		}
@@ -198,10 +200,13 @@ void OverMenu::InitEvent() {
 	continueButton->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED) {
 
-			Director::getInstance()->resume();
 			Director::getInstance()->popScene();
-			if (GameManager::getGame()->currentLevel < GameManager::getGame()->maxLevel)
-				Director::getInstance()->pushScene(DesertMap::createGame());
+			if (GameManager::getGame()->currentLevel < GameManager::getGame()->maxLevel) {
+				if (GameManager::getGame()->getResult(1))
+					Director::getInstance()->pushScene(DesertMap::createGame());
+				else
+					Director::getInstance()->pushScene(SkyMap::createGame());
+			}
 		}
 		});
 

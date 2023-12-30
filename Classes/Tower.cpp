@@ -1,6 +1,5 @@
 #include "Tower.h"
 #include "cocos2d.h"
-#include "Terrains.h"
 #include "MAP.h"
 #include <vector>
 #include"GameManager.h"
@@ -8,11 +7,15 @@
 #include<math.h>
 using namespace cocos2d::ui;
 
-char basename[3][50] = {
-	"Bottle/Bottle_3.png",
-	"Flower/level1.png"
-	"Star/level1_base.png"
-};
+void BaseTower::buildTower(char* basename,char* towername) {
+
+	buildAnimation(basename,towername);
+
+	addButton(updateMoney, sellMoney);
+
+	initEvent();
+
+}
 
 bool BaseTower::init() {
 
@@ -24,7 +27,7 @@ bool BaseTower::init() {
 	return true;
 }
 
-void BaseTower::buildAnimation(char* name) {
+void BaseTower::buildAnimation(char* basename,char* towername) {
 
 	char namesize[30] = { 0 };
 	auto animation = Animation::create();
@@ -32,17 +35,70 @@ void BaseTower::buildAnimation(char* name) {
 		sprintf(namesize, "MAP/smoke_%d.png", i);
 		animation->addSpriteFrameWithFile(namesize);
 	}
-	animation->addSpriteFrameWithFile(name);
+	animation->addSpriteFrameWithFile(towername);
 
 	animation->setLoops(1);
 	animation->setDelayPerUnit(0.1f);
 	auto build = Animate::create(animation);
 
-	runAction(build);
+	getParent()->addChild(attackRange);
+	attackRange->setName("attackRange");
+
+	runAction(Sequence::create(build
+		,CallFuncN::create(CC_CALLBACK_0(Terrains::updateTerrain,static_cast<Terrains*>(getParent()),basename))
+		,NULL));
 }
 
-/*有时间搞升级动画*/
-void BaseTower::updateTower() {
+void BaseTower::upgradeAnimation() {
+
+	auto upgrade = Sprite::create("MAP/upgrade1.png");
+	auto loop = Sprite::create();
+	auto animation = Animation::create();
+	char namesize[20] = { 0 };
+	for (int i = 2; i <= 5; i++) {
+		sprintf(namesize, "MAP/upgrade%d.png", i);
+		animation->addSpriteFrameWithFile(namesize);
+	}
+
+	animation->setLoops(1);
+	animation->setDelayPerUnit(0.1f);
+	
+	auto animate = Animate::create(animation);
+
+	getParent()->addChild(upgrade);
+	getParent()->addChild(loop, -2);
+	loop->setPosition(getParent()->getContentSize().width / 2, getParent()->getContentSize().height / 3);
+	upgrade->setPosition(getParent()->getContentSize().width / 2, getParent()->getContentSize().height);
+
+	loop->runAction(Sequence::create(animate
+		,CallFuncN::create(CC_CALLBACK_0(Sprite::removeFromParent,upgrade))
+		,CallFuncN::create(CC_CALLBACK_0(Sprite::removeFromParent,loop))
+		,NULL));
+
+}
+
+void BaseTower::removeAnimation() {
+
+	unscheduleAllCallbacks();
+
+	getParent()->setOpacity(0);
+
+	auto animation = Animation::create();
+
+	char namesize[20] = { 0 };
+	for (int i = 1; i <= 4; i++) {
+		sprintf(namesize, "MAP/remove%d.png", i);
+		animation->addSpriteFrameWithFile(namesize);
+	}
+
+	animation->setLoops(1);
+	animation->setDelayPerUnit(0.1f);
+
+	auto remove = Animate::create(animation);
+
+	runAction(Sequence::create(remove
+		,CallFuncN::create(CC_CALLBACK_0(BaseTower::sellTower,this))
+		,NULL));
 
 }
 
@@ -131,7 +187,6 @@ void BaseTower::sellTower()
 	auto parent = dynamic_cast<Terrains*>(getParent());
 	GameManager::getGame()->Money += sellMoney;
 	parent->setTexture("GamePlay/select.png");
-	parent->setOpacity(0);
 	parent->setIsShow(0);
 	parent->setIsBuilt(0);
 	updateSignal->removeFromParent();
@@ -149,7 +204,7 @@ void BaseTower::addButton(int needMoney, int removeMoney)
 	char str1[30] = { 0 };
 	sprintf(str1, "Money/update_%d.png", needMoney);
 	upgrade = Button::create(str1, str1, "");
-	upgrade->setPosition(position + Vec2(0, 70)); //+Vec2(40, 110)
+	upgrade->setPosition(position + Vec2(0, 70));
 	upgrade->setPressedActionEnabled(true);
 	upgrade->setVisible(false);
 	nowScene->addChild(upgrade, 3);
@@ -157,12 +212,12 @@ void BaseTower::addButton(int needMoney, int removeMoney)
 	//添加拆除按钮
 	sprintf(str1, "Money/remove_%d.png", removeMoney);
 	remove = Button::create(str1, str1, "");
-	remove->setPosition(position + Vec2(0, -70));// +Vec2(40, -30)
+	remove->setPosition(position + Vec2(0, -70));
 	remove->setPressedActionEnabled(true);
 	remove->setVisible(false);
 	nowScene->addChild(remove, 3);
 
-	updateSignal = Sprite::create("Money/to_update1.png");
+	updateSignal = Sprite::create();
 	updateSignal->setPosition(this->getParent()->getPosition() + Vec2(0, 50));
 	nowScene->addChild(updateSignal);
 
@@ -171,7 +226,7 @@ void BaseTower::addButton(int needMoney, int removeMoney)
 	animation->addSpriteFrameWithFile("Money/to_update2.png");
 
 	animation->setLoops(-1);
-	animation->setDelayPerUnit(0.3f);
+	animation->setDelayPerUnit(0.4f);
 
 	/*创建动画*/
 	auto shake = Animate::create(animation);
@@ -264,10 +319,8 @@ void Bottle::shootWeapon() {
 
 bool Bottle::init() {
 
-	if (!Sprite::init())
+	if (!BaseTower::init())
 		return false;
-
-	buildAnimation("Bottle/Bottle11.png");
 
 	initData();
 
@@ -305,12 +358,12 @@ void Bottle::initEvent()
 	listener->onTouchBegan = CC_CALLBACK_2(Bottle::onTouchBegan, this);
 	listener->onTouchEnded = CC_CALLBACK_2(Bottle::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-	getParent()->addChild(attackRange);
 
 	upgrade->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
 			if (GameManager::getGame()->Money >= updateMoney) {
+				upgradeAnimation();
 				updateTower();
 				hideUpdateMenu();
 				unschedule(schedule_selector(Bottle::attack));
@@ -323,7 +376,7 @@ void Bottle::initEvent()
 	remove->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			sellTower();
+			removeAnimation();
 		}
 		});
 
@@ -396,11 +449,8 @@ void Bottle::update(float dt) {
 
 bool Flower::init() {
 
-	if (!Sprite::init())
+	if (!BaseTower::init())
 		return false;
-
-	buildAnimation("Flower/level1_bg.png");
-
 	
 	initData();
 
@@ -424,7 +474,6 @@ void Flower::initData()
 	sellMoney = 144;
 	updateMoney = 220;
 	attackRange = cocos2d::Sprite::create("GamePlay/range.png");
-	addChild(attackRange);
 	attackRange->setPosition(40, 40);
 	attackRange->setScale(scope);
 	attackRange->setVisible(false);
@@ -434,27 +483,30 @@ void Flower::initData()
 
 void Flower::updateTower()
 {
+
+	auto parent = dynamic_cast<Terrains*>(getParent());
+
 	if (level == 1) {
 		sellMoney = 336;
 		GameManager::getGame()->Money -= updateMoney;
 		updateMoney = 260;
 		upgrade->loadTextures("Money/update_260.png", "Money/update_260.png");
-		//dynamic_cast<Terrains*>(getParent())->setTexture("Money/level2.png");
 		setTexture("Flower/level2_bg.png");
 		remove->loadTextures("Money/remove_336.png", "Money/remove_336.png");
+		parent->updateTerrain("Flower/level2.png");
 	}
 	else if (level == 2) {
 		sellMoney = 560;
 		GameManager::getGame()->Money -= updateMoney;
 		upgrade->loadTextures("Money/update_max.png", "Money/update_max.png");
-		auto parent = dynamic_cast<Terrains*>(getParent());
-		parent->setTexture("Flower/level3.png");
-		auto size = parent->getContentSize();
-		this->setPosition(Vec2(size.width / 2, size.height / 2));
 		setTexture("Flower/level3_bg.png");
 		remove->loadTextures("Money/remove_560.png", "Money/remove_560.png");
 		upgrade->setPressedActionEnabled(false);
+		parent->updateTerrain("Flower/level3.png");
 	}
+
+	setPosition(parent->getContentSize().width / 2, parent->getContentSize().height / 2);
+
 	if (level == 1 || level == 2) {
 		level++;
 		damage += 10;
@@ -475,18 +527,21 @@ void Flower::initEvent()
 	upgrade->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			updateTower();
-			hideUpdateMenu();
-			unschedule(schedule_selector(Flower::attack));
-			schedule(schedule_selector(Flower::attack), rate);
-			attackRange->setScale(scope);
+			if (GameManager::getGame()->Money >= updateMoney) {
+				upgradeAnimation();
+				updateTower();
+				hideUpdateMenu();
+				unschedule(schedule_selector(Flower::attack));
+				schedule(schedule_selector(Flower::attack), rate);
+				attackRange->setScale(scope);
+			}
 		}
 		});
 
 	remove->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			sellTower();
+			removeAnimation();
 		}
 		});
 
@@ -507,7 +562,7 @@ void Flower::attack(float dt) {
 		auto bullet = Sprite::create("Flower/PFlower1.png");
 		getParent()->addChild(bullet);
 		bullet->setPosition(getParent()->getContentSize().width / 2, getParent()->getContentSize().height / 2);
-		bullet->runAction(Sequence::create(ScaleTo::create(0.3f, scope + 0.8)
+		bullet->runAction(Sequence::create(ScaleTo::create(0.3f, scope + 1.0f)       //调整攻击动画范围
 			, DelayTime::create(0.2f)
 			, CallFuncN::create(CC_CALLBACK_0(Sprite::removeFromParent, bullet))
 			, NULL));
@@ -564,10 +619,8 @@ void Flower::update(float dt) {
 
 bool Star::init() {
 
-	if (!Sprite::init())
+	if (!BaseTower::init())
 		return false;
-
-	buildAnimation("Star/level1.png");
 
 	initData();
 
@@ -631,7 +684,7 @@ void Star::shootWeapon() {
 		bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(StarBullet::shoot, bullet, level))
 			, MoveTo::create(dur, dst)
 			, CallFuncN::create(CC_CALLBACK_0(BottleBullet::removeFromParent, bullet))
-			,CallFuncN::create(CC_CALLBACK_0(Monster::getHurt,chosenEnemy,damage,Ice))
+			,CallFuncN::create(CC_CALLBACK_0(Star::attackScope,this))
 			, NULL));
 
 	}
@@ -657,7 +710,7 @@ void Star::initData()
 {
 	//初始化数据
 	level = 1;
-	rate = 1.5f;
+	rate = 1.0f;
 	scope = 0.8f;
 	speed = 300;
 	damage = 10;
@@ -665,7 +718,6 @@ void Star::initData()
 	buildMoney = 180;
 	updateMoney = 220;
 	attackRange = cocos2d::Sprite::create("GamePlay/range.png");
-	addChild(attackRange);
 	this->setAnchorPoint(Vec2(0.5, 0.5));
 	attackRange->setPosition(40, 40);
 	attackRange->setScale(scope);
@@ -676,6 +728,9 @@ void Star::initData()
 
 void Star::updateTower()
 {
+
+	auto parent = dynamic_cast<Terrains*>(getParent());
+
 	if (level == 1) {
 		sellMoney = 336;
 		GameManager::getGame()->Money -= updateMoney;
@@ -683,19 +738,20 @@ void Star::updateTower()
 		upgrade->loadTextures("Money/update_260.png", "Money/update_260.png");
 		setTexture("Star/level2.png");
 		remove->loadTextures("Money/remove_336.png", "Money/remove_336.png");
+		parent->updateTerrain("Star/level2_base.png");
 	}
 	else if (level == 2) {
 		sellMoney = 560;
 		GameManager::getGame()->Money -= updateMoney;
 		upgrade->loadTextures("Money/update_max.png", "Money/update_max.png");
-		auto parent = dynamic_cast<Terrains*>(getParent());
-		parent->setTexture("Star/level3_base(1).png");
-		auto size = parent->getContentSize();
-		this->setPosition(Vec2(size.width / 2, size.height / 2));
 		setTexture("Star/level3.png");
 		remove->loadTextures("Money/remove_560.png", "Money/remove_560.png");
 		upgrade->setPressedActionEnabled(false);
+		parent->updateTerrain("Star/level3_base.png");
 	}
+
+	setPosition(parent->getContentSize().width / 2, parent->getContentSize().height / 2);
+
 	if (level == 1 || level == 2) {
 		level++;
 		damage += 10;
@@ -715,7 +771,8 @@ void Star::initEvent()
 	upgrade->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			if (level == 1 || level == 2) {
+			if (GameManager::getGame()->Money >= updateMoney) {
+				upgradeAnimation();
 				updateTower();
 				hideUpdateMenu();
 				unschedule(schedule_selector(Star::attack));
@@ -728,8 +785,28 @@ void Star::initEvent()
 	remove->addTouchEventListener([&](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
-			sellTower();
+			removeAnimation();
 		}
 		});
+
+}
+
+void Star::attackScope() {
+
+	if (chosenEnemy != NULL) {
+
+		auto monsters = GameManager::getGame()->currentMonster;
+
+		Vector<Monster*>::iterator it = monsters.begin();
+
+		for (; it != monsters.end(); it++) {
+
+			if ((*it) == chosenEnemy)
+				chosenEnemy->getHurt(damage, IceBoom);
+			else if ((*it)->getPosition().distance(chosenEnemy->getPosition()) <= 100)
+				(*it)->getHurt(damage, Ice);
+
+		}
+	}
 
 }

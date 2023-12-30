@@ -5,7 +5,7 @@
 #include<vector>
 
 typedef enum {
-	None,Death,Bite,Burn,Ice,Boom
+	None,Death,Bite,Burn,Ice,Boom,IceBoom
 } state;
 
 typedef enum {

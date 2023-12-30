@@ -3,13 +3,18 @@
 #include "ui/CocosGUI.h"
 #include "Monster.h"
 #include "Bullet.h"
+#include"Terrains.h"
 USING_NS_CC;
 
 
 class BaseTower : public Sprite
 {
 public:
-	void buildAnimation(char* name);
+	friend class Terrains;
+
+	void buildTower(char* basename,char* towername);
+
+	void buildAnimation(char* basename,char* towername);
 
 	void showUpdateMenu();
 
@@ -22,6 +27,7 @@ public:
 	void addButton(int needMoney, int removeMoney);
 	virtual void sellTower();//出售防御塔
 	virtual bool init();                   //初始化防御塔
+	virtual void initEvent() { }
 
 
 	CC_SYNTHESIZE(int, level, Level);//塔的等级
@@ -46,8 +52,12 @@ protected:
 	bool onTouchBegan(Touch* touch, Event* event) { return true; };
 	void onTouchEnded(Touch* touch, Event* event);
 	bool InattackRange(Monster* monster);
-	virtual void updateTower();//升级防御塔
+	virtual void updateTower() { } //升级防御塔
 	float getAngle(Monster* monster);
+
+	void upgradeAnimation();
+
+	void removeAnimation();
 
 	Monster* chosenEnemy;
 	cocos2d::ui::Button* upgrade = NULL;
@@ -75,7 +85,7 @@ private:
 
 	void attack(float dt);
 	
-	void updateTower()override;
+	void updateTower();
 };
 
 class Flower : public BaseTower
@@ -97,7 +107,7 @@ protected:
 
 	void initData();
 
-	void updateTower()override;
+	void updateTower();
 };
 
 class Star : public BaseTower
@@ -113,11 +123,13 @@ protected:
 	void initData();
 private:
 
+	void attackScope();
+
 	void update(float dt);
 
 	void attack(float dt);
 
 	void shootWeapon();
 
-	void updateTower()override;
+	void updateTower();
 };

@@ -3,6 +3,7 @@
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include"DesertMap.h"
+#include"SkyMap.h"
 
 class ChooseMenu :public cocos2d::Layer {
 public:

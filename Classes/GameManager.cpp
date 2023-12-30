@@ -35,10 +35,16 @@ GameManager* GameManager::getGame() {
 
 void GameManager::setResult() {
 
-	if (Life > 0)
-		level[currentLevel-1] = true;
-	else
-		level[currentLevel] = false;
+	if (level[currentLevel - 1] == false) {
+		if (Life > 0)
+			level[currentLevel - 1] = true;
+	}
+
+}
+
+bool GameManager::getResult(int currentlevel) {
+
+	return level[currentlevel - 1];
 
 }
 

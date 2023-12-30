@@ -232,15 +232,16 @@ void Monster::attackAnimation() {
 			animation->setDelayPerUnit(0.1f);
 			delay->setDuration(0.5f);
 			break;
-		case(Ice):
+		case(IceBoom):
 			for (int i = 1; i <= 3; i++) {
 				sprintf(namesize, "Star/star%d.png", i);
 				animation->addSpriteFrameWithFile(namesize);
 			}
+		case(Ice):
+			speed = slowspeed;
 			animation->addSpriteFrameWithFile("Star/Ice.png");
 			animation->setDelayPerUnit(0.1f);
 			delay->setDuration(2.0f);
-			speed = slowspeed;
 			break;
 		default:
 			break;
@@ -282,6 +283,7 @@ void Monster::update(float dt) {
 	case(Boom):
 	case(Burn):
 	case(Ice):
+	case(IceBoom):
 		attackAnimation();
 		break;
 	case(None):
@@ -331,7 +333,7 @@ bool FlyMonster::init() {
 	if (!Monster::init())
 		return false;
 
-	maxHp = Hp = 30;
+	maxHp = Hp = 100;
 
 	money = 75;
 
