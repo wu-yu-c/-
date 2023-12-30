@@ -1,6 +1,7 @@
 #include "SelectLevelScene.h"
 #include "MainScene.h"
 #include"GameManager.h"
+#include "SoundManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -133,7 +134,6 @@ bool SkyLine::InitUI()
 	//Ñ¡¹ØÍ¼Æ¬
 	skyline_button = Button::create("ChooseLevel/skyline.png", "ChooseLevel/skyline.png", "null.png");
 	skyline_button->setPosition(Vec2(origin.x + 568, origin.y + 320));
-
 	if (GameManager::getGame()->getResult(1) != 0) {
 		char namesize[20] = { 0 };
 		sprintf(namesize, "MAP/carrot%d.png", GameManager::getGame()->getResult(1));
@@ -142,7 +142,6 @@ bool SkyLine::InitUI()
 		carrot->setPosition(skyline_button->getContentSize().width - 10, skyline_button->getContentSize().height / 4);
 		carrot->setScale(2.0f);
 	}
-
 	this->addChild(skyline_button, 1);
 	if (skyline_button == nullptr)
 		return false;
@@ -196,7 +195,7 @@ bool Desert::InitUI()
 		lock->setName("lock");
 		lock->setPosition(desert_button->getContentSize().width / 2, desert_button->getContentSize().height / 2);
 	}
-	else{
+	else {
 		char namesize[20] = { 0 };
 		sprintf(namesize, "MAP/carrot%d.png", GameManager::getGame()->getResult(1));
 		auto carrot = Sprite::create(namesize);

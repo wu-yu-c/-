@@ -2,6 +2,7 @@
 #include"GameManager.h"
 #include<vector>
 #include "Terrains.h"
+#include "SoundManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -90,7 +91,6 @@ bool SkyMap::init() {
 	addTerrains();
 
 	loadPath();
-
 	return true;
 
 }

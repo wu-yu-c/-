@@ -1,6 +1,7 @@
 #include"Monster.h"
 #include"GameManager.h"
 #include"MAP.h"
+#include "SoundManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -32,7 +33,6 @@ void Monster::loadPoint() {
 	}
 	current = birthPlace;
 }
-
 void Monster::InitEvent() {
 
 	auto listener = EventListenerTouchOneByOne::create();
@@ -49,7 +49,6 @@ bool Monster::onTouchBegan(Touch* touch, Event* event)
 
 void Monster::onTouchEnded(Touch* touch, Event* event)
 {
-	//×ª»»×ø±êÏµ
 	Point locationInNode = convertTouchToNodeSpace(touch);
 	Size size = getContentSize();
 	Rect rect = Rect(0, 0, size.width, size.height);
@@ -59,8 +58,6 @@ void Monster::onTouchEnded(Touch* touch, Event* event)
 		chosen = false;
 
 }
-
-
 bool Monster::init() {
 	if (!Sprite::init())
 		return false;
@@ -133,7 +130,7 @@ void Monster::killAnimation() {
 	runAction(Sequence::create(smoke,
 		CallFuncN::create(CC_CALLBACK_0(MAP::addMoney,static_cast<MAP*>(Director::getInstance()->getRunningScene()), money, getPosition())),
 		CallFuncN::create(CC_CALLBACK_0(Monster::removeFromParent, this)), NULL));
-
+	SoundManager::PlayMonsterMusic();
 	GameManager::getGame()->currentMonster.eraseObject(this);
 
 }
@@ -214,7 +211,7 @@ bool NormalMonster::init() {
 	if (!Monster::init())
 		return false;
 
-	maxHp=Hp = 50;
+	maxHp=Hp = 35;
 
 	money = 14;
 
@@ -310,6 +307,7 @@ void Monster::update(float dt) {
 
 	switch (State) {
 	case(Bite):
+		SoundManager::PlayBiteMusic();
 		GameManager::getGame()->Life--;
 		GameManager::getGame()->currentMonster.eraseObject(this);
 		unscheduleUpdate();
@@ -372,7 +370,7 @@ bool FlyMonster::init() {
 	if (!Monster::init())
 		return false;
 
-	maxHp = Hp = 35;
+	maxHp = Hp = 70;
 
 	money = 50;
 

@@ -1,6 +1,7 @@
 #include"Menu.h"
 #include"MAP.h"
 #include"GameManager.h"
+#include "SoundManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -52,11 +53,13 @@ void ChooseMenu::InitEvent() {
 		if (type == ui::Widget::TouchEventType::ENDED) {
 			auto director = Director::getInstance();
 			director->resume();
-			Director::getInstance()->popScene();
-			if(GameManager::getGame()->currentLevel==1)
+			SoundManager::StopBackgroundMusic();
+			SoundManager::PlayMapMusic();
+			if (GameManager::getGame()->currentLevel == 1)
 				Director::getInstance()->pushScene(SkyMap::createGame());
 			else
 				Director::getInstance()->pushScene(DesertMap::createGame());
+			Director::getInstance()->popScene();
 
 		}
 		});
@@ -66,6 +69,8 @@ void ChooseMenu::InitEvent() {
 		if (type == ui::Widget::TouchEventType::ENDED) {
 			auto director = Director::getInstance();
 			director->resume();
+			SoundManager::StopBackgroundMusic();
+			SoundManager::PlayBackgroundMusic();
 			Director::getInstance()->popScene();
 
 		}
@@ -194,7 +199,8 @@ void OverMenu::InitEvent() {
 	/*设置选择关卡按钮*/
 	returnButton->addTouchEventListener([this](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED) {
-
+			SoundManager::StopBackgroundMusic();
+			SoundManager::PlayBackgroundMusic();
 			Director::getInstance()->popScene();
 
 		}
@@ -203,7 +209,6 @@ void OverMenu::InitEvent() {
 	/*设置继续游戏按钮*/
 	continueButton->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED) {
-
 			Director::getInstance()->popScene();
 			if (GameManager::getGame()->currentLevel < GameManager::getGame()->maxLevel) {
 				if (GameManager::getGame()->getResult(1))
@@ -211,6 +216,8 @@ void OverMenu::InitEvent() {
 				else
 					Director::getInstance()->pushScene(SkyMap::createGame());
 			}
+			else
+				SoundManager::PlayBackgroundMusic();
 		}
 		});
 

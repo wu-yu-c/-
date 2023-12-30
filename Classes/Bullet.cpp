@@ -1,8 +1,6 @@
 #include "Bullet.h"
 #include "MAP.h"
 #include"GameManager.h"
-
-
 bool Bullet::init()
 {
 	if (!Sprite::init())

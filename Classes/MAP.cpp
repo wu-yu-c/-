@@ -3,6 +3,7 @@
 #include"Monster.h"
 #include"Menu.h"
 #include "TouchLayer.h"
+#include "SoundManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -157,6 +158,7 @@ void MAP::InitMap() {
 	auto touchLayer = TouchLayer::createTouchLayer();
 	addChild(touchLayer);
 
+	SoundManager::StopBackgroundMusic();
 }
 
 void MAP::Count(int i) {
@@ -168,7 +170,10 @@ void MAP::Count(int i) {
 	auto oneCount = Sequence::create(fadein, growBig, growSmall, fadeout, NULL);
 
 	if (i >= 0) {
-
+		if (i > 0)
+			SoundManager::PlayCountMusic();
+		else
+			SoundManager::PlayGoMusic();
 		Vec2 origin = Director::getInstance()->getVisibleOrigin();
 		Vec2 middle = Vec2(origin.x + 568, origin.y + 320);
 
@@ -180,11 +185,10 @@ void MAP::Count(int i) {
 		number->runAction(Sequence::create(oneCount, CallFuncN::create(CC_CALLBACK_0(MAP::Count, this, --i)), NULL));
 	}
 	else {
-		
 		schedule(schedule_selector(MAP::addWaves), 1.0f);
 		getChildByName("BG")->removeFromParent();
+		SoundManager::PlayMapMusic();
 	}
-
 }
 
 void MAP::beginAnimation() {
@@ -392,6 +396,7 @@ void::MAP::GameOver(bool win) {
 
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	SoundManager::PlayResultMusic(win);
 	auto menu = OverMenu::createMenu(win, maxWave, wave);
 
 	addChild(menu, 5);

@@ -4,6 +4,7 @@
 #include <vector>
 #include"GameManager.h"
 #include "Bullet.h"
+#include "SoundManager.h"
 #include<math.h>
 using namespace cocos2d::ui;
 
@@ -29,6 +30,7 @@ bool BaseTower::init() {
 
 void BaseTower::buildAnimation(char* basename,char* towername) {
 
+	SoundManager::PlayBuildMusic();
 	char namesize[30] = { 0 };
 	auto animation = Animation::create();
 	for (int i = 1; i <= 4; i++) {
@@ -45,7 +47,7 @@ void BaseTower::buildAnimation(char* basename,char* towername) {
 	attackRange->setName("attackRange");
 
 	runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(Sprite::setOpacity, getParent(), 0))
-		,build
+		, build
 		, CallFuncN::create(CC_CALLBACK_0(Sprite::setOpacity, getParent(), 225))
 		,CallFuncN::create(CC_CALLBACK_0(Terrains::updateTerrain,static_cast<Terrains*>(getParent()),basename))
 		,NULL));
@@ -53,6 +55,7 @@ void BaseTower::buildAnimation(char* basename,char* towername) {
 
 void BaseTower::upgradeAnimation() {
 
+	SoundManager::PlayUpdateMusic();
 	auto upgrade = Sprite::create("MAP/upgrade1.png");
 	auto loop = Sprite::create();
 	auto animation = Animation::create();
@@ -81,10 +84,10 @@ void BaseTower::upgradeAnimation() {
 
 void BaseTower::removeAnimation() {
 
+	SoundManager::PlayRemoveMusic();
 	unscheduleAllCallbacks();
 
 	getParent()->setOpacity(0);
-
 	updateSignal->removeFromParent();
 	attackRange->removeFromParent();
 	upgrade->removeFromParent();
@@ -196,7 +199,6 @@ void BaseTower::sellTower()
 	parent->setTexture("GamePlay/select.png");
 	parent->setIsShow(0);
 	parent->setIsBuilt(0);
-	
 	removeFromParentAndCleanup(true);
 }
 
@@ -216,7 +218,12 @@ void BaseTower::addButton(int needMoney, int removeMoney)
 	//Ìí¼Ó²ð³ý°´Å¥
 	sprintf(str1, "Money/remove_%d.png", removeMoney);
 	remove = Button::create(str1, str1, "");
-	remove->setPosition(position + Vec2(0, -70));
+	if (this->getParent()->getTag() != 999 + 7 || this->getParent()->getTag() != 999 + 8)
+		remove->setPosition(position + Vec2(0, -70));
+	else if (this->getParent()->getTag() == 999 + 7)
+		remove->setPosition(position + Vec2(-70, 0));
+	else
+		remove->setPosition(position + Vec2(70, 0));
 	remove->setPressedActionEnabled(true);
 	remove->setVisible(false);
 	nowScene->addChild(remove, 3);
@@ -284,6 +291,7 @@ void Bottle::attack(float dt) {
 		animation->setDelayPerUnit(0.1f);
 
 		auto shoot = Animate::create(animation);
+		SoundManager::PlayBottleAttackMusic();
 		runAction(Sequence::create(shoot
 			, CallFuncN::create(CC_CALLBACK_0(Bottle::shootWeapon, this))
 			, NULL));
@@ -444,16 +452,14 @@ void Bottle::update(float dt) {
 
 	}
 	else {
-
 		if (chosenEnemy == NULL) {
-			for (it=monsters.begin(); it != monsters.end(); it++) {
+			for (it = monsters.begin(); it != monsters.end(); it++) {
 				if (InattackRange(*it)) {
 					chosenEnemy = (*it);
 				}
 			}
 		}
 	}
-
 }
 
 /**********************************************************/
@@ -573,6 +579,7 @@ void Flower::attack(float dt) {
 		auto bullet = Sprite::create("Flower/PFlower1.png");
 		getParent()->addChild(bullet);
 		bullet->setPosition(getParent()->getContentSize().width / 2, getParent()->getContentSize().height / 2);
+		SoundManager::PlayFlowerAttackMusic();
 		bullet->runAction(Sequence::create(ScaleTo::create(0.3f, scope + 1.0f)       //µ÷Õû¹¥»÷¶¯»­·¶Î§
 			, DelayTime::create(0.2f)
 			, CallFuncN::create(CC_CALLBACK_0(Sprite::removeFromParent, bullet))
@@ -671,14 +678,12 @@ void Star::update(float dt) {
 
 	}
 	else {
-
 		for (it = monsters.begin(); it != monsters.end(); it++) {
 			if (InattackRange((*it))) {
 				chosenEnemy = (*it);
 				break;
 			}
 		}
-
 	}
 
 }
@@ -698,7 +703,7 @@ void Star::shootWeapon() {
 		bullet->setRotation(getAngle(chosenEnemy));
 
 		float dur = src.distance(dst) / speed;
-
+		SoundManager::PlayStarAttackMusic();
 		bullet->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(StarBullet::shoot, bullet, level))
 			, MoveTo::create(dur, dst)
 			, CallFuncN::create(CC_CALLBACK_0(BottleBullet::removeFromParent, bullet))

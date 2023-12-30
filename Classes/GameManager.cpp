@@ -34,8 +34,6 @@ GameManager* GameManager::getGame() {
 }
 
 void GameManager::setResult() {
-
-	
 	if (Life == 10)
 		level[currentLevel - 1] = 3;
 	else if (Life >= 4) {
@@ -46,7 +44,7 @@ void GameManager::setResult() {
 		if (level[currentLevel - 1] < 1)
 			level[currentLevel - 1] = 1;
 	}
-
+	CCUserDefault::sharedUserDefault()->setIntegerForKey("level_1", level[currentLevel - 1]);
 }
 
 int GameManager::getResult(int currentlevel) {

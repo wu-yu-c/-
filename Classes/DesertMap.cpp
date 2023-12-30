@@ -62,7 +62,7 @@ void DesertMap::addTerrains() {
 	for (int i = 0; i < towerNum; i++) {
 		Terrains* newTerrain = Terrains::createTerrain();
 		newTerrain->setPosition(terrains.at(i));
-		newTerrain->setTag(i + 888);
+		newTerrain->setTag(i + 999);
 		addChild(newTerrain, 0);
 		terrain.push_back(newTerrain);
 	}

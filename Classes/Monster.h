@@ -1,5 +1,4 @@
 #pragma once
-
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include<vector>
@@ -72,7 +71,6 @@ protected:
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
 
 	void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
-
 };
 
 class NormalMonster :public Monster {

@@ -3,6 +3,7 @@
 #include "cocos2d.h"
 #include "Tower.h"
 #include "GameManager.h"
+#include "SoundManager.h"
 using namespace cocos2d::ui;
 Terrains* Terrains::createTerrain()
 {
@@ -59,6 +60,7 @@ void Terrains::initEvent()
 				auto bottle = Bottle::create();
 				bottle->setPosition(Vec2(getContentSize().width / 2, getContentSize().height / 2));
 				addChild(bottle, 0);
+				SoundManager::PlayBuildMusic();
 				bottle->buildTower("Bottle/Bottle_3.png", "Bottle/Bottle11.png");
 			}
 		}
@@ -73,6 +75,7 @@ void Terrains::initEvent()
 				auto flower = Flower::create();
 				flower->setPosition(Vec2(25, 23));
 				addChild(flower, -1);
+				SoundManager::PlayBuildMusic();
 				flower->buildTower("Flower/level1.png", "Flower/level1_bg.png");
 			}
 		}

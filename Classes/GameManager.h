@@ -32,7 +32,7 @@ public:
 
 	int maxLevel;
 
-private:
+public:
 
 	int level[2];       //记录关卡是否胜利
 

@@ -1,15 +1,13 @@
 #include "MainScene.h"
-#include "SimpleAudioEngine.h"
+#include "SoundManager.h"
 #include "SelectLevelScene.h"
-
+#include "GameManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
-using namespace CocosDenshion;
 
 cocos2d::Scene* MainScene::createScene()
 {
-	auto mainAudio = SimpleAudioEngine::getInstance();
-	mainAudio->playBackgroundMusic("Sound/MainMenu/BGMusic.mp3", true);
+	SoundManager::PlayBackgroundMusic();
 	return MainScene::create();
 }
 
@@ -62,7 +60,7 @@ bool MainScene::InitUI()
 		problemLoading("MainMenu/zh/front_btn_start_normal.png||MainMenu/zh/front_btn_start_pressed.png");
 	else
 	{
-		click_start_game_button->setPosition(Vec2(origin.x + 562, origin.y + 384));
+		click_start_game_button->setPosition(Vec2(origin.x + 570, origin.y + 384));
 		this->addChild(click_start_game_button, 1);
 	}
 
@@ -72,16 +70,6 @@ bool MainScene::InitUI()
 	if (nullptr == monster4)
 		return false;
 	monster4->setScale(0.75);
-
-	//设置按钮
-	click_set_button = Button::create("MainMenu/front_btn_setting_normal.png", "MainMenu/front_btn_setting_pressed.png", "null.png");
-	if (nullptr == click_set_button)
-		problemLoading("MainMenu/front_btn_setting_normal.png||MainMenu/front_btn_setting_pressed.png");
-	else
-	{
-		monster4->addChild(click_set_button, 1);
-		click_set_button->setPosition(Vec2(176, 89));
-	}
 
 	//保卫的萝卜
 	Sprite* carrot = nullptr;
@@ -156,7 +144,7 @@ void MainScene::InitEvent()
 		{
 		case ui::Widget::TouchEventType::BEGAN:
 		{
-			SimpleAudioEngine::getInstance()->playEffect("Sound/MainMenu/Select.mp3", false, 1.0f, 1.0f, 1.0f);
+			SoundManager::PlaySelectMusic();
 			break;
 		}
 		case ui::Widget::TouchEventType::ENDED:
@@ -179,6 +167,8 @@ bool MainScene::init()
 
 	if (!InitUI())
 		return false;
+
+	GameManager::getGame()->level[0] = CCUserDefault::sharedUserDefault()->getIntegerForKey("level_1");
 
 	//初始化事件
 	InitEvent();
