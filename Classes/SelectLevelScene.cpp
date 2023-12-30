@@ -132,8 +132,17 @@ bool SkyLine::InitUI()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	//选关图片
 	skyline_button = Button::create("ChooseLevel/skyline.png", "ChooseLevel/skyline.png", "null.png");
-	//此处未使用problemloading检查错误
 	skyline_button->setPosition(Vec2(origin.x + 568, origin.y + 320));
+
+	if (GameManager::getGame()->getResult(1) != 0) {
+		char namesize[20] = { 0 };
+		sprintf(namesize, "MAP/carrot%d.png", GameManager::getGame()->getResult(1));
+		auto carrot = Sprite::create(namesize);
+		skyline_button->addChild(carrot);
+		carrot->setPosition(skyline_button->getContentSize().width - 10, skyline_button->getContentSize().height / 4);
+		carrot->setScale(2.0f);
+	}
+
 	this->addChild(skyline_button, 1);
 	if (skyline_button == nullptr)
 		return false;
@@ -181,11 +190,19 @@ bool Desert::InitUI()
 	desert_button->setPosition(Vec2(origin.x + 568, origin.y + 320));
 	this->addChild(desert_button, 1);
 
-	if (GameManager::getGame()->getResult(1) == false) {
+	if (GameManager::getGame()->getResult(1) == 0) {
 		auto lock = Sprite::create("ChooseLevel/lock.png");
 		desert_button->addChild(lock, 1);
 		lock->setName("lock");
 		lock->setPosition(desert_button->getContentSize().width / 2, desert_button->getContentSize().height / 2);
+	}
+	else{
+		char namesize[20] = { 0 };
+		sprintf(namesize, "MAP/carrot%d.png", GameManager::getGame()->getResult(1));
+		auto carrot = Sprite::create(namesize);
+		desert_button->addChild(carrot);
+		carrot->setPosition(desert_button->getContentSize().width - 10, desert_button->getContentSize().height / 4);
+		carrot->setScale(2.0f);
 	}
 
 	if (desert_button == nullptr)

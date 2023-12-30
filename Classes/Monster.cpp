@@ -33,6 +33,34 @@ void Monster::loadPoint() {
 	current = birthPlace;
 }
 
+void Monster::InitEvent() {
+
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->onTouchBegan = CC_CALLBACK_2(Monster::onTouchBegan, this);
+	listener->onTouchEnded = CC_CALLBACK_2(Monster::onTouchEnded, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
+}
+
+bool Monster::onTouchBegan(Touch* touch, Event* event)
+{
+	return true;
+}
+
+void Monster::onTouchEnded(Touch* touch, Event* event)
+{
+	//转换坐标系
+	Point locationInNode = convertTouchToNodeSpace(touch);
+	Size size = getContentSize();
+	Rect rect = Rect(0, 0, size.width, size.height);
+	if (rect.containsPoint(locationInNode))
+		chosen = true;
+	else
+		chosen = false;
+
+}
+
+
 bool Monster::init() {
 	if (!Sprite::init())
 		return false;
@@ -42,6 +70,8 @@ bool Monster::init() {
 	slowspeed = 30;
 
 	IsReverse = false;
+
+	InitEvent();
 
 	return true;
 }
@@ -184,9 +214,9 @@ bool NormalMonster::init() {
 	if (!Monster::init())
 		return false;
 
-	maxHp=Hp = 35;
+	maxHp=Hp = 50;
 
-	money = 50;
+	money = 14;
 
 	normalspeed = speed = 80;
 
@@ -269,6 +299,15 @@ void Monster::attackAnimation() {
 /*怪物的多种状态*/
 void Monster::update(float dt) {
 
+	if (chosen && getChildByName("target") == NULL) {
+		auto target = Sprite::create("MONSTER/chosen.png");
+		target->setPosition(getContentSize().width / 2 - 2, height + 5);
+		addChild(target);
+		target->setName("target");
+	}
+	else if (!chosen && getChildByName("target") != NULL)
+		removeChildByName("target");
+
 	switch (State) {
 	case(Bite):
 		GameManager::getGame()->Life--;
@@ -333,9 +372,9 @@ bool FlyMonster::init() {
 	if (!Monster::init())
 		return false;
 
-	maxHp = Hp = 100;
+	maxHp = Hp = 35;
 
-	money = 75;
+	money = 50;
 
 	normalspeed = speed = 100;
 
@@ -392,9 +431,9 @@ bool BigMonster::init() {
 	if (!Monster::init())
 		return false;
 
-	maxHp = Hp = 50;
+	maxHp = Hp = 100;
 
-	money = 150;
+	money = 75;
 
 	normalspeed = speed = 50;
 

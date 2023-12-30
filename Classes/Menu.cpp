@@ -53,6 +53,10 @@ void ChooseMenu::InitEvent() {
 			auto director = Director::getInstance();
 			director->resume();
 			Director::getInstance()->popScene();
+			if(GameManager::getGame()->currentLevel==1)
+				Director::getInstance()->pushScene(SkyMap::createGame());
+			else
+				Director::getInstance()->pushScene(DesertMap::createGame());
 
 		}
 		});
@@ -129,11 +133,11 @@ void OverMenu::Result() {
 	bg->addChild(result);
 
 	if (life >= 10)
-		result->setTexture("MAP/goldcarrot.png");
+		result->setTexture("MAP/carrot3.png");
 	else if (life >= 4)
-		result->setTexture("MAP/silvercarrot.png");
+		result->setTexture("MAP/carrot2.png");
 	else
-		result->setTexture("MAP/woodcarrot.png");
+		result->setTexture("MAP/carrot1.png");
 
 }
 

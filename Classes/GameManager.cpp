@@ -6,9 +6,9 @@ static GameManager* instance;
 
 GameManager::GameManager() {
 
-	level[0] = false;
+	level[0] = 0;
 
-	level[1] = false;
+	level[1] = 0;
 
 }
 
@@ -35,14 +35,21 @@ GameManager* GameManager::getGame() {
 
 void GameManager::setResult() {
 
-	if (level[currentLevel - 1] == false) {
-		if (Life > 0)
-			level[currentLevel - 1] = true;
+	
+	if (Life == 10)
+		level[currentLevel - 1] = 3;
+	else if (Life >= 4) {
+		if (level[currentLevel - 1] < 2)
+			level[currentLevel - 1] = 2;
+	}
+	else if (Life > 0) {
+		if (level[currentLevel - 1] < 1)
+			level[currentLevel - 1] = 1;
 	}
 
 }
 
-bool GameManager::getResult(int currentlevel) {
+int GameManager::getResult(int currentlevel) {
 
 	return level[currentlevel - 1];
 

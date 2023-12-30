@@ -40,6 +40,8 @@ void MAP::addMonsters(float dt) {
 			break;
 		}
 		monster->setPosition(begin);
+		monster->setMaxhp(monster->getMaxhp() + 10 * wave);
+		monster->setHp(monster->getMaxhp());
 		addChild(monster);
 		GameManager::getGame()->currentMonster.pushBack(monster);
 		MonsterNum++;
@@ -154,6 +156,7 @@ void MAP::InitMap() {
 
 	auto touchLayer = TouchLayer::createTouchLayer();
 	addChild(touchLayer);
+
 }
 
 void MAP::Count(int i) {
@@ -177,6 +180,7 @@ void MAP::Count(int i) {
 		number->runAction(Sequence::create(oneCount, CallFuncN::create(CC_CALLBACK_0(MAP::Count, this, --i)), NULL));
 	}
 	else {
+		
 		schedule(schedule_selector(MAP::addWaves), 1.0f);
 		getChildByName("BG")->removeFromParent();
 	}

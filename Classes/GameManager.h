@@ -14,7 +14,7 @@ public:
 
 	void setResult();
 
-	bool getResult(int level);
+	int getResult(int level);
 
 	GameManager();
 
@@ -34,7 +34,7 @@ public:
 
 private:
 
-	bool level[2];       //记录关卡是否胜利
+	int level[2];       //记录关卡是否胜利
 
 
 };

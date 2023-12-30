@@ -28,6 +28,8 @@ public:
 
 	void getHurt(int hurt, state effect = None);
 
+	CC_SYNTHESIZE(bool, chosen, Chosen);
+
 	bool IsReverse;
 
 protected:
@@ -64,6 +66,12 @@ protected:
 	void attackAnimation();
 
 	void reverseHpbar();
+
+	void InitEvent();
+
+	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
+
+	void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
 
 };
 

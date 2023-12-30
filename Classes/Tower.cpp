@@ -44,7 +44,9 @@ void BaseTower::buildAnimation(char* basename,char* towername) {
 	getParent()->addChild(attackRange);
 	attackRange->setName("attackRange");
 
-	runAction(Sequence::create(build
+	runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_0(Sprite::setOpacity, getParent(), 0))
+		,build
+		, CallFuncN::create(CC_CALLBACK_0(Sprite::setOpacity, getParent(), 225))
 		,CallFuncN::create(CC_CALLBACK_0(Terrains::updateTerrain,static_cast<Terrains*>(getParent()),basename))
 		,NULL));
 }
@@ -82,6 +84,11 @@ void BaseTower::removeAnimation() {
 	unscheduleAllCallbacks();
 
 	getParent()->setOpacity(0);
+
+	updateSignal->removeFromParent();
+	attackRange->removeFromParent();
+	upgrade->removeFromParent();
+	remove->removeFromParent();
 
 	auto animation = Animation::create();
 
@@ -189,10 +196,7 @@ void BaseTower::sellTower()
 	parent->setTexture("GamePlay/select.png");
 	parent->setIsShow(0);
 	parent->setIsBuilt(0);
-	updateSignal->removeFromParent();
-	attackRange->removeFromParent();
-	upgrade->removeFromParent();
-	remove->removeFromParent();
+	
 	removeFromParentAndCleanup(true);
 }
 
@@ -420,6 +424,15 @@ void Bottle::update(float dt) {
 	if (GameManager::getGame()->currentMonster.contains(chosenEnemy) == false)
 		chosenEnemy = NULL;
 
+	auto monsters = GameManager::getGame()->currentMonster;
+	Vector<Monster*>::iterator it = monsters.begin();
+	for (; it != monsters.end(); it++) {
+		if (InattackRange(*it) && (*it)->getChosen()) {
+			chosenEnemy = (*it);
+			break;
+		}
+	}
+
 	/*有攻击目标*/
 	if (chosenEnemy) {
 
@@ -432,15 +445,13 @@ void Bottle::update(float dt) {
 	}
 	else {
 
-		auto monsters = GameManager::getGame()->currentMonster;
-		Vector<Monster*>::iterator it = monsters.begin();
-		for (; it != monsters.end(); it++) {
-			if (InattackRange((*it))) {
-				chosenEnemy = (*it);
-				break;
+		if (chosenEnemy == NULL) {
+			for (it=monsters.begin(); it != monsters.end(); it++) {
+				if (InattackRange(*it)) {
+					chosenEnemy = (*it);
+				}
 			}
 		}
-
 	}
 
 }
@@ -642,6 +653,15 @@ void Star::update(float dt) {
 	if (GameManager::getGame()->currentMonster.contains(chosenEnemy) == false)
 		chosenEnemy = NULL;
 
+	auto monsters = GameManager::getGame()->currentMonster;
+	Vector<Monster*>::iterator it = monsters.begin();
+	for (; it != monsters.end(); it++) {
+		if (InattackRange(*it) && (*it)->getChosen()) {
+			chosenEnemy = (*it);
+			break;
+		}
+	}
+
 	/*有攻击目标*/
 	if (chosenEnemy) {
 
@@ -652,9 +672,7 @@ void Star::update(float dt) {
 	}
 	else {
 
-		auto monsters = GameManager::getGame()->currentMonster;
-		Vector<Monster*>::iterator it = monsters.begin();
-		for (; it != monsters.end(); it++) {
+		for (it = monsters.begin(); it != monsters.end(); it++) {
 			if (InattackRange((*it))) {
 				chosenEnemy = (*it);
 				break;
