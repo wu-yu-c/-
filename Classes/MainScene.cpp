@@ -185,6 +185,7 @@ bool MainScene::init()
 	if (!InitUI())
 		return false;
 
+	//CCUserDefault::sharedUserDefault()->deleteValueForKey("level_1");
 	GameManager::getGame()->level[0] = CCUserDefault::sharedUserDefault()->getIntegerForKey("level_1");
 
 	//初始化事件
