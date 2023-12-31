@@ -733,7 +733,7 @@ void Star::initData()
 {
 	//初始化数据
 	level = 1;
-	rate = 1.0f;
+	rate = 1.2f;
 	scope = 0.8f;
 	speed = 300;
 	damage = 10;

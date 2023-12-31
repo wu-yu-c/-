@@ -55,11 +55,11 @@ void ChooseMenu::InitEvent() {
 			director->resume();
 			SoundManager::StopBackgroundMusic();
 			SoundManager::PlayMapMusic();
+			Director::getInstance()->popScene();
 			if (GameManager::getGame()->currentLevel == 1)
 				Director::getInstance()->pushScene(SkyMap::createGame());
 			else
 				Director::getInstance()->pushScene(DesertMap::createGame());
-			Director::getInstance()->popScene();
 
 		}
 		});

@@ -35,7 +35,7 @@ protected:
 
 	CC_SYNTHESIZE(float, maxHp, Maxhp);                  //最大血量
 	CC_SYNTHESIZE(float, Hp, Hp);                      //当前血量
-	int speed;                                         //速度
+	CC_SYNTHESIZE(int,speed,speed);                                         //速度
 	int normalspeed;
 	int slowspeed;                                     //减速后速度
 	CC_SYNTHESIZE(int, money, Money);                  //金币数

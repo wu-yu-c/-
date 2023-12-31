@@ -53,7 +53,16 @@ void SkyMap::addTerrains()
 
 void SkyMap::loadWave() {
 	std::vector<std::vector<int>> skywave = {
-		{normal,normal,normal,normal,normal}
+		{normal,normal,normal,normal,normal,normal,normal,normal,normal,normal},
+		{normal,normal,normal,normal,normal,normal,fly,fly,fly,fly},
+		{normal,normal,normal,normal,normal,fly,fly,fly,fly,fly},
+		{fly,normal,normal,normal,big,fly,fly,fly,fly,big},
+		{fly,fly,fly,fly,fly,fly,fly,fly,big,big},
+		{normal,normal,normal,normal,normal,normal,normal,big,big,big},
+		{normal,normal,normal,normal,fly,fly,fly,big,big,big},
+		{normal,normal,fly,fly,fly,fly,fly,big,big,big},
+		{big,big,normal,normal,fly,fly,fly,normal,normal,big},
+		{big,big,fly,fly,fly,fly,fly,big,big,big},
 	};
 
 	for (size_t i = 0; i < skywave.size(); i++)

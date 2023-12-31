@@ -18,4 +18,5 @@ private:
 private:
 	cocos2d::ui::Button* click_start_game_button;//点击开始游戏按钮
 	cocos2d::ui::Button* click_set_button;//点击设置按钮
+	cocos2d::ui::Button* exit_button;//退出按钮
 };

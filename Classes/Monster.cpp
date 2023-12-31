@@ -52,12 +52,27 @@ void Monster::onTouchEnded(Touch* touch, Event* event)
 	Point locationInNode = convertTouchToNodeSpace(touch);
 	Size size = getContentSize();
 	Rect rect = Rect(0, 0, size.width, size.height);
-	if (rect.containsPoint(locationInNode))
-		chosen = true;
-	else
-		chosen = false;
+	if (rect.containsPoint(locationInNode)) {
+		if (chosen)
+			chosen = false;
+		else
+			chosen = true;
+	}
+	else {
+		auto monsters = GameManager::getGame()->currentMonster;
+		Vector<Monster*>::iterator it = monsters.begin();
+		for (; it != monsters.end(); it++) {
+			auto loc = (*it)->convertTouchToNodeSpace(touch);
+			size = (*it)->getContentSize();
+			rect = Rect(0, 0, size.width, size.height);
+			if (rect.containsPoint(loc)) {
+				chosen = false;
+			}
+		}
+	}
 
 }
+
 bool Monster::init() {
 	if (!Sprite::init())
 		return false;
@@ -211,11 +226,11 @@ bool NormalMonster::init() {
 	if (!Monster::init())
 		return false;
 
-	maxHp=Hp = 35;
+	maxHp=Hp = 80;
 
 	money = 14;
 
-	normalspeed = speed = 80;
+	normalspeed = speed = 70;
 
 	width = 27;
 	height = 55;
@@ -370,7 +385,7 @@ bool FlyMonster::init() {
 	if (!Monster::init())
 		return false;
 
-	maxHp = Hp = 70;
+	maxHp = Hp = 50;
 
 	money = 50;
 
@@ -429,7 +444,7 @@ bool BigMonster::init() {
 	if (!Monster::init())
 		return false;
 
-	maxHp = Hp = 100;
+	maxHp = Hp = 150;
 
 	money = 75;
 

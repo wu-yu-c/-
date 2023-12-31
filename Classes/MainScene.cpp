@@ -64,6 +64,11 @@ bool MainScene::InitUI()
 		this->addChild(click_start_game_button, 1);
 	}
 
+	//退出游戏按钮
+	exit_button = Button::create("MainMenu/zh/exitButton_normal.png", "MainMenu/zh/exitButton_pressed.png");
+	exit_button->setPosition(Vec2(origin.x + 575, origin.y + 270));
+	addChild(exit_button, 1);
+
 	//Monster4
 	Sprite* monster4 = nullptr;
 	InitSprite(monster4, this, "MainMenu/front_monster_4.png", origin.x + 227, origin.y + 475, 1);
@@ -158,6 +163,18 @@ void MainScene::InitEvent()
 			break;
 		}
 		});
+
+
+	exit_button->addTouchEventListener([](Ref* sender, Widget::TouchEventType type) {
+
+		if( type==ui::Widget::TouchEventType::ENDED){
+			//退出游戏
+
+			Director::getInstance()->popScene();
+		
+		}
+		});
+
 }
 
 bool MainScene::init()

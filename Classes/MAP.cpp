@@ -41,8 +41,9 @@ void MAP::addMonsters(float dt) {
 			break;
 		}
 		monster->setPosition(begin);
-		monster->setMaxhp(monster->getMaxhp() + 10 * wave);
+		monster->setMaxhp(monster->getMaxhp() + 50 * wave);
 		monster->setHp(monster->getMaxhp());
+		monster->setspeed(monster->getspeed() + 2 * wave);
 		addChild(monster);
 		GameManager::getGame()->currentMonster.pushBack(monster);
 		MonsterNum++;

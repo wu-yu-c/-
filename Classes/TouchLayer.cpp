@@ -49,6 +49,7 @@ void TouchLayer::onTouchEnded(Touch* touch, Event* event)
 	auto map = static_cast<MAP*>(Director::getInstance()->getRunningScene());
 	Point pos = touch->getLocation();//得到触摸位置
 
+
 	for (size_t i = 0; i < map->terrain.size(); i++) {
 		auto element = map->terrain[i];
 		//若存在显示信息，则隐藏
