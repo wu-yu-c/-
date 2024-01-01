@@ -197,7 +197,7 @@ bool Desert::InitUI()
 	}
 	else {
 		char namesize[20] = { 0 };
-		sprintf(namesize, "MAP/carrot%d.png", GameManager::getGame()->getResult(1));
+		sprintf(namesize, "MAP/carrot%d.png", GameManager::getGame()->getResult(2));
 		auto carrot = Sprite::create(namesize);
 		desert_button->addChild(carrot);
 		carrot->setPosition(desert_button->getContentSize().width - 10, desert_button->getContentSize().height / 4);
