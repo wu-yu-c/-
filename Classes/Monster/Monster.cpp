@@ -1,7 +1,7 @@
-#include"Monster.h"
-#include"GameManager.h"
-#include"MAP.h"
-#include "SoundManager.h"
+#include"Monster/Monster.h"
+#include"Manager/GameManager.h"
+#include"MAP/MAP.h"
+#include "Manager/SoundManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 

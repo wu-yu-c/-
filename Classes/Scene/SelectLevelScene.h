@@ -1,8 +1,8 @@
 #pragma once
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-#include"SkyMap.h"
-#include"DesertMap.h"
+#include"MAP/SkyMap.h"
+#include"MAP/DesertMap.h"
 class SelectLevelScene :public cocos2d::Scene {
 public:
 	static cocos2d::Scene* createScene();

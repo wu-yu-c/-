@@ -1,6 +1,6 @@
-#include"GameManager.h"
-#include"SkyMap.h"
-#include"DesertMap.h"
+#include"Manager/GameManager.h"
+#include"MAP/SkyMap.h"
+#include"MAP/DesertMap.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 

@@ -1,8 +1,8 @@
-#include"SkyMap.h"
-#include"GameManager.h"
+#include"MAP/SkyMap.h"
+#include"Manager/GameManager.h"
 #include<vector>
-#include "Terrains.h"
-#include "SoundManager.h"
+#include "Tower/Terrains.h"
+#include "Manager/SoundManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 

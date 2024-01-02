@@ -1,7 +1,7 @@
-#include "MainScene.h"
-#include "SoundManager.h"
-#include "SelectLevelScene.h"
-#include "GameManager.h"
+#include "Scene/MainScene.h"
+#include "Manager/SoundManager.h"
+#include "Scene/SelectLevelScene.h"
+#include "Manager/GameManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 

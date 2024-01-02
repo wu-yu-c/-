@@ -1,9 +1,9 @@
-#include "Terrains.h"
-#include "MAP.h"
+#include"Tower/Tower.h"
+#include"MAP/MAP.h"
 #include "cocos2d.h"
 #include "Tower.h"
-#include "GameManager.h"
-#include "SoundManager.h"
+#include"Manager/GameManager.h"
+#include"Manager/SoundManager.h"
 using namespace cocos2d::ui;
 Terrains* Terrains::createTerrain()
 {

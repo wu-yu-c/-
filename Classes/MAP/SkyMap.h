@@ -1,6 +1,6 @@
 #pragma once
-#include"Terrains.h"
-#include"MAP.h"
+#include"Tower/Terrains.h"
+#include"MAP/MAP.h"
 const int towerNum = 8;
 class SkyMap :public MAP {
 public:

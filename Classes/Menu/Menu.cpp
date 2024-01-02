@@ -1,7 +1,7 @@
-#include"Menu.h"
-#include"MAP.h"
-#include"GameManager.h"
-#include "SoundManager.h"
+#include"Menu/Menu.h"
+#include"MAP/MAP.h"
+#include"Manager/GameManager.h"
+#include "Manager/SoundManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 

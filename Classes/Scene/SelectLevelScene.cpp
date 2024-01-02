@@ -1,7 +1,7 @@
-#include "SelectLevelScene.h"
-#include "MainScene.h"
-#include"GameManager.h"
-#include "SoundManager.h"
+#include "Scene/SelectLevelScene.h"
+#include "Scene/MainScene.h"
+#include"Manager/GameManager.h"
+#include "Manager/SoundManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 
@@ -195,7 +195,7 @@ bool Desert::InitUI()
 		lock->setName("lock");
 		lock->setPosition(desert_button->getContentSize().width / 2, desert_button->getContentSize().height / 2);
 	}
-	else {
+	else if (GameManager::getGame()->getResult(2) != 0) {
 		char namesize[20] = { 0 };
 		sprintf(namesize, "MAP/carrot%d.png", GameManager::getGame()->getResult(2));
 		auto carrot = Sprite::create(namesize);

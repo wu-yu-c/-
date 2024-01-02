@@ -1,6 +1,7 @@
-#include "SoundManager.h"
+#include "Manager/SoundManager.h"
 #include <Windows.h>
 #include <time.h>
+
 auto audio = SimpleAudioEngine::getInstance();
 void SoundManager::PlayBackgroundMusic()
 {
@@ -11,50 +12,62 @@ void SoundManager::PlayBackgroundMusic()
 	else
 		audio->playBackgroundMusic("Sound/BGMusic2.mp3", true);
 }
+
 void SoundManager::StopBackgroundMusic()
 {
 	audio->stopBackgroundMusic();
 }
+
 void SoundManager::PlayMapMusic()
 {
 	audio->playBackgroundMusic("Sound/GameRunning.mp3", true);
 }
+
 void SoundManager::PlaySelectMusic()
 {
 	audio->playEffect("Sound/MainMenu/Select.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayCountMusic()
 {
 	audio->playEffect("Sound/CountDown.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayGoMusic()
 {
 	audio->playEffect("Sound/GO.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayBuildMusic()
 {
 	audio->playEffect("Sound/TowerBulid.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayUpdateMusic()
 {
 	audio->playEffect("Sound/TowerUpdata.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayRemoveMusic()
 {
 	audio->playEffect("Sound/TowerSell.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayBottleAttackMusic()
 {
 	audio->playEffect("Sound/Bottle.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayFlowerAttackMusic()
 {
 	audio->playEffect("Sound/Sun.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayStarAttackMusic()
 {
 	audio->playEffect("Sound/Star.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayResultMusic(const int win)
 {
 	if(!win)
@@ -62,10 +75,12 @@ void SoundManager::PlayResultMusic(const int win)
 	else
 		audio->playEffect("Sound/Perfect.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayBiteMusic()
 {
 	audio->playEffect("Sound/Crash.mp3", false, 1.0f, 1.0f, 1.0f);
 }
+
 void SoundManager::PlayMonsterMusic()
 {
 	srand(static_cast<unsigned int>(time(NULL)));

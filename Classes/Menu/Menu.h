@@ -2,8 +2,8 @@
 #pragma once
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-#include"DesertMap.h"
-#include"SkyMap.h"
+#include"MAP/DesertMap.h"
+#include"MAP/SkyMap.h"
 
 class ChooseMenu :public cocos2d::Layer {
 public:

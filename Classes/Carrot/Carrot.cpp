@@ -1,6 +1,6 @@
-#include"Carrot.h"
-#include"MAP.h"
-#include"GameManager.h"
+#include"Carrot/Carrot.h"
+#include"MAP/MAP.h"
+#include"Manager/GameManager.h"
 USING_NS_CC;
 using namespace cocos2d::ui;
 

@@ -1,6 +1,6 @@
 #pragma once
-#include"MAP.h"
-#include "Terrains.h"
+#include"MAP/MAP.h"
+#include "Tower/Terrains.h"
 class DesertMap :public MAP {
 public:
 	static DesertMap* createGame();

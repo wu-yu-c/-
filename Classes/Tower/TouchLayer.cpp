@@ -1,8 +1,8 @@
-#include "TouchLayer.h"
+#include "Tower/TouchLayer.h"
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-#include "Tower.h"
-#include "MAP.h"
+#include "Tower/Tower.h"
+#include "MAP/MAP.h"
 #include <vector>
 USING_NS_CC;
 using namespace cocos2d::ui;

@@ -1,10 +1,10 @@
-#include "Tower.h"
+#include "Tower/Tower.h"
 #include "cocos2d.h"
-#include "MAP.h"
+#include "MAP/MAP.h"
 #include <vector>
-#include"GameManager.h"
-#include "Bullet.h"
-#include "SoundManager.h"
+#include"Manager/GameManager.h"
+#include "BUllet/Bullet.h"
+#include "Manager/SoundManager.h"
 #include<math.h>
 using namespace cocos2d::ui;
 

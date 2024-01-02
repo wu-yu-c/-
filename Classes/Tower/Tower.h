@@ -1,9 +1,9 @@
 #pragma once
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-#include "Monster.h"
-#include "Bullet.h"
-#include"Terrains.h"
+#include"Monster/Monster.h"
+#include "Bullet/Bullet.h"
+#include"Tower/Terrains.h"
 USING_NS_CC;
 
 

@@ -1,9 +1,9 @@
 #pragma once
 
 #include"cocos2d.h"
-#include"Monster.h"
-#include"MAP.h"
-#include"Tower.h"
+#include"Monster/Monster.h"
+#include"MAP/MAP.h"
+#include"Tower/Tower.h"
 
 class GameManager {
 public:
